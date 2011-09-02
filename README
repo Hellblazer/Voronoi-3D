@@ -3,3 +3,5 @@ A library for incrementally constructing 3 dimensional Delaunay tetrahedralizati
 This library is licensed under the AGPL v3.0 and is built with Maven 2.x.  To build, cd into the root directory and do:
 
     mvn clean install
+    
+Depends on https://github.com/Hellblazer/Utils, so you'll have to check that out and make it until I get off my lazy ass and publish these in a maven repo
