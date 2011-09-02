@@ -49,10 +49,6 @@
 							<name>java.util.logging.config.file</name>
 							<value>logging.properties</value>
 						</property>
-						<property>
-							<name>thirdspace.version</name>
-							<value>${thirdspace.version}</value>
-						</property>
 					</systemProperties>
 				</configuration>
 			</plugin>
