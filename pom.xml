@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.hellblazer</groupId>
+	<artifactId>voronoi-3d</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+	<name>Voronoi 3D</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.hellblazer</groupId>
+			<artifactId>utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.9</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License V3</name>
+			<url>http://www.gnu.org/licenses/agpl-3.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>
+                Copyright (c) 2008, Hal Hildebrand
+                &lt;hal.hildebrand @ gmail.com&gt; All
+                rights reserved.
+            </comments>
+		</license>
+	</licenses>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>java.util.logging.config.file</name>
+							<value>logging.properties</value>
+						</property>
+						<property>
+							<name>thirdspace.version</name>
+							<value>${thirdspace.version}</value>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<debug>true</debug>
+					<fork>true</fork>
+					<meminitial>128m</meminitial>
+					<maxmem>512m</maxmem>
+				</configuration>
+			</plugin>
+			
+			<!-- OSGi Felix bundle plugin -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.1.0</version>
+				<configuration>
+					<instructions>
+						<obrRepository>NONE</obrRepository>
+						<!-- bundle specific conf -->
+						<Bundle-Name>${project.artifactId}</Bundle-Name>
+						<Bundle-SymbolicName>
+							voronoi-3d
+                        </Bundle-SymbolicName>
+						<Implementation-Version>
+							${project.version}
+                        </Implementation-Version>
+					</instructions>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
