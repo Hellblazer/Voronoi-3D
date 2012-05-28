@@ -83,7 +83,6 @@ public class Inspector {
         }
     }
 
-    private static final long serialVersionUID = 1L;
     public static final Color COLOR_OF_SELECTED_ROWS = new Color(1.0F, 0.0F,
                                                                  0.0F);
 

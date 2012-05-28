@@ -6,7 +6,6 @@
 	<groupId>com.hellblazer</groupId>
 	<artifactId>voronoi-3d</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>bundle</packaging>
 	<name>Voronoi 3D</name>
 
 	<dependencies>
