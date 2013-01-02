@@ -39,7 +39,7 @@ import java.util.Set;
 
 import javax.vecmath.Point3f;
 
-import com.hellblazer.utils.IdentitySet;
+import com.hellblazer.utils.collections.IdentitySet;
 
 /**
  * A Delaunay tetrahedralization.
@@ -48,6 +48,7 @@ import com.hellblazer.utils.IdentitySet;
  * 
  */
 
+@SuppressWarnings("restriction")
 public class Tetrahedralization {
     private static class EmptySet<T> extends AbstractSet<T> implements
             Serializable {

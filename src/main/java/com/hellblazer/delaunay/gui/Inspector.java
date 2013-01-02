@@ -57,6 +57,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  * 
  */
 
+@SuppressWarnings("restriction")
 public class Inspector {
     private class Listener implements ItemListener {
         @Override

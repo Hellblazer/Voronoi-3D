@@ -28,6 +28,7 @@ import javax.vecmath.Point3f;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
+@SuppressWarnings("restriction")
 public class Vertex {
     public class CircumSphere {
         private double x;

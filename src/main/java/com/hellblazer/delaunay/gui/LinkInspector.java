@@ -12,6 +12,7 @@ import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Vertex;
 
+@SuppressWarnings("restriction")
 public class LinkInspector {
     private final JFrame frame;
     private final LinkView view;

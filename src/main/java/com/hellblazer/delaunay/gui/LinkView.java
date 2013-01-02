@@ -19,6 +19,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
+@SuppressWarnings("restriction")
 public class LinkView extends GraphicsView {
     private static final long serialVersionUID = 1L;
     private final Vertex v;

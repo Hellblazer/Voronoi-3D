@@ -20,7 +20,7 @@ package com.hellblazer.delaunay;
 import java.util.LinkedList;
 import java.util.Set;
 
-import com.hellblazer.utils.OaHashSet;
+import com.hellblazer.utils.collections.OaHashSet;
 
 /**
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>

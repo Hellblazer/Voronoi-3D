@@ -93,6 +93,7 @@ public class PointModel extends AbstractTableModel {
         return data.size();
     }
 
+    @SuppressWarnings("restriction")
     @Override
     public synchronized Object getValueAt(int rowIndex, int columnIndex) {
         if (rowIndex < 0 || rowIndex > getRowCount()) {

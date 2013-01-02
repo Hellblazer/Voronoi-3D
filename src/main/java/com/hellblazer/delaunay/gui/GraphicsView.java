@@ -28,6 +28,7 @@ import com.sun.j3d.utils.picking.behaviors.PickTranslateBehavior;
 import com.sun.j3d.utils.picking.behaviors.PickZoomBehavior;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
+@SuppressWarnings("restriction")
 public class GraphicsView extends Canvas3D {
 
     protected static final Color3f DEFAULT_COLOR = new Color3f(1.0F, 1.0F, 1.0F);

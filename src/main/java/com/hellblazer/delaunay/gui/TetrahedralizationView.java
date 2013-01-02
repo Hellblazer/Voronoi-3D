@@ -33,7 +33,7 @@ import javax.vecmath.Point3f;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Tetrahedron;
 import com.hellblazer.delaunay.Vertex;
-import com.hellblazer.utils.IdentitySet;
+import com.hellblazer.utils.collections.IdentitySet;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 /**
@@ -42,6 +42,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  * 
  */
 
+@SuppressWarnings("restriction")
 public class TetrahedralizationView extends GraphicsView {
     /**
      * 

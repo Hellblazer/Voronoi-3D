@@ -32,7 +32,7 @@ import java.util.Set;
 import javax.vecmath.Point3f;
 
 import com.hellblazer.delaunay.Vertex.CircumSphere;
-import com.hellblazer.utils.IdentitySet;
+import com.hellblazer.utils.collections.IdentitySet;
 
 /**
  * An oriented, delaunay tetrahedral cell. The vertices of the tetrahedron are
@@ -43,6 +43,7 @@ import com.hellblazer.utils.IdentitySet;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
+@SuppressWarnings("restriction")
 public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
