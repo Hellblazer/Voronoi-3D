@@ -52,7 +52,7 @@ public class TetrahedralizationTest extends TestCase {
         }
 
         Set<Tetrahedron> L = T.getTetrahedrons();
-        assertEquals(188, L.size());
+        assertEquals(189, L.size());
     }
 
     public void testFlip4to1() {
@@ -70,7 +70,7 @@ public class TetrahedralizationTest extends TestCase {
         }
 
         Set<Tetrahedron> L = T.getTetrahedrons();
-        assertEquals(387, L.size());
+        assertEquals(386, L.size());
     }
 
     public void testLargeRandom() {
