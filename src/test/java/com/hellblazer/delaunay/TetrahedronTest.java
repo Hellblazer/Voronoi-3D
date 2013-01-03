@@ -29,8 +29,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import com.hellblazer.delaunay.Vertex.CircumSphere;
-
 /**
  * 
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
@@ -41,8 +39,6 @@ public class TetrahedronTest extends TestCase {
     public void testCreateUniverse() {
         Tetrahedron idaho = new Tetrahedralization().myOwnPrivateIdaho();
         assertNotNull(idaho);
-        CircumSphere circumsphere = idaho.getCircumsphere();
-        assertNotNull(circumsphere);
         Vertex[] vertices = idaho.getVertices();
         assertNotNull(vertices);
         assertEquals(4, vertices.length);

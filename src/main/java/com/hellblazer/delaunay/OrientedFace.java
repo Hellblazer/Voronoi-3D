@@ -28,8 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.hellblazer.delaunay.Vertex.CircumSphere;
-
 /**
  * An oriented face of a tetrahedron.
  * <p>
@@ -39,6 +37,21 @@ import com.hellblazer.delaunay.Vertex.CircumSphere;
  */
 
 public abstract class OrientedFace implements Iterable<Vertex> {
+    private static class CircumSphere {
+        private final Vertex a, b, c, d;
+
+        private CircumSphere(Vertex a, Vertex b, Vertex c, Vertex d) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.d = d;
+        }
+
+        public boolean inSphere(Vertex query) {
+            return query.inSphere(a, b, c, d) > 0;
+        }
+    }
+
     /**
      * The vertex in the adjacent tetrahedron opposite of this face
      */
@@ -438,7 +451,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
             b = a;
             a = tmp;
         }
-        return a.createCircumSphere(b, c, d);
+        return new CircumSphere(a, b, c, d);
     }
 
     private boolean isFlippable3ear(Vertex n) {

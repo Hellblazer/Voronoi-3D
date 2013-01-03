@@ -103,52 +103,36 @@ public class Tetrahedralization {
     /**
      * Cannonical enumeration of the vertex ordinals
      */
-    public final static V[] VERTICES = { A, B, C, D };
+    public final static V[]      VERTICES = { A, B, C, D };
 
     /**
      * A pre-built table of all the permutations of remaining faces to check in
      * location.
      */
-    private static final V[][][] ORDER = new V[][][] {
-                                                      { { B, C, D },
-                                                       { C, B, D },
-                                                       { C, D, B },
-                                                       { B, D, C },
-                                                       { D, B, C }, { D, C, B } },
+    private static final V[][][] ORDER    = new V[][][] {
+            { { B, C, D }, { C, B, D }, { C, D, B }, { B, D, C }, { D, B, C },
+            { D, C, B } },
 
-                                                      { { A, C, D },
-                                                       { C, A, D },
-                                                       { C, D, A },
-                                                       { A, D, C },
-                                                       { D, A, C }, { D, C, A } },
+            { { A, C, D }, { C, A, D }, { C, D, A }, { A, D, C }, { D, A, C },
+            { D, C, A } },
 
-                                                      { { B, A, D },
-                                                       { A, B, D },
-                                                       { A, D, B },
-                                                       { B, D, A },
-                                                       { D, B, A }, { D, A, B } },
+            { { B, A, D }, { A, B, D }, { A, D, B }, { B, D, A }, { D, B, A },
+            { D, A, B } },
 
-                                                      { { B, C, A },
-                                                       { C, B, A },
-                                                       { C, A, B },
-                                                       { B, A, C },
-                                                       { A, B, C }, { A, C, B } } };
+            { { B, C, A }, { C, B, A }, { C, A, B }, { B, A, C }, { A, B, C },
+            { A, C, B } }                };
 
     /**
      * Scale of the universe
      */
-    private static double SCALE = Math.pow(2D, 30D);
+    private static double        SCALE    = Math.pow(2D, 30D);
 
     public static Vertex[] getFourCorners() {
         Vertex[] fourCorners = new Vertex[4];
-        fourCorners[0] = new Vertex(1, 1, 1);
-        fourCorners[1] = new Vertex(-1, -1, 1);
-        fourCorners[2] = new Vertex(-1, 1, -1);
-        fourCorners[3] = new Vertex(1, -1, -1);
-
-        for (Vertex v : fourCorners) {
-            v.scale(SCALE);
-        }
+        fourCorners[0] = new Vertex(1, 1, 1, SCALE);
+        fourCorners[1] = new Vertex(-1, -1, 1, SCALE);
+        fourCorners[2] = new Vertex(-1, 1, -1, SCALE);
+        fourCorners[3] = new Vertex(1, -1, -1, SCALE);
         return fourCorners;
     }
 
@@ -160,17 +144,17 @@ public class Tetrahedralization {
     /**
      * The last valid tetrahedron noted
      */
-    private Tetrahedron last;
+    private Tetrahedron    last;
 
     /**
      * A random number generator
      */
-    private final Random random;
+    private final Random   random;
 
     /**
      * The number of points in this tetrahedralization
      */
-    private int size = 0;
+    private int            size = 0;
 
     /**
      * Construct a new tetrahedralization with the default random number

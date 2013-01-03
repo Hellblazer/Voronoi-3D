@@ -19,6 +19,7 @@
 
 package com.hellblazer.delaunay;
 
+import static com.hellblazer.delaunay.Geometry.centerSphere;
 import static com.hellblazer.delaunay.V.A;
 import static com.hellblazer.delaunay.V.B;
 import static com.hellblazer.delaunay.V.C;
@@ -31,7 +32,6 @@ import java.util.Set;
 
 import javax.vecmath.Point3f;
 
-import com.hellblazer.delaunay.Vertex.CircumSphere;
 import com.hellblazer.utils.collections.IdentitySet;
 
 /**
@@ -583,76 +583,61 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Matrix used to determine the next neighbor in a voronoi face traversal
      */
-    private static final V[][][] VORONOI_FACE_NEXT = {
-                                                      { null,
-                                                       { null, null, D, C },
-                                                       { null, D, null, B },
-                                                       { null, C, B, null } },
-                                                      { { null, null, D, C },
-                                                       null,
-                                                       { D, null, null, A },
-                                                       { C, null, A, null } },
-                                                      { { null, D, null, B },
-                                                       { D, null, null, A },
-                                                       null,
-                                                       { B, A, null, null } },
-                                                      { { null, C, B, null },
-                                                       { C, null, A, null },
-                                                       { B, A, null, null },
-                                                       null } };
+    private static final V[][][] VORONOI_FACE_NEXT   = {
+            { null, { null, null, D, C }, { null, D, null, B },
+            { null, C, B, null } },
+            { { null, null, D, C }, null, { D, null, null, A },
+            { C, null, A, null } },
+            { { null, D, null, B }, { D, null, null, A }, null,
+            { B, A, null, null } },
+            { { null, C, B, null }, { C, null, A, null }, { B, A, null, null },
+            null }                                  };
 
     /**
      * Matrix used to determine the origin neighbor in a vororoni face traversal
      */
-    private static final V[][] VORONOI_FACE_ORIGIN = { { null, C, D, B },
-                                                      { C, null, D, A },
-                                                      { D, A, null, B },
-                                                      { B, C, A, null } };
+    private static final V[][]   VORONOI_FACE_ORIGIN = { { null, C, D, B },
+            { C, null, D, A }, { D, A, null, B }, { B, C, A, null } };
 
     /**
      * Vertex A
      */
-    private Vertex a;
+    private Vertex               a;
 
     /**
      * Vertx B
      */
-    private Vertex b;
+    private Vertex               b;
 
     /**
      * Vertex C
      */
-    private Vertex c;
+    private Vertex               c;
 
     /**
      * Vertex D
      */
-    private Vertex d;
+    private Vertex               d;
 
     /**
      * The neighboring tetrahedron opposite of vertex A
      */
-    private Tetrahedron nA;
+    private Tetrahedron          nA;
 
     /**
      * The neighboring tetrahedron opposite of vertex B
      */
-    private Tetrahedron nB;
+    private Tetrahedron          nB;
 
     /**
      * The neighboring tetrahedron opposite of vertex C
      */
-    private Tetrahedron nC;
+    private Tetrahedron          nC;
 
     /**
      * The neighboring tetrahedron opposite of vertex D
      */
-    private Tetrahedron nD;
-
-    /**
-     * The circumsphere defined by the tetrahedron
-     */
-    private CircumSphere sphere;
+    private Tetrahedron          nD;
 
     /**
      * Construct a tetrahedron from the four vertices
@@ -674,8 +659,6 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         b.setAdjacent(this);
         c.setAdjacent(this);
         d.setAdjacent(this);
-
-        sphere = a.createCircumSphere(b, c, d);
     }
 
     /**
@@ -773,15 +756,6 @@ public class Tetrahedron implements Iterable<OrientedFace> {
             ears.add(newFace);
         }
         return t1;
-    }
-
-    /**
-     * Answer the center of the circumsphere defined by the tetrahedron
-     * 
-     * @return
-     */
-    public CircumSphere getCircumsphere() {
-        return sphere;
     }
 
     /**
@@ -896,7 +870,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @return
      */
     public boolean inSphere(Vertex query) {
-        return sphere.inSphere(query);
+        return query.inSphere(a, b, c, d) > 0;
     }
 
     /**
@@ -910,8 +884,8 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     public Iterator<OrientedFace> iterator() {
         return new Iterator<OrientedFace>() {
             OrientedFace[] faces = { getFace(A), getFace(B), getFace(C),
-                                    getFace(D) };
-            int i = 0;
+                                         getFace(D) };
+            int            i     = 0;
 
             @Override
             public boolean hasNext() {
@@ -1084,7 +1058,6 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         d.deleteAdjacent();
         nA = nB = nC = nD = null;
         a = b = c = d = null;
-        sphere = null;
     }
 
     Vertex getA() {
@@ -1220,7 +1193,11 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         if (origin == this) {
             return;
         }
-        face.add(sphere.asPoint3f());
+        double[] center = new double[3];
+        centerSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y,
+                     d.z, center);
+        face.add(new Point3f((float) center[0], (float) center[1],
+                             (float) center[2]));
         V next = VORONOI_FACE_NEXT[ordinalOf(from).ordinal()][ordinalOf(vC).ordinal()][ordinalOf(
                                                                                                  axis).ordinal()];
         Tetrahedron t = getNeighbor(next);
@@ -1241,7 +1218,11 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      */
     void traverseVoronoiFace(Vertex vC, Vertex axis, List<Point3f[]> faces) {
         ArrayList<Point3f> face = new ArrayList<Point3f>();
-        face.add(sphere.asPoint3f());
+        double[] center = new double[3];
+        centerSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y,
+                     d.z, center);
+        face.add(new Point3f((float) center[0], (float) center[1],
+                             (float) center[2]));
         V v = VORONOI_FACE_ORIGIN[ordinalOf(vC).ordinal()][ordinalOf(axis).ordinal()];
         Tetrahedron next = getNeighbor(v);
         if (next != null) {
