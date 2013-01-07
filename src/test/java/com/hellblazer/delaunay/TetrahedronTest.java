@@ -23,11 +23,16 @@ import static com.hellblazer.delaunay.V.A;
 import static com.hellblazer.delaunay.V.B;
 import static com.hellblazer.delaunay.V.C;
 import static com.hellblazer.delaunay.V.D;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * 
@@ -35,7 +40,8 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TetrahedronTest extends TestCase {
+public class TetrahedronTest  {
+    @Test
     public void testCreateUniverse() {
         Tetrahedron idaho = new Tetrahedralization().myOwnPrivateIdaho();
         assertNotNull(idaho);
@@ -63,6 +69,7 @@ public class TetrahedronTest extends TestCase {
         }
     }
 
+    @Test
     public void testFlip14() {
         Tetrahedron U = new Tetrahedralization().myOwnPrivateIdaho();
         Vertex a = U.getVertex(A);

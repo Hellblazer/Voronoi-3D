@@ -23,7 +23,13 @@ import static com.hellblazer.delaunay.V.A;
 import static com.hellblazer.delaunay.V.B;
 import static com.hellblazer.delaunay.V.C;
 import static com.hellblazer.delaunay.V.D;
-import junit.framework.TestCase;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * 
@@ -31,8 +37,9 @@ import junit.framework.TestCase;
  * 
  */
 
-public class OrientedFaceTest extends TestCase {
+public class OrientedFaceTest {
 
+    @Test
     public void testFlip2to3() {
         Vertex a = new Vertex(0, -100, 0);
         Vertex b = new Vertex(-100, 0, 0);
@@ -79,6 +86,7 @@ public class OrientedFaceTest extends TestCase {
         assertSame(tIII, tII.getNeighbor(C));
     }
 
+    @Test
     public void testIsConvex() {
         Vertex a = new Vertex(-1, -1, 1);
         Vertex b = new Vertex(1, 1, 1);
@@ -99,6 +107,7 @@ public class OrientedFaceTest extends TestCase {
         }
     }
 
+    @Test
     public void testIsReflex() {
         Vertex a = new Vertex(-1, -1, 1);
         Vertex b = new Vertex(1, 1, 1);

@@ -22,7 +22,7 @@ package com.hellblazer.delaunay;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * 
@@ -30,7 +30,8 @@ import junit.framework.TestCase;
  * 
  */
 
-public class VertexTest extends TestCase {
+public class VertexTest  {
+    @Test
     public void testFlip4to1() {
         Tetrahedralization tetrahedralization = new Tetrahedralization();
         Tetrahedron U = tetrahedralization.myOwnPrivateIdaho();

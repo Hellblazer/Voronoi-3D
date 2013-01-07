@@ -23,7 +23,7 @@ import static com.hellblazer.delaunay.Vertex.getRandomPoints;
 
 import java.util.Random;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.hellblazer.delaunay.gui.Examples;
 
@@ -33,10 +33,11 @@ import com.hellblazer.delaunay.gui.Examples;
  * 
  */
 
-public class TestTimeInsert extends TestCase {
+public class TestTimeInsert {
 
     int iterations = 100;
 
+    @Test
     public void testCubic() throws Exception {
 
         Random random = new Random(666);
@@ -60,6 +61,7 @@ public class TestTimeInsert extends TestCase {
                            + " points): " + iter / 1E6 + " Ms");
     }
 
+    @Test
     public void testGrid() throws Exception {
 
         Random random = new Random(666);
@@ -83,6 +85,7 @@ public class TestTimeInsert extends TestCase {
                            / 1E6 + " Ms");
     }
 
+    @Test
     public void testLargeRandom() {
         Random random = new Random(666);
         Vertex ourPoints[] = getRandomPoints(random, 600, 1.0D, false);
@@ -104,6 +107,7 @@ public class TestTimeInsert extends TestCase {
                            + " points): " + iter / 1E6 + " Ms");
     }
 
+    @Test
     public void testSuperLargeRandom() {
         Random random = new Random(666);
         Vertex ourPoints[] = getRandomPoints(random, 6000, 10.0D, false);
@@ -125,6 +129,7 @@ public class TestTimeInsert extends TestCase {
                            + " points): " + iter / 1E6 + " Ms");
     }
 
+    @Test
     public void testWorstCase() throws Exception {
         Random random = new Random(666);
 

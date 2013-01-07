@@ -20,11 +20,12 @@
 package com.hellblazer.delaunay;
 
 import static com.hellblazer.delaunay.Vertex.getRandomPoints;
+import static junit.framework.Assert.assertEquals;
 
 import java.util.Random;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.hellblazer.delaunay.gui.Examples;
 
@@ -34,7 +35,7 @@ import com.hellblazer.delaunay.gui.Examples;
  * 
  */
 
-public class TetrahedralizationTest extends TestCase {
+public class TetrahedralizationTest {
 
     private static class OC implements StarVisitor {
         int order = 0;
@@ -45,6 +46,7 @@ public class TetrahedralizationTest extends TestCase {
         }
     }
 
+    @Test
     public void testCubic() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
         for (Vertex v : Examples.getCubicCrystalStructure()) {
@@ -55,6 +57,7 @@ public class TetrahedralizationTest extends TestCase {
         assertEquals(189, L.size());
     }
 
+    @Test
     public void testFlip4to1() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
         Vertex N = new Vertex(100, 100, 100);
@@ -63,6 +66,7 @@ public class TetrahedralizationTest extends TestCase {
         assertEquals(1, T.getTetrahedrons().size());
     }
 
+    @Test
     public void testGrid() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
         for (Vertex v : Examples.getGrid()) {
@@ -73,6 +77,7 @@ public class TetrahedralizationTest extends TestCase {
         assertEquals(386, L.size());
     }
 
+    @Test
     public void testLargeRandom() {
         Random random = new Random(666);
         Vertex ourPoints[] = getRandomPoints(random, 600, 1.0D, false);
@@ -91,6 +96,7 @@ public class TetrahedralizationTest extends TestCase {
      * Verify that the order of a vertex in a Tetrahedralization is correctly
      * maintained.
      */
+    @Test
     public void testOrderMaintenance() throws Exception {
         verifyOrder(Examples.getWorstCase());
         verifyOrder(Examples.getCubicCrystalStructure());
@@ -99,6 +105,7 @@ public class TetrahedralizationTest extends TestCase {
         verifyOrder(getRandomPoints(random, 600, 1.0D, false));
     }
 
+    @Test
     public void testWorstCase() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
         for (Vertex v : Examples.getWorstCase()) {
@@ -109,7 +116,7 @@ public class TetrahedralizationTest extends TestCase {
         assertEquals(610, L.size());
     }
 
-    public void teztDelete() {
+    public void testDelete() {
         Tetrahedralization T = new Tetrahedralization(new Random(666));
         Vertex N = new Vertex(100, 100, 100);
         T.insert(N);

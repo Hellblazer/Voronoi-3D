@@ -1,9 +1,11 @@
 package com.hellblazer.delaunay;
 
-import junit.framework.TestCase;
+import static junit.framework.Assert.assertEquals;
 
-public class TestVertex extends TestCase {
+import org.junit.Test;
+public class TestVertex  {
 
+    @Test
     public void testOrientation() {
         Vertex[] fourCorners = Tetrahedralization.getFourCorners();
         assertEquals(1, fourCorners[3].orientation(fourCorners[0],
@@ -34,6 +36,7 @@ public class TestVertex extends TestCase {
                                                    fourCorners[0]));
     }
 
+    @Test
     public void testOrientation2() {
         Vertex[] fourCorners = Tetrahedralization.getFourCorners();
         Vertex N = new Vertex(0, 0, 0);
