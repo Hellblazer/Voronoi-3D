@@ -80,16 +80,16 @@ public class OrientedFaceTest extends TestCase {
     }
 
     public void testIsConvex() {
-        Vertex a = new Vertex(0, -100, 0);
-        Vertex b = new Vertex(-100, 0, 0);
-        Vertex c = new Vertex(100, 0, 0);
-        Vertex d = new Vertex(0, 0, -100);
-        Vertex e = new Vertex(0, 0, 100);
+        Vertex a = new Vertex(-1, -1, 1);
+        Vertex b = new Vertex(1, 1, 1);
+        Vertex c = new Vertex(-1, 1, -1);
+        Vertex d = new Vertex(1, -1, -1);
+        Vertex e = new Vertex(-1, 1, 1);
 
         Tetrahedron tA = new Tetrahedron(a, b, c, d);
-        Tetrahedron tB = new Tetrahedron(e, b, c, a);
+        Tetrahedron tB = new Tetrahedron(b, c, a, e);
         tA.setNeighbor(D, tB);
-        tB.setNeighbor(A, tA);
+        tB.setNeighbor(D, tA);
 
         OrientedFace faceAB = tA.getFace(D);
 
@@ -100,16 +100,16 @@ public class OrientedFaceTest extends TestCase {
     }
 
     public void testIsReflex() {
-        Vertex a = new Vertex(0, -100, 0);
-        Vertex b = new Vertex(-100, 0, 0);
-        Vertex c = new Vertex(100, 0, 0);
-        Vertex d = new Vertex(0, -500, -100);
-        Vertex e = new Vertex(0, -500, 100);
+        Vertex a = new Vertex(-1, -1, 1);
+        Vertex b = new Vertex(1, 1, 1);
+        Vertex c = new Vertex(-1, 1, -1);
+        Vertex d = new Vertex(1, -1, -1);
+        Vertex e = new Vertex(-1, 1, 1);
 
         Tetrahedron tA = new Tetrahedron(a, b, c, d);
-        Tetrahedron tB = new Tetrahedron(e, b, c, a);
+        Tetrahedron tB = new Tetrahedron(b, c, a, e);
         tA.setNeighbor(D, tB);
-        tB.setNeighbor(A, tA);
+        tB.setNeighbor(D, tA);
 
         OrientedFace faceAB = tA.getFace(D);
 

@@ -129,10 +129,10 @@ public class Tetrahedralization {
 
     public static Vertex[] getFourCorners() {
         Vertex[] fourCorners = new Vertex[4];
-        fourCorners[0] = new Vertex(1, 1, 1, SCALE);
-        fourCorners[1] = new Vertex(-1, -1, 1, SCALE);
-        fourCorners[2] = new Vertex(-1, 1, -1, SCALE);
-        fourCorners[3] = new Vertex(1, -1, -1, SCALE);
+        fourCorners[0] = new Vertex(-1, 1, -1, SCALE);
+        fourCorners[1] = new Vertex(1, 1, 1, SCALE);
+        fourCorners[2] = new Vertex(1, -1, -1, SCALE);
+        fourCorners[3] = new Vertex(-1, -1, 1, SCALE);
         return fourCorners;
     }
 

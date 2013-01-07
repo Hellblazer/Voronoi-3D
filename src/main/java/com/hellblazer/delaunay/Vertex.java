@@ -179,7 +179,7 @@ public class Vertex {
      *         cospherical
      */
 
-    public final int inSphere(Vertex b, Vertex a, Vertex c, Vertex d) {
+    public final int inSphere(Vertex a, Vertex b, Vertex c, Vertex d) {
         double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x,
                                           c.y, c.z, d.x, d.y, d.z, x, y, z);
         if (result > 0.0) {
@@ -202,12 +202,12 @@ public class Vertex {
      * @return +1 if the orientation of the query point is positive with respect
      *         to the plane, -1 if negative and 0 if the test point is coplanar
      */
-    public final int orientation(Vertex b, Vertex a, Vertex c) {
+    public final int orientation(Vertex a, Vertex b, Vertex c) {
         double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x,
                                              c.y, c.z, x, y, z);
         if (result > 0.0) {
             return 1;
-        } else if(result < 0.0) {
+        } else if (result < 0.0) {
             return -1;
         }
         return 0;
