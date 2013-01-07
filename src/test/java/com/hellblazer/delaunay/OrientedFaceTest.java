@@ -103,8 +103,8 @@ public class OrientedFaceTest extends TestCase {
         Vertex a = new Vertex(-1, -1, 1);
         Vertex b = new Vertex(1, 1, 1);
         Vertex c = new Vertex(-1, 1, -1);
-        Vertex d = new Vertex(1, -1, -1);
-        Vertex e = new Vertex(-1, 1, 1);
+        Vertex d = new Vertex(1, -1, 100);
+        Vertex e = new Vertex(-1, 1, 100);
 
         Tetrahedron tA = new Tetrahedron(a, b, c, d);
         Tetrahedron tB = new Tetrahedron(b, c, a, e);
@@ -112,9 +112,8 @@ public class OrientedFaceTest extends TestCase {
         tB.setNeighbor(D, tA);
 
         OrientedFace faceAB = tA.getFace(D);
-
-        assertTrue(faceAB.isReflex(0));
-        assertFalse(faceAB.isConvex(0));
+        assertFalse(faceAB.isReflex(0));
+        assertTrue(faceAB.isConvex(0));
         assertTrue(faceAB.isReflex(1));
         assertFalse(faceAB.isConvex(1));
         assertFalse(faceAB.isReflex(2));
