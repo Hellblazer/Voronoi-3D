@@ -61,7 +61,6 @@ public abstract class OrientedFace implements Iterable<Vertex> {
         Tetrahedron adjacent = getAdjacent();
         adjacentVertexOrdinal = adjacent == null ? null
                                                 : adjacent.ordinalOf(getIncident());
-        assert orientationOf(getIncidentVertex()) > 0;
     }
 
     /**
