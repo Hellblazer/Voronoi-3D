@@ -2,19 +2,19 @@ package com.hellblazer.delaunay.gui;
 
 /**
  * Copyright (C) 2011 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi GUI
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -52,12 +52,11 @@ import com.hellblazer.delaunay.Vertex;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 /**
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
 
-@SuppressWarnings("restriction")
 public class Inspector {
     private class Listener implements ItemListener {
         @Override
@@ -96,30 +95,17 @@ public class Inspector {
         insp.open();
     }
 
-    public void open() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+    private JCheckBox              displayDelaunay;
 
-    private JRadioButton displayFaces;
-    private JRadioButton displayLines;
-    private JCheckBox displayDelaunay;
-    private JCheckBox displayPoints;
-    private JTable table;
-    private JCheckBox displayVoronoi;
-    private ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+    private JRadioButton           displayFaces;
+    private JRadioButton           displayLines;
+    private JCheckBox              displayPoints;
+    private JCheckBox              displayVoronoi;
+    private JFrame                 frame;
+    private ItemListener           listener = new Listener();
+    private JTable                 table;
+    private ArrayList<Vertex>      vertices = new ArrayList<Vertex>();
     private TetrahedralizationView view;
-    private JFrame frame;
-
-    private ItemListener listener = new Listener();
 
     public Inspector(Tetrahedralization vd) {
         vertices = new ArrayList<Vertex>(vd.getVertices());
@@ -155,6 +141,19 @@ public class Inspector {
         }
         view.update(displayVoronoi.isSelected(), displayDelaunay.isSelected(),
                     displayFaces.isSelected(), displayPoints.isSelected());
+    }
+
+    public void open() {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void createDiagramTypePanel(JComponent aComponent) {

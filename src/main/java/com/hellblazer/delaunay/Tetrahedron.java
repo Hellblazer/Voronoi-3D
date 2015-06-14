@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2009 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi system
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,24 +39,40 @@ import com.hellblazer.utils.collections.IdentitySet;
  * A, B, C and D. The vertices {A, B, C} are positively oriented with respect to
  * the fourth vertex D.
  * <p>
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
-@SuppressWarnings("restriction")
 public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Represents the oriented face opposite vertex C
-     * 
+     *
      * @author hhildebrand
-     * 
+     *
      */
     private class FaceADB extends OrientedFace {
 
         @Override
         public Tetrahedron getAdjacent() {
             return nC;
+        }
+
+        @Override
+        public Vertex[] getEdge(Vertex v) {
+            switch (ordinalOf(v)) {
+                case A: {
+                    return new Vertex[] { d, b };
+                }
+                case D: {
+                    return new Vertex[] { b, a };
+                }
+                case B: {
+                    return new Vertex[] { a, d };
+                }
+                default:
+                    throw new IllegalArgumentException("Invalid vertex ordinal");
+            }
         }
 
         @Override
@@ -160,36 +176,36 @@ public class Tetrahedron implements Iterable<OrientedFace> {
             return "Face ADB";
         }
 
-        @Override
-        public Vertex[] getEdge(Vertex v) {
-            switch (ordinalOf(v)) {
-                case A: {
-                    return new Vertex[] { d, b };
-                }
-                case D: {
-                    return new Vertex[] { b, a };
-                }
-                case B: {
-                    return new Vertex[] { a, d };
-                }
-                default:
-                    throw new IllegalArgumentException("Invalid vertex ordinal");
-            }
-        }
-
     }
 
     /**
      * Represents the oriented face opposite of vertex D
-     * 
+     *
      * @author hhildebrand
-     * 
+     *
      */
     private class FaceBCA extends OrientedFace {
 
         @Override
         public Tetrahedron getAdjacent() {
             return nD;
+        }
+
+        @Override
+        public Vertex[] getEdge(Vertex v) {
+            switch (ordinalOf(v)) {
+                case B: {
+                    return new Vertex[] { c, a };
+                }
+                case C: {
+                    return new Vertex[] { a, b };
+                }
+                case A: {
+                    return new Vertex[] { b, c };
+                }
+                default:
+                    throw new IllegalArgumentException("Invalid vertex ordinal");
+            }
         }
 
         @Override
@@ -295,36 +311,36 @@ public class Tetrahedron implements Iterable<OrientedFace> {
             return "Face BCA";
         }
 
-        @Override
-        public Vertex[] getEdge(Vertex v) {
-            switch (ordinalOf(v)) {
-                case B: {
-                    return new Vertex[] { c, a };
-                }
-                case C: {
-                    return new Vertex[] { a, b };
-                }
-                case A: {
-                    return new Vertex[] { b, c };
-                }
-                default:
-                    throw new IllegalArgumentException("Invalid vertex ordinal");
-            }
-        }
-
     }
 
     /**
      * Represents the oriented face opposite of vertex A
-     * 
+     *
      * @author hhildebrand
-     * 
+     *
      */
     private class FaceCBD extends OrientedFace {
 
         @Override
         public Tetrahedron getAdjacent() {
             return nA;
+        }
+
+        @Override
+        public Vertex[] getEdge(Vertex v) {
+            switch (ordinalOf(v)) {
+                case C: {
+                    return new Vertex[] { b, d };
+                }
+                case B: {
+                    return new Vertex[] { d, c };
+                }
+                case D: {
+                    return new Vertex[] { c, b };
+                }
+                default:
+                    throw new IllegalArgumentException("Invalid vertex ordinal");
+            }
         }
 
         @Override
@@ -428,36 +444,36 @@ public class Tetrahedron implements Iterable<OrientedFace> {
             return "Face CBD";
         }
 
-        @Override
-        public Vertex[] getEdge(Vertex v) {
-            switch (ordinalOf(v)) {
-                case C: {
-                    return new Vertex[] { b, d };
-                }
-                case B: {
-                    return new Vertex[] { d, c };
-                }
-                case D: {
-                    return new Vertex[] { c, b };
-                }
-                default:
-                    throw new IllegalArgumentException("Invalid vertex ordinal");
-            }
-        }
-
     }
 
     /**
      * Represents the oriented face opposite of vertex B
-     * 
+     *
      * @author hhildebrand
-     * 
+     *
      */
     private class FaceDAC extends OrientedFace {
 
         @Override
         public Tetrahedron getAdjacent() {
             return nB;
+        }
+
+        @Override
+        public Vertex[] getEdge(Vertex v) {
+            switch (ordinalOf(v)) {
+                case D: {
+                    return new Vertex[] { a, c };
+                }
+                case A: {
+                    return new Vertex[] { c, d };
+                }
+                case C: {
+                    return new Vertex[] { d, a };
+                }
+                default:
+                    throw new IllegalArgumentException("Invalid vertex ordinal");
+            }
         }
 
         @Override
@@ -561,23 +577,6 @@ public class Tetrahedron implements Iterable<OrientedFace> {
             return "Face DAC";
         }
 
-        @Override
-        public Vertex[] getEdge(Vertex v) {
-            switch (ordinalOf(v)) {
-                case D: {
-                    return new Vertex[] { a, c };
-                }
-                case A: {
-                    return new Vertex[] { c, d };
-                }
-                case C: {
-                    return new Vertex[] { d, a };
-                }
-                default:
-                    throw new IllegalArgumentException("Invalid vertex ordinal");
-            }
-        }
-
     }
 
     /**
@@ -641,7 +640,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Construct a tetrahedron from the four vertices
-     * 
+     *
      * @param x
      * @param y
      * @param z
@@ -663,7 +662,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Construct a tetrahedron from the array of four vertices
-     * 
+     *
      * @param vertices
      */
     public Tetrahedron(Vertex[] vertices) {
@@ -673,7 +672,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Add the four faces defined by the tetrahedron to the list of faces
-     * 
+     *
      * @param faces
      */
     public void addFaces(List<Vertex[]> faces) {
@@ -685,7 +684,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Add the four faces defined by the tetrahedron to the list of faces
-     * 
+     *
      * @param faces
      */
     public void addFacesCoordinates(List<Point3f[]> faces) {
@@ -696,13 +695,13 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     }
 
     /**
-     * 
+     *
      * Perform the 1 -> 4 bistellar flip. This produces 4 new tetrahedron from
      * the original tetrahdron, by inserting the new point in the interior of
      * the receiver tetrahedron. The star set of the newly inserted point is
      * pushed onto the supplied stack.
      * <p>
-     * 
+     *
      * @param n
      *            - the inserted point
      * @param ears
@@ -761,13 +760,13 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Answer the oriented face of the tetrahedron
      * <p>
-     * 
+     *
      * @param v
      *            - the vertex opposite the face
      * @return the OrientedFace
      */
     public OrientedFace getFace(V v) {
-        // return new OrientedFace(this, v);  
+        // return new OrientedFace(this, v);
         switch (v) {
             case A:
                 return new FaceCBD();
@@ -784,7 +783,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Answer the oriented face opposite the vertex
-     * 
+     *
      * @param v
      * @return
      */
@@ -795,7 +794,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Answer the neighbor that is adjacent to the face opposite of the vertex
      * <p>
-     * 
+     *
      * @param v
      *            - the opposing vertex defining the face
      * @return the neighboring tetrahedron, or null if none.
@@ -819,7 +818,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Answer the neighbor that is adjacent to the face opposite of the vertex
      * <p>
-     * 
+     *
      * @param vertex
      * @return
      */
@@ -829,7 +828,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Answer the vertex of the tetrahedron
-     * 
+     *
      * @param v
      *            the vertex
      * @return the vertex
@@ -851,7 +850,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Answer the four vertices that define the tetrahedron
-     * 
+     *
      * @return
      */
     public Vertex[] getVertices() {
@@ -865,7 +864,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Answer true if the query point is contained in the circumsphere of the
      * tetrahedron
-     * 
+     *
      * @param query
      * @return
      */
@@ -876,7 +875,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Answer the iterator over the faces of the tetrahedron
      * <p>
-     * 
+     *
      * @return the iterator of the faces, in the order of the index their
      *         opposite vertex
      */
@@ -906,7 +905,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Answer the vertex indicator of the the point
-     * 
+     *
      * @param v
      *            - the vertex
      * @return the indicator of this vertex or null if not a vertex of this
@@ -933,7 +932,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Answer 1 if the query point is positively oriented with respect to the
      * face opposite the vertex, -1 if negatively oriented, 0 if the query point
      * is coplanar to the face
-     * 
+     *
      * @param face
      * @param query
      * @return
@@ -957,7 +956,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Answer 1 if the query point is positively oriented with respect to the
      * face ADB, -1 if negatively oriented, 0 if the query point is coplanar to
      * the face
-     * 
+     *
      * @param query
      * @return
      */
@@ -969,7 +968,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Answer 1 if the query point is positively oriented with respect to the
      * face BCA, -1 if negatively oriented, 0 if the query point is coplanar to
      * the face
-     * 
+     *
      * @param query
      * @return
      */
@@ -981,7 +980,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Answer 1 if the query point is positively oriented with respect to the
      * face CBD, -1 if negatively oriented, 0 if the query point is coplanar to
      * the face
-     * 
+     *
      * @param query
      * @return
      */
@@ -993,7 +992,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Answer 1 if the query point is positively oriented with respect to the
      * face DAC, -1 if negatively oriented, 0 if the query point is coplanar to
      * the face
-     * 
+     *
      * @param query
      * @return
      */
@@ -1021,7 +1020,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Traverse all the tetradrons in a tetrahedralization, filling in the set
      * of all visited tetrahedron and the vertices defining them
      * <p>
-     * 
+     *
      * @param visited
      *            - the set of visited tetrahedrons
      * @param vertices
@@ -1083,7 +1082,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Answer the canonical ordinal of the opposite vertex of the neighboring
      * tetrahedron
-     * 
+     *
      * @param neighbor
      * @return
      */
@@ -1110,7 +1109,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Patch the new tetrahedron created by a flip of the receiver by seting the
      * neighbor to the value in the receiver
      * <p>
-     * 
+     *
      * @param vOld
      *            - the opposing vertex the neighboring tetrahedron in the
      *            receiver
@@ -1132,7 +1131,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Patch the new tetrahedron created by a flip of the receiver by seting the
      * neighbor to the value in the receiver
      * <p>
-     * 
+     *
      * @param old
      * @param n
      * @param vNew
@@ -1181,7 +1180,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * the line segement defined by the center point and the axis. Terminate the
      * traversal if we have returned to the originating tetrahedron.
      * <p>
-     * 
+     *
      * @param origin
      * @param from
      * @param vC
@@ -1211,7 +1210,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Traverse the points which define the voronoi face defined by the dual of
      * the line segement defined by the center point and the axis.
      * <p>
-     * 
+     *
      * @param vC
      * @param axis
      * @param face
@@ -1233,7 +1232,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Visit the star tetrahedra set of the of the center vertex
-     * 
+     *
      * @param vC
      *            - the center vertex
      * @param visitor
@@ -1246,7 +1245,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     /**
      * Visit the star tetrahedra set of the of the center vertex
-     * 
+     *
      * @param vC
      *            - the center vertex
      * @param visitor

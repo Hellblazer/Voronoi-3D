@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2009 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi GUI
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,9 +30,9 @@ import org.junit.Test;
 import com.hellblazer.delaunay.gui.Examples;
 
 /**
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
 
 public class TetrahedralizationTest {
@@ -55,6 +55,16 @@ public class TetrahedralizationTest {
 
         Set<Tetrahedron> L = T.getTetrahedrons();
         assertEquals(189, L.size());
+    }
+
+    public void testDelete() {
+        Tetrahedralization T = new Tetrahedralization(new Random(666));
+        Vertex N = new Vertex(100, 100, 100);
+        T.insert(N);
+        Vertex O = new Vertex(5000, -1003, 101);
+        T.insert(O);
+        T.delete(N);
+        assertEquals(1, T.getTetrahedrons().size());
     }
 
     @Test
@@ -114,16 +124,6 @@ public class TetrahedralizationTest {
 
         Set<Tetrahedron> L = T.getTetrahedrons();
         assertEquals(610, L.size());
-    }
-
-    public void testDelete() {
-        Tetrahedralization T = new Tetrahedralization(new Random(666));
-        Vertex N = new Vertex(100, 100, 100);
-        T.insert(N);
-        Vertex O = new Vertex(5000, -1003, 101);
-        T.insert(O);
-        T.delete(N);
-        assertEquals(1, T.getTetrahedrons().size());
     }
 
     private void verifyOrder(Vertex[] vertices) {

@@ -3,7 +3,8 @@ package com.hellblazer.delaunay;
 import static junit.framework.Assert.assertEquals;
 
 import org.junit.Test;
-public class TestVertex  {
+
+public class TestVertex {
 
     @Test
     public void testOrientation() {

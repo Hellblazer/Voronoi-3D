@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2009 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi system
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -43,12 +43,11 @@ import com.hellblazer.utils.collections.IdentitySet;
 
 /**
  * A Delaunay tetrahedralization.
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
 
-@SuppressWarnings("restriction")
 public class Tetrahedralization {
     private static class EmptySet<T> extends AbstractSet<T> implements
             Serializable {
@@ -166,7 +165,7 @@ public class Tetrahedralization {
 
     /**
      * Construct a tetrahedralizaion using the supplied random number generator
-     * 
+     *
      * @param random
      */
     public Tetrahedralization(Random random) {
@@ -182,7 +181,7 @@ public class Tetrahedralization {
      * Vertex in a Delaunay Tetrahedralization", H. Ledoux, C.M. Gold and G.
      * Baciu, 2005
      * <p>
-     * 
+     *
      * @param v
      *            - the vertex to be deleted
      */
@@ -203,10 +202,17 @@ public class Tetrahedralization {
         size--;
     }
 
+    public LinkedList<OrientedFace> getEars(Vertex v) {
+        assert v != null && v.getAdjacent() != null;
+        EarSet aggregator = new EarSet();
+        v.getAdjacent().visitStar(v, aggregator);
+        return aggregator.getEars();
+    }
+
     /**
      * Answer the collection of neighboring vertices around the indicated
      * vertex.
-     * 
+     *
      * @param v
      *            - the vertex determining the neighborhood
      * @return the collection of neighboring vertices
@@ -227,9 +233,24 @@ public class Tetrahedralization {
         return neighbors;
     }
 
+    public Deque<OrientedFace> getStar(Vertex v) {
+        assert v != null && v.getAdjacent() != null;
+
+        final Deque<OrientedFace> star = new ArrayDeque<OrientedFace>();
+        v.getAdjacent().visitStar(v, new StarVisitor() {
+
+            @Override
+            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y,
+                              Vertex z) {
+                star.push(t.getFace(vertex));
+            }
+        });
+        return star;
+    }
+
     /**
      * Answer the set of all tetrahedrons in this tetrahedralization
-     * 
+     *
      * @return
      */
     public Set<Tetrahedron> getTetrahedrons() {
@@ -240,7 +261,7 @@ public class Tetrahedralization {
 
     /**
      * Answer the four corners of the universe
-     * 
+     *
      * @return
      */
     public Vertex[] getUniverse() {
@@ -249,7 +270,7 @@ public class Tetrahedralization {
 
     /**
      * Answer the set of all vertices in this tetrahedralization
-     * 
+     *
      * @return
      */
     public Set<Vertex> getVertices() {
@@ -264,7 +285,7 @@ public class Tetrahedralization {
 
     /**
      * Answer the faces of the voronoi region around the vertex
-     * 
+     *
      * @param v
      *            - the vertex of interest
      * @return the list of faces defining the voronoi region defined by v
@@ -298,7 +319,7 @@ public class Tetrahedralization {
      * "Computing the 3D Voronoi Diagram Robustly: An Easy Explanation", by Hugo
      * Ledoux
      * <p>
-     * 
+     *
      * @param v
      *            - the vertex to be inserted
      */
@@ -333,7 +354,7 @@ public class Tetrahedralization {
      * algorithm is ideally suited for incremental deletions and kinetic
      * maintenance of the delaunay tetrahedralization.
      * <p>
-     * 
+     *
      * @param query
      *            - the query point
      * @return
@@ -374,7 +395,7 @@ public class Tetrahedralization {
 
     /**
      * Construct a Tetrahedron which is set up to encompass the numerical span
-     * 
+     *
      * @return
      */
     public Tetrahedron myOwnPrivateIdaho() {
@@ -392,7 +413,7 @@ public class Tetrahedralization {
      * vertices will be filled with all the vertices defining the
      * tetrahedralization.
      * <p>
-     * 
+     *
      * @param tetrahedrons
      * @param vertices
      */
@@ -405,10 +426,10 @@ public class Tetrahedralization {
     /**
      * Perform the 4->1 bistellar flip. This flip is the inverse of the 4->1
      * flip.
-     * 
+     *
      * @param n
      *            - the vertex who's star defines the 4 tetrahedron
-     * 
+     *
      * @return the tetrahedron created from the flip
      */
     protected Tetrahedron flip4to1(Vertex n) {
@@ -487,27 +508,5 @@ public class Tetrahedralization {
             tet.delete();
         }
         return t;
-    }
-
-    public LinkedList<OrientedFace> getEars(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-        EarSet aggregator = new EarSet();
-        v.getAdjacent().visitStar(v, aggregator);
-        return aggregator.getEars();
-    }
-
-    public Deque<OrientedFace> getStar(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-
-        final Deque<OrientedFace> star = new ArrayDeque<OrientedFace>();
-        v.getAdjacent().visitStar(v, new StarVisitor() {
-
-            @Override
-            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y,
-                              Vertex z) {
-                star.push(t.getFace(vertex));
-            }
-        });
-        return star;
     }
 }

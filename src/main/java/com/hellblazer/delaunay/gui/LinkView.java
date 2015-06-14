@@ -15,16 +15,15 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 
 /**
  * A visualization of the link set of a vertex in a delaunay tetrahedralization.
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
-@SuppressWarnings("restriction")
 public class LinkView extends GraphicsView {
-    private static final long serialVersionUID = 1L;
-    private final Vertex v;
+    private static final long        serialVersionUID = 1L;
     private final List<OrientedFace> ears;
-    private final List<Point3f[]> voronoiRegion;
+    private final Vertex             v;
+    private final List<Point3f[]>    voronoiRegion;
 
     public LinkView(GraphicsConfiguration gc, Vertex v,
                     List<OrientedFace> ears, List<Point3f[]> voronoiRegion) {
@@ -51,7 +50,7 @@ public class LinkView extends GraphicsView {
         for (OrientedFace ear : ears) {
             Vertex[] edge = ear.getEdge(v);
             Point3f[] line = new Point3f[] { edge[0].asPoint3f(),
-                                            edge[1].asPoint3f() };
+                    edge[1].asPoint3f() };
             diagram.addChild(newFace(line, false, COLOR_OF_DT));
         }
         diagram.addChild(createSphereAround(v.asPoint3f(),

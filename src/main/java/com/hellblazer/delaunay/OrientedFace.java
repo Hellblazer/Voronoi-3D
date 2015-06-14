@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2009 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi system
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,9 +31,9 @@ import java.util.NoSuchElementException;
 /**
  * An oriented face of a tetrahedron.
  * <p>
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
 
 public abstract class OrientedFace implements Iterable<Vertex> {
@@ -69,7 +69,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * The incident and adjacent tetrahedra form an ear of the star set of
      * tetrahedra adjacent to v.
      * <p>
-     * 
+     *
      * @param index
      *            - the index of the receiver in the list of ears
      * @param ears
@@ -118,7 +118,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
                 return true;
             }
         }
-        // all three faces are visible, no action taken 
+        // all three faces are visible, no action taken
         return false;
     }
 
@@ -126,7 +126,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * Perform the flip which incrementally restores the delaunay condition
      * after the vertex has been inserted into the tetrahedralization.
      * <p>
-     * 
+     *
      * @param n
      *            - the inserted vertex
      * @param ears
@@ -181,7 +181,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
     /**
      * Perform the bistellar flip 2 -> 3. This produces three new tetrahedra
      * from the receiver and tetrahdron that shares the receiver face
-     * 
+     *
      * @return the three created tetrahedron
      */
     public Tetrahedron[] flip2to3() {
@@ -228,7 +228,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * of the face, along with the tetrahedron on the reflexive edge of the
      * face.
      * <p>
-     * 
+     *
      * @param reflexiveEdge
      *            - the vertex opposite the reflexive edge of the face
      * @return the two created tetrahedron
@@ -297,7 +297,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
 
     /**
      * Answer the adjacent tetrahedron to the face
-     * 
+     *
      * @return
      */
     abstract public Tetrahedron getAdjacent();
@@ -305,7 +305,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
     /**
      * Answer the vertex in the adjacent tetrahedron which is opposite of this
      * face.
-     * 
+     *
      * @return
      */
     public Vertex getAdjacentVertex() {
@@ -318,7 +318,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
     /**
      * Answer the canonical ordinal of the vertex in the adjacent tetrahedron
      * which is opposite of this face.
-     * 
+     *
      * @return
      */
     public V getAdjacentVertexOrdinal() {
@@ -326,22 +326,31 @@ public abstract class OrientedFace implements Iterable<Vertex> {
     }
 
     /**
+     * Answer the two vertices defining the edge opposite of the vertex v
+     *
+     * @param v
+     *            - the vertex defining the edge
+     * @return the array of two vertices defining the edge
+     */
+    abstract public Vertex[] getEdge(Vertex v);
+
+    /**
      * Answer the tetrahedron which is incident with this face
-     * 
+     *
      * @return
      */
     abstract public Tetrahedron getIncident();
 
     /**
      * Answer the vertex in the tetrahedron which is opposite of this face
-     * 
+     *
      * @return
      */
     abstract public Vertex getIncidentVertex();
 
     /**
      * Answer the canonical vertex for this face
-     * 
+     *
      * @param anIndex
      * @return
      */
@@ -355,7 +364,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
 
     /**
      * Answer the edge index corresponding to the vertex
-     * 
+     *
      * @param v
      *            - the vertex
      * @return the index of the edge
@@ -366,7 +375,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * Answer true if the faces joined by the edge are concave when viewed from
      * the originating tetrahedron.
      * <p>
-     * 
+     *
      * @param vertex
      *            - the vertex of the face that is opposite of the edge
      * @return true if the faces joined by the edge are convex, false if these
@@ -378,7 +387,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * Answer true if the faces joined by the edge are not concave when viewed
      * from the originating tetrahedron.
      * <p>
-     * 
+     *
      * @param vertex
      *            - the vertex of the face that is opposite of the edge
      * @return true if the faces joined by the edge are reflex, false if these
@@ -389,7 +398,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
     /**
      * Answer true if the vertex in the adjacent tetrahedron is not contained in
      * the circumsphere of the incident tetrahedron
-     * 
+     *
      * @return
      */
     public boolean isRegular() {
@@ -424,19 +433,10 @@ public abstract class OrientedFace implements Iterable<Vertex> {
     }
 
     /**
-     * Answer the two vertices defining the edge opposite of the vertex v
-     * 
-     * @param v
-     *            - the vertex defining the edge
-     * @return the array of two vertices defining the edge
-     */
-    abstract public Vertex[] getEdge(Vertex v);
-
-    /**
      * Answer +1 if the orientation of the query point is positive with respect
      * to this face, -1 if negative and 0 if the test point is coplanar with the
      * face
-     * 
+     *
      * @param query
      *            - the point to be tested
      * @return +1 if the orientation of the query point is positive with respect

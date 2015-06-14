@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2009 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi GUI
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -37,26 +37,27 @@ import com.hellblazer.utils.collections.IdentitySet;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 /**
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
 
-@SuppressWarnings("restriction")
 public class TetrahedralizationView extends GraphicsView {
     /**
-     * 
+     *
      */
-    private static final long serialVersionUID = 1L;
-    private List<Point3f[]> delaunayFaces = new ArrayList<Point3f[]>();
-    private Set<Point3f> fourCorners = new HashSet<Point3f>();
-    private BranchGroup highlightedRegions;
-    private Tetrahedralization tetrahedralization;
-    private Set<Tetrahedron> tetrahedrons = new IdentitySet<Tetrahedron>(100);
+    private static final long      serialVersionUID = 1L;
+    private List<Point3f[]>        delaunayFaces    = new ArrayList<Point3f[]>();
+    private Set<Point3f>           fourCorners      = new HashSet<Point3f>();
+    private BranchGroup            highlightedRegions;
     private TransparencyAttributes highlightTransparency;
-    private final Set<Vertex> vertices = new IdentitySet<Vertex>(100);
-    final TransparencyAttributes diagramTransparency;
-    private List<Point3f[]> voronoiFaces = new ArrayList<Point3f[]>();
+    private Tetrahedralization     tetrahedralization;
+    private Set<Tetrahedron>       tetrahedrons     = new IdentitySet<Tetrahedron>(
+                                                                                   100);
+    private final Set<Vertex>      vertices         = new IdentitySet<Vertex>(
+                                                                              100);
+    private List<Point3f[]>        voronoiFaces     = new ArrayList<Point3f[]>();
+    final TransparencyAttributes   diagramTransparency;
 
     public TetrahedralizationView() {
         this(new Tetrahedralization());

@@ -12,11 +12,7 @@ import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Vertex;
 
-@SuppressWarnings("restriction")
 public class LinkInspector {
-    private final JFrame frame;
-    private final LinkView view;
-
     public static void main(String[] argv) {
         final Tetrahedralization tet = new Tetrahedralization(new Random(666));
         Vertex[] vertices = Examples.getCubicCrystalStructure();
@@ -27,7 +23,12 @@ public class LinkInspector {
         new LinkInspector(v, tet.getEars(v), tet.getVoronoiRegion(v)).open();
     }
 
-    public LinkInspector(Vertex v, List<OrientedFace> ears, List<Point3f[]> voronoiRegion) {
+    private final JFrame   frame;
+
+    private final LinkView view;
+
+    public LinkInspector(Vertex v, List<OrientedFace> ears,
+                         List<Point3f[]> voronoiRegion) {
         frame = new JFrame();
         view = new LinkView(v, ears, voronoiRegion);
         frame.setBounds(100, 100, 800, 600);

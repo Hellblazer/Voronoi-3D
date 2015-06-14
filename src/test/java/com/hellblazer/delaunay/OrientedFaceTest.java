@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2009 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi GUI
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,18 +32,18 @@ import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
 
 public class OrientedFaceTest {
 
     @Test
     public void testFlip2to3() {
-        Vertex a = new Vertex(0, -100, 0);
-        Vertex b = new Vertex(-100, 0, 0);
-        Vertex c = new Vertex(100, 0, 0);
+        Vertex a = new Vertex(0, 100, 0);
+        Vertex b = new Vertex(100, 0, 0);
+        Vertex c = new Vertex(50, 50, 0);
         Vertex d = new Vertex(0, -50, -100);
         Vertex e = new Vertex(0, -50, 100);
 
