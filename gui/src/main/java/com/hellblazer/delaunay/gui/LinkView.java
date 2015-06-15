@@ -50,7 +50,7 @@ public class LinkView extends GraphicsView {
         for (OrientedFace ear : ears) {
             Vertex[] edge = ear.getEdge(v);
             Point3f[] line = new Point3f[] { edge[0].asPoint3f(),
-                                             edge[1].asPoint3f() };
+                    edge[1].asPoint3f() };
             diagram.addChild(newFace(line, false, COLOR_OF_DT));
         }
         diagram.addChild(createSphereAround(v.asPoint3f(),

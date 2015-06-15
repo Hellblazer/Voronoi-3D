@@ -53,9 +53,9 @@ public class TetrahedralizationView extends GraphicsView {
     private TransparencyAttributes highlightTransparency;
     private Tetrahedralization     tetrahedralization;
     private Set<Tetrahedron>       tetrahedrons     = new IdentitySet<Tetrahedron>(
-            100);
+                                                                                   100);
     private final Set<Vertex>      vertices         = new IdentitySet<Vertex>(
-            100);
+                                                                              100);
     private List<Point3f[]>        voronoiFaces     = new ArrayList<Point3f[]>();
     final TransparencyAttributes   diagramTransparency;
 
@@ -97,7 +97,7 @@ public class TetrahedralizationView extends GraphicsView {
             if (highlightedRegions != null) {
                 for (int i = 0; i < diagram.numChildren(); i++) {
                     if (diagram != null
-                            && diagram.getChild(i).equals(highlightedRegions)) {
+                        && diagram.getChild(i).equals(highlightedRegions)) {
                         diagram.removeChild(i);
                     }
                 }

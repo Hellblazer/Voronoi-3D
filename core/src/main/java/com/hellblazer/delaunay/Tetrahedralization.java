@@ -50,7 +50,7 @@ import com.hellblazer.utils.collections.IdentitySet;
 
 public class Tetrahedralization {
     private static class EmptySet<T> extends AbstractSet<T> implements
-    Serializable {
+            Serializable {
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -109,17 +109,17 @@ public class Tetrahedralization {
      * location.
      */
     private static final V[][][] ORDER    = new V[][][] {
-                                                         { { B, C, D }, { C, B, D }, { C, D, B }, { B, D, C }, { D, B, C },
-                                                             { D, C, B } },
+            { { B, C, D }, { C, B, D }, { C, D, B }, { B, D, C }, { D, B, C },
+            { D, C, B } },
 
-                                                             { { A, C, D }, { C, A, D }, { C, D, A }, { A, D, C }, { D, A, C },
-                                                                 { D, C, A } },
+            { { A, C, D }, { C, A, D }, { C, D, A }, { A, D, C }, { D, A, C },
+            { D, C, A } },
 
-                                                                 { { B, A, D }, { A, B, D }, { A, D, B }, { B, D, A }, { D, B, A },
-                                                                     { D, A, B } },
+            { { B, A, D }, { A, B, D }, { A, D, B }, { B, D, A }, { D, B, A },
+            { D, A, B } },
 
-                                                                     { { B, C, A }, { C, B, A }, { C, A, B }, { B, A, C }, { A, B, C },
-                                                                         { A, C, B } }                };
+            { { B, C, A }, { C, B, A }, { C, A, B }, { B, A, C }, { A, B, C },
+            { A, C, B } }                };
 
     /**
      * Scale of the universe

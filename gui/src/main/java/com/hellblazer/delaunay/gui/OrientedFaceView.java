@@ -39,12 +39,12 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  */
 public class OrientedFaceView extends GraphicsView {
     private static final long  serialVersionUID = 1L;
-    private final OrientedFace face;
-    private Point3f[]          myFace           = new Point3f[3];
-    private Point3f            incident;
     private Point3f            adjacent;
-    private List<Point3f[]>    incidentFaces    = new ArrayList<Point3f[]>();
     private List<Point3f[]>    adjacentFaces    = new ArrayList<Point3f[]>();
+    private final OrientedFace face;
+    private Point3f            incident;
+    private List<Point3f[]>    incidentFaces    = new ArrayList<Point3f[]>();
+    private Point3f[]          myFace           = new Point3f[3];
 
     public OrientedFaceView(OrientedFace face) {
         this(face, SimpleUniverse.getPreferredConfiguration());

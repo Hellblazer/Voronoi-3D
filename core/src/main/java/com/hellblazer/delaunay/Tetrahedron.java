@@ -96,7 +96,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return b;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + v);
+                                                       + v);
             }
         }
 
@@ -143,7 +143,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(a, d, c) == -1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -162,7 +162,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(a, d, c) == 1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -229,7 +229,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return a;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + v);
+                                                       + v);
             }
         }
 
@@ -277,7 +277,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(b, c, d) == -1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -297,7 +297,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(b, c, d) == 1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -364,7 +364,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return d;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + v);
+                                                       + v);
             }
         }
 
@@ -411,7 +411,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(c, b, a) == -1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -430,7 +430,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(c, b, a) == 1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -497,7 +497,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return c;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + v);
+                                                       + v);
             }
         }
 
@@ -544,7 +544,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(d, a, b) == -1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -563,7 +563,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                     return adjacentVertex.orientation(d, a, b) == 1;
                 default:
                     throw new IllegalArgumentException("Invalid vertex index: "
-                            + vertex);
+                                                       + vertex);
             }
         }
 
@@ -583,20 +583,20 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Matrix used to determine the next neighbor in a voronoi face traversal
      */
     private static final V[][][] VORONOI_FACE_NEXT   = {
-                                                        { null, { null, null, D, C }, { null, D, null, B },
-                                                            { null, C, B, null } },
-                                                            { { null, null, D, C }, null, { D, null, null, A },
-                                                                { C, null, A, null } },
-                                                                { { null, D, null, B }, { D, null, null, A }, null,
-                                                                    { B, A, null, null } },
-                                                                    { { null, C, B, null }, { C, null, A, null }, { B, A, null, null },
-                                                                        null }                                  };
+            { null, { null, null, D, C }, { null, D, null, B },
+            { null, C, B, null } },
+            { { null, null, D, C }, null, { D, null, null, A },
+            { C, null, A, null } },
+            { { null, D, null, B }, { D, null, null, A }, null,
+            { B, A, null, null } },
+            { { null, C, B, null }, { C, null, A, null }, { B, A, null, null },
+            null }                                  };
 
     /**
      * Matrix used to determine the origin neighbor in a vororoni face traversal
      */
     private static final V[][]   VORONOI_FACE_ORIGIN = { { null, C, D, B },
-                                                         { C, null, D, A }, { D, A, null, B }, { B, C, A, null } };
+            { C, null, D, A }, { D, A, null, B }, { B, C, A, null } };
 
     /**
      * Vertex A
@@ -811,7 +811,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                 return nD;
             default:
                 throw new IllegalArgumentException("Invalid opposing vertex: "
-                        + v);
+                                                   + v);
         }
     }
 
@@ -883,7 +883,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     public Iterator<OrientedFace> iterator() {
         return new Iterator<OrientedFace>() {
             OrientedFace[] faces = { getFace(A), getFace(B), getFace(C),
-                                     getFace(D) };
+                                         getFace(D) };
             int            i     = 0;
 
             @Override

@@ -15,9 +15,6 @@ import com.hellblazer.delaunay.V;
 import com.hellblazer.delaunay.Vertex;
 
 public class OrientedFaceInspector {
-    private final JFrame           frame;
-    private final OrientedFaceView view;
-
     public static void main(String[] argv) {
         final Tetrahedralization tet = new Tetrahedralization(new Random(666));
         for (Vertex v : Examples.getCubicCrystalStructure()) {
@@ -29,6 +26,10 @@ public class OrientedFaceInspector {
                                                                tets.get(2).getFace(V.C));
         insp.open();
     }
+
+    private final JFrame           frame;
+
+    private final OrientedFaceView view;
 
     public OrientedFaceInspector(OrientedFace face) {
         frame = new JFrame();

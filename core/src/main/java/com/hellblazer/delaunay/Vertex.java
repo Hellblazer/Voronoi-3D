@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2009 Hal Hildebrand. All rights reserved.
- * 
+ *
  * This file is part of the 3D Incremental Voronoi system
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as 
+ * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,36 +26,21 @@ import javax.vecmath.Point3f;
 import com.hellblazer.utils.math.Geometry;
 
 /**
- * 
+ *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
- * 
+ *
  */
 public class Vertex {
-
-    public final double x;
-    public final double y;
-    public final double z;
-
-    /**
-     * One of the tetrahedra adjacent to the vertex
-     */
-    private Tetrahedron adjacent;
-
-    /**
-     * The number of tetrahedra adjacent to the vertex
-     */
-    private int         order   = 0;
 
     /**
      * Minimal zero
      */
     static final double EPSILON = Math.pow(10D, -20D);
-
     static final Vertex ORIGIN  = new Vertex(0, 0, 0);
 
     /**
      * Create some random points in a sphere
-     * 
+     *
      * @param random
      * @param numberOfPoints
      * @param radius
@@ -81,7 +66,7 @@ public class Vertex {
 
     /**
      * Generate a bounded random double
-     * 
+     *
      * @param random
      * @param min
      * @param max
@@ -101,7 +86,7 @@ public class Vertex {
 
     /**
      * Generate a random point
-     * 
+     *
      * @param random
      * @param min
      * @param max
@@ -111,6 +96,22 @@ public class Vertex {
         return new Vertex(random(random, min, max), random(random, min, max),
                           random(random, min, max));
     }
+
+    public final double x;
+
+    public final double y;
+
+    public final double z;
+
+    /**
+     * One of the tetrahedra adjacent to the vertex
+     */
+    private Tetrahedron adjacent;
+
+    /**
+     * The number of tetrahedra adjacent to the vertex
+     */
+    private int         order = 0;
 
     public Vertex(double i, double j, double k) {
         x = i;
@@ -145,7 +146,7 @@ public class Vertex {
 
     /**
      * Answer one of the adjacent tetrahedron
-     * 
+     *
      * @return
      */
     public final Tetrahedron getAdjacent() {
@@ -156,7 +157,7 @@ public class Vertex {
      * Answer the number of tetrahedra adjacent to the receiver vertex in the
      * tetrahedralization
      * <p>
-     * 
+     *
      * @return
      */
     public final int getOrder() {
@@ -170,7 +171,7 @@ public class Vertex {
      * orientation (as defined by {@link #orientation(Vertex, Vertex, Vertex)}),
      * or the sign of the result will be reversed.
      * <p>
-     * 
+     *
      * @param a
      *            , b, c, d - the points defining the sphere, in oriented order
      * @return +1 if the receiver lies inside the sphere passing through a, b,
@@ -195,7 +196,7 @@ public class Vertex {
      * the plane defined by {a, b, c}, -1 if negative, or 0 if the test point is
      * coplanar
      * <p>
-     * 
+     *
      * @param a
      *            , b, c - the points defining the plane
      * @return +1 if the orientation of the query point is positive with respect
@@ -223,7 +224,7 @@ public class Vertex {
     /**
      * Note one of the adjacent tetrahedron
      * <p>
-     * 
+     *
      * @param tetrahedron
      */
     public final void setAdjacent(Tetrahedron tetrahedron) {

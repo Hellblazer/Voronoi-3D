@@ -30,14 +30,20 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class GraphicsView extends Canvas3D {
 
-    protected static final Color3f DEFAULT_COLOR                         = new Color3f(
-                                                                                       1.0F,
-                                                                                       1.0F,
-                                                                                       1.0F);
     private static final Color3f   BACKGROUND_COLOR                      = new Color3f(
                                                                                        0.0F,
                                                                                        0.0F,
                                                                                        0.0F);
+    private static final int       NODE_ALLOW_AUTO_COMPUTE_BOUNDS_WRITE  = 10;
+    private static final int       NODE_ALLOW_LOCAL_TO_VWORLD_READ       = 11;
+    private static final int       NODE_ENABLE_PICK_REPORTING            = 1;
+    private static final long      serialVersionUID                      = 1L;
+    private static final int       TRANSFORM_GROUP_ALLOW_TRANSFORM_READ  = 17;
+    private static final int       TRANSFORM_GROUP_ALLOW_TRANSFORM_WRITE = 18;
+    private static final Vector3f  VIEW_POSITION                         = new Vector3f(
+                                                                                        0.0F,
+                                                                                        0.0F,
+                                                                                        0.0F);
     protected static final int     BRANCH_GROUP_ALLOW_DETACH             = 17;
     protected static final Color3f COLOR_OF_DT                           = new Color3f(
                                                                                        1.0F,
@@ -51,19 +57,13 @@ public class GraphicsView extends Canvas3D {
                                                                                        1.0F,
                                                                                        1.0F,
                                                                                        1.0F);
+    protected static final Color3f DEFAULT_COLOR                         = new Color3f(
+                                                                                       1.0F,
+                                                                                       1.0F,
+                                                                                       1.0F);
     protected static final int     GROUP_ALLOW_CHILDREN_EXTEND           = 14;
     protected static final int     GROUP_ALLOW_CHILDREN_READ             = 12;
     protected static final int     GROUP_ALLOW_CHILDREN_WRITE            = 13;
-    private static final int       NODE_ALLOW_AUTO_COMPUTE_BOUNDS_WRITE  = 10;
-    private static final int       NODE_ALLOW_LOCAL_TO_VWORLD_READ       = 11;
-    private static final int       NODE_ENABLE_PICK_REPORTING            = 1;
-    private static final long      serialVersionUID                      = 1L;
-    private static final int       TRANSFORM_GROUP_ALLOW_TRANSFORM_READ  = 17;
-    private static final int       TRANSFORM_GROUP_ALLOW_TRANSFORM_WRITE = 18;
-    private static final Vector3f  VIEW_POSITION                         = new Vector3f(
-                                                                                        0.0F,
-                                                                                        0.0F,
-                                                                                        0.0F);
 
     protected static Point3f[] convertToPoint3f(List<Vertex> somePoints) {
         Point3f tmp[] = new Point3f[somePoints.size()];
@@ -75,9 +75,9 @@ public class GraphicsView extends Canvas3D {
         return tmp;
     }
 
+    private BranchGroup      scene;
     protected BranchGroup    diagram;
     protected TransformGroup transformGroup;
-    private BranchGroup      scene;
 
     public GraphicsView(GraphicsConfiguration gc) {
         super(gc);

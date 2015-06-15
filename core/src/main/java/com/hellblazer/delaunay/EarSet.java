@@ -45,11 +45,11 @@ public class EarSet implements StarVisitor {
             if (obj instanceof Ear) {
                 Ear ear = (Ear) obj;
                 if (face.getIncident() == ear.face.getIncident()
-                        && face.getAdjacent() == ear.face.getAdjacent()) {
+                    && face.getAdjacent() == ear.face.getAdjacent()) {
                     return true;
                 }
                 if (face.getAdjacent() == ear.face.getIncident()
-                        && face.getIncident() == ear.face.getAdjacent()) {
+                    && face.getIncident() == ear.face.getAdjacent()) {
                     return true;
                 }
             }
