@@ -17,11 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.hellblazer.delaunay.gui;
+package com.hellblazer.delaunay;
 
 import java.util.ArrayList;
-
-import com.hellblazer.delaunay.Vertex;
 
 /**
  * 

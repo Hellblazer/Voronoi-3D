@@ -8,6 +8,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.vecmath.Point3f;
 
+import com.hellblazer.delaunay.Examples;
 import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Vertex;

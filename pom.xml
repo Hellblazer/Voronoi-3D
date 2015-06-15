@@ -12,10 +12,16 @@
 
     <modules>
         <module>core</module>
+        <module>gui</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <version>${project.version}</version>
+                <artifactId>voronoi-3d</artifactId>
+            </dependency>
             <dependency>
                 <groupId>java3d</groupId>
                 <artifactId>vecmath</artifactId>

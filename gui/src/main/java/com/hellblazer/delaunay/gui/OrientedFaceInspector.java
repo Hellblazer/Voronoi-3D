@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import com.hellblazer.delaunay.Examples;
 import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Tetrahedron;
@@ -14,7 +15,7 @@ import com.hellblazer.delaunay.V;
 import com.hellblazer.delaunay.Vertex;
 
 public class OrientedFaceInspector {
-    private final JFrame frame;
+    private final JFrame           frame;
     private final OrientedFaceView view;
 
     public static void main(String[] argv) {
@@ -22,8 +23,10 @@ public class OrientedFaceInspector {
         for (Vertex v : Examples.getCubicCrystalStructure()) {
             tet.insert(v);
         }
-        ArrayList<Tetrahedron> tets = new ArrayList<Tetrahedron>(tet.getTetrahedrons());
-        OrientedFaceInspector insp = new OrientedFaceInspector(tets.get(2).getFace(V.C));
+        ArrayList<Tetrahedron> tets = new ArrayList<Tetrahedron>(
+                                                                 tet.getTetrahedrons());
+        OrientedFaceInspector insp = new OrientedFaceInspector(
+                                                               tets.get(2).getFace(V.C));
         insp.open();
     }
 

@@ -27,8 +27,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.hellblazer.delaunay.gui.Examples;
-
 /**
  * 
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>

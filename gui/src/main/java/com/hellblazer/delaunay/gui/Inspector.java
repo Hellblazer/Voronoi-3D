@@ -47,6 +47,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.hellblazer.delaunay.Examples;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Vertex;
 import com.sun.j3d.utils.universe.SimpleUniverse;
@@ -158,7 +159,7 @@ public class Inspector {
 
     private void createDiagramTypePanel(JComponent aComponent) {
         aComponent.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                "Type"));
+                                                              "Type"));
         displayVoronoi = new JCheckBox("VD", true);
         displayVoronoi.setToolTipText("Toggle to show Voronoi diagram");
         aComponent.add(displayVoronoi);
@@ -172,7 +173,7 @@ public class Inspector {
 
     private void createShowingPanel(JComponent aComponent) {
         javax.swing.border.TitledBorder bF = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                "Show");
+                                                                              "Show");
         aComponent.setBorder(bF);
         Box showBox = Box.createVerticalBox();
         Box radioButtonBox = Box.createHorizontalBox();
@@ -215,7 +216,7 @@ public class Inspector {
             aComponent = new JPanel();
         }
         javax.swing.border.TitledBorder bF = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                "Transparency");
+                                                                              "Transparency");
         aComponent.setBorder(bF);
         ChangeListener sliderListener = new ChangeListener() {
 
