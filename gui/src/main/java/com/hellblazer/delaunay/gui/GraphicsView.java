@@ -30,37 +30,19 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class GraphicsView extends Canvas3D {
 
-    private static final Color3f   BACKGROUND_COLOR                      = new Color3f(
-                                                                                       0.0F,
-                                                                                       0.0F,
-                                                                                       0.0F);
+    private static final Color3f   BACKGROUND_COLOR                      = new Color3f(0.0F, 0.0F, 0.0F);
     private static final int       NODE_ALLOW_AUTO_COMPUTE_BOUNDS_WRITE  = 10;
     private static final int       NODE_ALLOW_LOCAL_TO_VWORLD_READ       = 11;
     private static final int       NODE_ENABLE_PICK_REPORTING            = 1;
     private static final long      serialVersionUID                      = 1L;
     private static final int       TRANSFORM_GROUP_ALLOW_TRANSFORM_READ  = 17;
     private static final int       TRANSFORM_GROUP_ALLOW_TRANSFORM_WRITE = 18;
-    private static final Vector3f  VIEW_POSITION                         = new Vector3f(
-                                                                                        0.0F,
-                                                                                        0.0F,
-                                                                                        0.0F);
+    private static final Vector3f  VIEW_POSITION                         = new Vector3f(0.0F, 0.0F, 0.0F);
     protected static final int     BRANCH_GROUP_ALLOW_DETACH             = 17;
-    protected static final Color3f COLOR_OF_DT                           = new Color3f(
-                                                                                       1.0F,
-                                                                                       1.0F,
-                                                                                       0.0F);
-    protected static final Color3f COLOR_OF_HIGHLIGHTED_REGION           = new Color3f(
-                                                                                       1.0F,
-                                                                                       0.0F,
-                                                                                       0.0F);
-    protected static final Color3f COLOR_OF_VD                           = new Color3f(
-                                                                                       1.0F,
-                                                                                       1.0F,
-                                                                                       1.0F);
-    protected static final Color3f DEFAULT_COLOR                         = new Color3f(
-                                                                                       1.0F,
-                                                                                       1.0F,
-                                                                                       1.0F);
+    protected static final Color3f COLOR_OF_DT                           = new Color3f(1.0F, 1.0F, 0.0F);
+    protected static final Color3f COLOR_OF_HIGHLIGHTED_REGION           = new Color3f(1.0F, 0.0F, 0.0F);
+    protected static final Color3f COLOR_OF_VD                           = new Color3f(1.0F, 1.0F, 1.0F);
+    protected static final Color3f DEFAULT_COLOR                         = new Color3f(1.0F, 1.0F, 1.0F);
     protected static final int     GROUP_ALLOW_CHILDREN_EXTEND           = 14;
     protected static final int     GROUP_ALLOW_CHILDREN_READ             = 12;
     protected static final int     GROUP_ALLOW_CHILDREN_WRITE            = 13;
@@ -109,15 +91,12 @@ public class GraphicsView extends Canvas3D {
         transformGroup = new TransformGroup();
         transformGroup.setCapability(GROUP_ALLOW_CHILDREN_READ);
         setCapabilities(transformGroup);
-        PickRotateBehavior pickRotate = new PickRotateBehavior(scene, this,
-                                                               bounds);
+        PickRotateBehavior pickRotate = new PickRotateBehavior(scene, this, bounds);
         pickRotate.setCapability(GROUP_ALLOW_CHILDREN_READ);
         scene.addChild(pickRotate);
         PickZoomBehavior pickZoom = new PickZoomBehavior(scene, this, bounds);
         scene.addChild(pickZoom);
-        PickTranslateBehavior pickTranslate = new PickTranslateBehavior(scene,
-                                                                        this,
-                                                                        bounds);
+        PickTranslateBehavior pickTranslate = new PickTranslateBehavior(scene, this, bounds);
         pickTranslate.setCapability(GROUP_ALLOW_CHILDREN_READ);
         scene.addChild(pickTranslate);
         scene.addChild(transformGroup);
@@ -127,8 +106,7 @@ public class GraphicsView extends Canvas3D {
         simpleUniverse.addBranchGraph(scene);
     }
 
-    protected TransformGroup createSphereAround(Point3f aPoint3f,
-                                                Color3f aColor, double aRadius) {
+    protected TransformGroup createSphereAround(Point3f aPoint3f, Color3f aColor, double aRadius) {
         ColoringAttributes cA = new ColoringAttributes();
         cA.setColor(aColor);
         Appearance app = new Appearance();
@@ -147,8 +125,8 @@ public class GraphicsView extends Canvas3D {
         return sphereTG;
     }
 
-    protected void displaySpheres(Collection<Vertex> selected, float aRadius,
-                                  Color3f aColor, BranchGroup aBranchGroup) {
+    protected void displaySpheres(Collection<Vertex> selected, float aRadius, Color3f aColor,
+                                  BranchGroup aBranchGroup) {
         BranchGroup pointsBG = new BranchGroup();
         for (Vertex v : selected) {
             pointsBG.addChild(createSphereAround(v.asPoint3f(), aColor, aRadius));
@@ -203,9 +181,7 @@ public class GraphicsView extends Canvas3D {
         }
         Shape3D face = new Shape3D();
         if (triangle) {
-            TriangleArray faceTriangleArray = new TriangleArray(
-                                                                (points.length - 2) * 3,
-                                                                5);
+            TriangleArray faceTriangleArray = new TriangleArray((points.length - 2) * 3, 5);
             Point3f tmpPoint[] = new Point3f[(points.length - 2) * 3];
             for (int i = 0; i < points.length - 2; i++) {
                 tmpPoint[i * 3 + 0] = points[0];
@@ -233,8 +209,7 @@ public class GraphicsView extends Canvas3D {
         return face;
     }
 
-    protected void render(List<Point3f[]> region, Color3f color,
-                          BranchGroup group, boolean showFaces,
+    protected void render(List<Point3f[]> region, Color3f color, BranchGroup group, boolean showFaces,
                           Appearance appearance) {
         appearance.setPolygonAttributes(new PolygonAttributes(2, 0, 0.0F));
         for (Point3f[] face : region) {

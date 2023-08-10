@@ -42,6 +42,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -62,9 +63,8 @@ public class Inspector {
     private class Listener implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent e) {
-            view.update(displayVoronoi.isSelected(),
-                        displayDelaunay.isSelected(),
-                        displayFaces.isSelected(), displayPoints.isSelected());
+            view.update(displayVoronoi.isSelected(), displayDelaunay.isSelected(), displayFaces.isSelected(),
+                        displayPoints.isSelected());
             highlightVoronoiRegions();
         }
     }
@@ -72,7 +72,7 @@ public class Inspector {
     private class TableSelectionListener implements ListSelectionListener {
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            List<Vertex> selectedVertices = new ArrayList<Vertex>();
+            List<Vertex> selectedVertices = new ArrayList<>();
             for (int selected : table.getSelectedRows()) {
                 selectedVertices.add(vertices.get(selected));
             }
@@ -84,8 +84,7 @@ public class Inspector {
         }
     }
 
-    public static final Color COLOR_OF_SELECTED_ROWS = new Color(1.0F, 0.0F,
-                                                                 0.0F);
+    public static final Color COLOR_OF_SELECTED_ROWS = new Color(1.0F, 0.0F, 0.0F);
 
     public static void main(String args[]) {
         final Tetrahedralization tet = new Tetrahedralization(new Random(666));
@@ -96,7 +95,7 @@ public class Inspector {
         insp.open();
     }
 
-    private JCheckBox              displayDelaunay;
+    private JCheckBox displayDelaunay;
 
     private JRadioButton           displayFaces;
     private JRadioButton           displayLines;
@@ -105,43 +104,32 @@ public class Inspector {
     private JFrame                 frame;
     private ItemListener           listener = new Listener();
     private JTable                 table;
-    private ArrayList<Vertex>      vertices = new ArrayList<Vertex>();
+    private ArrayList<Vertex>      vertices = new ArrayList<>();
     private TetrahedralizationView view;
 
     public Inspector(Tetrahedralization vd) {
-        vertices = new ArrayList<Vertex>(vd.getVertices());
+        vertices = new ArrayList<>(vd.getVertices());
         frame = new JFrame();
         frame.setBounds(100, 100, 800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         displayPoints = new JCheckBox();
-        view = new TetrahedralizationView(
-                                          SimpleUniverse.getPreferredConfiguration(),
-                                          vd);
+        view = new TetrahedralizationView(SimpleUniverse.getPreferredConfiguration(), vd);
         try {
             frame.getContentPane().setLayout(new BorderLayout());
             frame.getContentPane().add("Center", view);
             createWestControlPanel();
             if (displayVoronoi.isEnabled()) {
-                displayVoronoi.getItemListeners()[0].itemStateChanged(new ItemEvent(
-                                                                                    displayVoronoi,
-                                                                                    701,
-                                                                                    null,
-                                                                                    1));
+                displayVoronoi.getItemListeners()[0].itemStateChanged(new ItemEvent(displayVoronoi, 701, null, 1));
             }
             if (displayDelaunay.isEnabled()) {
-                displayDelaunay.getItemListeners()[0].itemStateChanged(new ItemEvent(
-                                                                                     displayDelaunay,
-                                                                                     701,
-                                                                                     null,
-                                                                                     1));
+                displayDelaunay.getItemListeners()[0].itemStateChanged(new ItemEvent(displayDelaunay, 701, null, 1));
             }
         } catch (Throwable t) {
             t.printStackTrace();
-            JOptionPane.showMessageDialog(frame.getParent(),
-                                          "An unexpected error occured!\n" + t);
+            JOptionPane.showMessageDialog(frame.getParent(), "An unexpected error occured!\n" + t);
         }
-        view.update(displayVoronoi.isSelected(), displayDelaunay.isSelected(),
-                    displayFaces.isSelected(), displayPoints.isSelected());
+        view.update(displayVoronoi.isSelected(), displayDelaunay.isSelected(), displayFaces.isSelected(),
+                    displayPoints.isSelected());
     }
 
     public void open() {
@@ -158,8 +146,7 @@ public class Inspector {
     }
 
     private void createDiagramTypePanel(JComponent aComponent) {
-        aComponent.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                                                              "Type"));
+        aComponent.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Type"));
         displayVoronoi = new JCheckBox("VD", true);
         displayVoronoi.setToolTipText("Toggle to show Voronoi diagram");
         aComponent.add(displayVoronoi);

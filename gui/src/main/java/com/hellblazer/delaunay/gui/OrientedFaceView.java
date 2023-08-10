@@ -40,10 +40,10 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 public class OrientedFaceView extends GraphicsView {
     private static final long  serialVersionUID = 1L;
     private Point3f            adjacent;
-    private List<Point3f[]>    adjacentFaces    = new ArrayList<Point3f[]>();
+    private List<Point3f[]>    adjacentFaces    = new ArrayList<>();
     private final OrientedFace face;
     private Point3f            incident;
-    private List<Point3f[]>    incidentFaces    = new ArrayList<Point3f[]>();
+    private List<Point3f[]>    incidentFaces    = new ArrayList<>();
     private Point3f[]          myFace           = new Point3f[3];
 
     public OrientedFaceView(OrientedFace face) {
@@ -65,14 +65,12 @@ public class OrientedFaceView extends GraphicsView {
             diagram.addChild(createSphereAround(p, COLOR_OF_VD, 0.01F));
         }
         Appearance appearance = getCapabilities();
-        diagram.addChild(createSphereAround(incident,
-                                            COLOR_OF_HIGHLIGHTED_REGION, 0.01F));
+        diagram.addChild(createSphereAround(incident, COLOR_OF_HIGHLIGHTED_REGION, 0.01F));
         if (adjacent != null) {
             diagram.addChild(createSphereAround(adjacent, COLOR_OF_DT, 0.01F));
             render(adjacentFaces, COLOR_OF_DT, diagram, false, appearance);
         }
-        render(incidentFaces, COLOR_OF_HIGHLIGHTED_REGION, diagram, false,
-               appearance);
+        render(incidentFaces, COLOR_OF_HIGHLIGHTED_REGION, diagram, false, appearance);
         transformGroup.addChild(diagram);
         doLayout();
     }

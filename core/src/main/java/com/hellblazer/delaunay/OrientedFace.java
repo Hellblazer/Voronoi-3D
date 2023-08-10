@@ -394,7 +394,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
 
     @Override
     public Iterator<Vertex> iterator() {
-        return new Iterator<Vertex>() {
+        return new Iterator<>() {
             int i = 0;
 
             @Override

@@ -43,21 +43,16 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  */
 
 public class TetrahedralizationView extends GraphicsView {
-    /**
-     *
-     */
     private static final long      serialVersionUID = 1L;
-    private List<Point3f[]>        delaunayFaces    = new ArrayList<Point3f[]>();
-    private Set<Point3f>           fourCorners      = new HashSet<Point3f>();
+    final TransparencyAttributes   diagramTransparency;
+    private List<Point3f[]>        delaunayFaces    = new ArrayList<>();
+    private Set<Point3f>           fourCorners      = new HashSet<>();
     private BranchGroup            highlightedRegions;
     private TransparencyAttributes highlightTransparency;
     private Tetrahedralization     tetrahedralization;
-    private Set<Tetrahedron>       tetrahedrons     = new IdentitySet<Tetrahedron>(
-                                                                                   100);
-    private final Set<Vertex>      vertices         = new IdentitySet<Vertex>(
-                                                                              100);
-    private List<Point3f[]>        voronoiFaces     = new ArrayList<Point3f[]>();
-    final TransparencyAttributes   diagramTransparency;
+    private Set<Tetrahedron>       tetrahedrons     = new IdentitySet<>(100);
+    private final Set<Vertex>      vertices         = new IdentitySet<>(100);
+    private List<Point3f[]>        voronoiFaces     = new ArrayList<>();
 
     public TetrahedralizationView() {
         this(new Tetrahedralization());
@@ -69,14 +64,8 @@ public class TetrahedralizationView extends GraphicsView {
         for (Vertex v : tetrahedralization.getUniverse()) {
             fourCorners.add(v.asPoint3f());
         }
-        highlightTransparency = new TransparencyAttributes(
-                                                           2,
-                                                           (float) (Math.log(50) / Math.log(200D)),
-                                                           2, 1);
-        diagramTransparency = new TransparencyAttributes(
-                                                         2,
-                                                         (float) (Math.log(180) / Math.log(200D)),
-                                                         2, 1);
+        highlightTransparency = new TransparencyAttributes(2, (float) (Math.log(50) / Math.log(200D)), 2, 1);
+        diagramTransparency = new TransparencyAttributes(2, (float) (Math.log(180) / Math.log(200D)), 2, 1);
         diagramTransparency.setCapability(3);
         createSceneGraph();
         updateDiagram();
@@ -96,8 +85,7 @@ public class TetrahedralizationView extends GraphicsView {
         if (diagram != null) {
             if (highlightedRegions != null) {
                 for (int i = 0; i < diagram.numChildren(); i++) {
-                    if (diagram != null
-                        && diagram.getChild(i).equals(highlightedRegions)) {
+                    if (diagram != null && diagram.getChild(i).equals(highlightedRegions)) {
                         diagram.removeChild(i);
                     }
                 }
@@ -111,12 +99,10 @@ public class TetrahedralizationView extends GraphicsView {
         Appearance appearance = getCapabilities(highlightTransparency);
         if (highlight) {
             for (Vertex v : vertices) {
-                render(tetrahedralization.getVoronoiRegion(v),
-                       COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions, true,
+                render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions, true,
                        appearance);
             }
-            displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION,
-                           highlightedRegions);
+            displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions);
         }
         diagram.addChild(highlightedRegions);
         doLayout();
@@ -132,8 +118,7 @@ public class TetrahedralizationView extends GraphicsView {
         diagramTransparency.setTransparency(transparency);
     }
 
-    public void update(boolean showVD, boolean showDT, boolean showFaces,
-                       boolean showAllPoints) {
+    public void update(boolean showVD, boolean showDT, boolean showFaces, boolean showAllPoints) {
         updateDiagram();
         createDiagram();
         Appearance appearance = getCapabilities(diagramTransparency);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import com.hellblazer.delaunay.Examples;
 import com.hellblazer.delaunay.OrientedFace;
@@ -20,14 +21,12 @@ public class OrientedFaceInspector {
         for (Vertex v : Examples.getCubicCrystalStructure()) {
             tet.insert(v);
         }
-        ArrayList<Tetrahedron> tets = new ArrayList<Tetrahedron>(
-                                                                 tet.getTetrahedrons());
-        OrientedFaceInspector insp = new OrientedFaceInspector(
-                                                               tets.get(2).getFace(V.C));
+        ArrayList<Tetrahedron> tets = new ArrayList<>(tet.getTetrahedrons());
+        OrientedFaceInspector insp = new OrientedFaceInspector(tets.get(2).getFace(V.C));
         insp.open();
     }
 
-    private final JFrame           frame;
+    private final JFrame frame;
 
     private final OrientedFaceView view;
 
@@ -35,7 +34,7 @@ public class OrientedFaceInspector {
         frame = new JFrame();
         view = new OrientedFaceView(face);
         frame.setBounds(100, 100, 800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add("Center", view);
     }

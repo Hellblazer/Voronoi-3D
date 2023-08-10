@@ -100,13 +100,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean includes(Vertex v) {
-            if (a == v) {
-                return true;
-            }
-            if (d == v) {
-                return true;
-            }
-            if (b == v) {
+            if ((a == v) || (d == v) || (b == v)) {
                 return true;
             }
             return false;
@@ -230,13 +224,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean includes(Vertex v) {
-            if (b == v) {
-                return true;
-            }
-            if (c == v) {
-                return true;
-            }
-            if (a == v) {
+            if ((b == v) || (c == v) || (a == v)) {
                 return true;
             }
             return false;
@@ -362,13 +350,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean includes(Vertex v) {
-            if (c == v) {
-                return true;
-            }
-            if (b == v) {
-                return true;
-            }
-            if (d == v) {
+            if ((c == v) || (b == v) || (d == v)) {
                 return true;
             }
             return false;
@@ -492,13 +474,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean includes(Vertex v) {
-            if (d == v) {
-                return true;
-            }
-            if (a == v) {
-                return true;
-            }
-            if (c == v) {
+            if ((d == v) || (a == v) || (c == v)) {
                 return true;
             }
             return false;
@@ -861,7 +837,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      */
     @Override
     public Iterator<OrientedFace> iterator() {
-        return new Iterator<OrientedFace>() {
+        return new Iterator<>() {
             OrientedFace[] faces = { getFace(A), getFace(B), getFace(C), getFace(D) };
             int            i     = 0;
 
@@ -1214,7 +1190,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param face
      */
     void traverseVoronoiFace(Vertex vC, Vertex axis, List<Point3f[]> faces) {
-        ArrayList<Point3f> face = new ArrayList<Point3f>();
+        ArrayList<Point3f> face = new ArrayList<>();
         double[] center = new double[3];
         centerSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, center);
         face.add(new Point3f((float) center[0], (float) center[1], (float) center[2]));
@@ -1233,7 +1209,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param visitor - the visitor to invoke for each tetrahedron in the star
      */
     void visitStar(Vertex vC, StarVisitor visitor) {
-        IdentitySet<Tetrahedron> visited = new IdentitySet<Tetrahedron>(10);
+        IdentitySet<Tetrahedron> visited = new IdentitySet<>(10);
         visitStar(vC, visitor, visited);
     }
 

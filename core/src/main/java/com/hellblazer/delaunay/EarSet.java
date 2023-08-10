@@ -44,12 +44,8 @@ public class EarSet implements StarVisitor {
         public boolean equals(Object obj) {
             if (obj instanceof Ear) {
                 Ear ear = (Ear) obj;
-                if (face.getIncident() == ear.face.getIncident()
-                    && face.getAdjacent() == ear.face.getAdjacent()) {
-                    return true;
-                }
-                if (face.getAdjacent() == ear.face.getIncident()
-                    && face.getIncident() == ear.face.getAdjacent()) {
+                if ((face.getIncident() == ear.face.getIncident() && face.getAdjacent() == ear.face.getAdjacent()) ||
+                    (face.getAdjacent() == ear.face.getIncident() && face.getIncident() == ear.face.getAdjacent())) {
                     return true;
                 }
             }
@@ -62,8 +58,8 @@ public class EarSet implements StarVisitor {
         }
     }
 
-    private LinkedList<OrientedFace> ears    = new LinkedList<OrientedFace>();
-    private Set<Ear>                 visited = new OaHashSet<Ear>();
+    private LinkedList<OrientedFace> ears    = new LinkedList<>();
+    private Set<Ear>                 visited = new OaHashSet<>();
 
     public LinkedList<OrientedFace> getEars() {
         return ears;

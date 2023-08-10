@@ -55,8 +55,7 @@ public class TestTimeInsert {
             }
         }
         long iter = (System.nanoTime() - now) / iterations;
-        System.out.println("insert cubic (" + cubicCrystalStructure.length
-                           + " points): " + iter / 1E6 + " Ms");
+        System.out.println("insert cubic (" + cubicCrystalStructure.length + " points): " + iter / 1E6 + " Ms");
     }
 
     @Test
@@ -79,8 +78,7 @@ public class TestTimeInsert {
             }
         }
         long iter = (System.nanoTime() - now) / iterations;
-        System.out.println("insert grid (" + grid.length + " points): " + iter
-                           / 1E6 + " Ms");
+        System.out.println("insert grid (" + grid.length + " points): " + iter / 1E6 + " Ms");
     }
 
     @Test
@@ -101,8 +99,7 @@ public class TestTimeInsert {
             }
         }
         long iter = (System.nanoTime() - now) / iterations;
-        System.out.println("insert random case (" + ourPoints.length
-                           + " points): " + iter / 1E6 + " Ms");
+        System.out.println("insert random case (" + ourPoints.length + " points): " + iter / 1E6 + " Ms");
     }
 
     @Test
@@ -123,8 +120,7 @@ public class TestTimeInsert {
             }
         }
         long iter = (System.nanoTime() - now) / 2;
-        System.out.println("insert random case (" + ourPoints.length
-                           + " points): " + iter / 1E6 + " Ms");
+        System.out.println("insert random case (" + ourPoints.length + " points): " + iter / 1E6 + " Ms");
     }
 
     @Test
@@ -146,7 +142,6 @@ public class TestTimeInsert {
             }
         }
         long iter = (System.nanoTime() - now) / iterations;
-        System.out.println("insert worst case (" + worstCase.length
-                           + " points): " + iter / 1E6 + " Ms");
+        System.out.println("insert worst case (" + worstCase.length + " points): " + iter / 1E6 + " Ms");
     }
 }
