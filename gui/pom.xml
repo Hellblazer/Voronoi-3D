@@ -10,7 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>voronoi-3d-gui</artifactId>
-    <name>Voronoi 3D</name>
+    <name>Voronoi 3D GUI</name>
 
     <dependencies>
         <dependency>
