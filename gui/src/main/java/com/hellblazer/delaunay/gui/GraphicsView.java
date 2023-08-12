@@ -52,31 +52,9 @@ public class GraphicsView extends Group {
 
             mesh.addVertexNormal(face.getFaceNormal());
             MeshView view = face.constructMeshView();
-            view.setCullFace(CullFace.NONE);
+            view.setCullFace(CullFace.BACK);
             view.setMaterial(color);
             getChildren().addAll(view);
-
-//            vertices = new ArrayList<Point3D>();
-//            float[] meshPoints = new float[verts.length * 3];
-//            int i = 0;
-//            for (var v : verts) {
-//                meshPoints[i++] = v.getX();
-//                meshPoints[i++] = v.getY();
-//                meshPoints[i++] = v.getZ();
-//                vertices.add(p(v));
-//            }
-//
-//            vertices.add(vertices.get(0));
-//
-//            TriangleMesh newMesh = new TriangleMesh();
-//            newMesh.getPoints().addAll(meshPoints);
-//            // add dummy Texture Coordinate
-//            newMesh.getTexCoords().addAll(0, 0);
-//            newMesh.getFaces().addAll(new int[] { 0, 0, 1, 0, 2, 0 });
-//            MeshView view = new MeshView(newMesh);
-//            view.setCullFace(CullFace.NONE);
-//            view.setMaterial(color);
-//            getChildren().addAll(view);
         }
         vertices = Stream.of(verts).map(v -> p(v)).collect(Collectors.toList());
         vertices.add(vertices.get(0));
