@@ -134,7 +134,7 @@ public class Tetrahedralization {
     }
 
     /**
-     * The four cornders of the maximally bounding tetrahedron
+     * The four corners of the maximally bounding tetrahedron
      */
     private final Vertex[] fourCorners;
 
