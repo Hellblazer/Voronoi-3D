@@ -18,10 +18,6 @@
             <artifactId>voronoi-3d</artifactId>
         </dependency>
         <dependency>
-            <groupId>java3d</groupId>
-            <artifactId>j3d-core-utils</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
         </dependency>

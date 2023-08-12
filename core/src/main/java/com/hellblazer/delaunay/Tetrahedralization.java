@@ -39,8 +39,6 @@ import java.util.Set;
 
 import javax.vecmath.Point3f;
 
-import com.hellblazer.utils.collections.IdentitySet;
-
 /**
  * A Delaunay tetrahedralization.
  *

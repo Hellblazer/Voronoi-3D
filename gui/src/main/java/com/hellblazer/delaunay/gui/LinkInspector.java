@@ -1,53 +1,48 @@
 package com.hellblazer.delaunay.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.util.List;
+import static com.hellblazer.delaunay.gui.Colors.blackMaterial;
+
 import java.util.Random;
 
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-import javax.vecmath.Point3f;
-
 import com.hellblazer.delaunay.Examples;
-import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.gui.CubicGrid.Neighborhood;
+import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
 
-public class LinkInspector {
+import javafx.scene.Group;
+
+public class LinkInspector extends Jfx3dViewerApp {
+    public static class Launcher {
+
+        public static void main(String[] argv) {
+            LinkInspector.main(argv);
+        }
+    }
+
     public static void main(String[] argv) {
+        launch(argv);
+    }
+
+    private LinkView view;
+
+    @Override
+    protected void initializeContentModel() {
         final Tetrahedralization tet = new Tetrahedralization(new Random(666));
         Vertex[] vertices = Examples.getCubicCrystalStructure();
         for (Vertex v : vertices) {
             tet.insert(v);
         }
         Vertex v = vertices[13];
-        new LinkInspector(v, tet.getEars(v), tet.getVoronoiRegion(v)).open();
-    }
+        view = new LinkView(v, tet.getEars(v), tet.getVoronoiRegion(v));
 
-    private final JFrame frame;
+        var content = getContentModel();
+        var group = new Group();
 
-    private final LinkView view;
+        var grid = new CubicGrid(Neighborhood.EIGHT, PhiCoordinates.Cubes[3], 1);
+        group.getChildren().add(grid.construct(blackMaterial, blackMaterial, blackMaterial));
+        group.getChildren().add(view);
 
-    public LinkInspector(Vertex v, List<OrientedFace> ears, List<Point3f[]> voronoiRegion) {
-        frame = new JFrame();
-        view = new LinkView(v, ears, voronoiRegion);
-        frame.setBounds(100, 100, 800, 600);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(new BorderLayout());
-        frame.getContentPane().add("Center", view);
-    }
-
-    public void open() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        content.setContent(group);
     }
 }

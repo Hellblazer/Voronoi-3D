@@ -19,11 +19,11 @@
 
 package com.hellblazer.delaunay;
 
+import static com.hellblazer.delaunay.Geometry.centerSphere;
 import static com.hellblazer.delaunay.V.A;
 import static com.hellblazer.delaunay.V.B;
 import static com.hellblazer.delaunay.V.C;
 import static com.hellblazer.delaunay.V.D;
-import static com.hellblazer.utils.math.Geometry.centerSphere;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.vecmath.Point3f;
-
-import com.hellblazer.utils.collections.IdentitySet;
 
 /**
  * An oriented, delaunay tetrahedral cell. The vertices of the tetrahedron are

@@ -16,11 +16,7 @@
         <dependency>
             <groupId>javax.vecmath</groupId>
             <artifactId>vecmath</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hellblazer</groupId>
-            <artifactId>utils</artifactId>
-        </dependency>
+        </dependency> 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

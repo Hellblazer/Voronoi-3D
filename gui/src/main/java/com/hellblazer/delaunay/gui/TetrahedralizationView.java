@@ -19,22 +19,20 @@
 
 package com.hellblazer.delaunay.gui;
 
-import java.awt.GraphicsConfiguration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.TransparencyAttributes;
 import javax.vecmath.Point3f;
 
+import com.hellblazer.delaunay.IdentitySet;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Tetrahedron;
 import com.hellblazer.delaunay.Vertex;
-import com.hellblazer.utils.collections.IdentitySet;
-import com.sun.j3d.utils.universe.SimpleUniverse;
+
+import javafx.scene.Group;
+import javafx.scene.paint.PhongMaterial;
 
 /**
  *
@@ -43,36 +41,28 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  */
 
 public class TetrahedralizationView extends GraphicsView {
-    private static final long      serialVersionUID = 1L;
-    final TransparencyAttributes   diagramTransparency;
-    private List<Point3f[]>        delaunayFaces    = new ArrayList<>();
-    private Set<Point3f>           fourCorners      = new HashSet<>();
-    private BranchGroup            highlightedRegions;
-    private TransparencyAttributes highlightTransparency;
-    private Tetrahedralization     tetrahedralization;
-    private Set<Tetrahedron>       tetrahedrons     = new IdentitySet<>(100);
-    private final Set<Vertex>      vertices         = new IdentitySet<>(100);
-    private List<Point3f[]>        voronoiFaces     = new ArrayList<>();
+
+    private static final PhongMaterial COLOR_OF_HIGHLIGHTED_REGION = null;
+
+    private List<Point3f[]>    delaunayFaces = new ArrayList<>();
+    private Set<Point3f>       fourCorners   = new HashSet<>();
+    private Group              highlightedRegions;
+    private Tetrahedralization tetrahedralization;
+    private Set<Tetrahedron>   tetrahedrons  = new IdentitySet<>(100);
+    private final Set<Vertex>  vertices      = new IdentitySet<>(100);
+    private List<Point3f[]>    voronoiFaces  = new ArrayList<>();
 
     public TetrahedralizationView() {
         this(new Tetrahedralization());
     }
 
-    public TetrahedralizationView(GraphicsConfiguration gC, Tetrahedralization t) {
-        super(gC);
+    public TetrahedralizationView(Tetrahedralization t) {
+        super();
         tetrahedralization = t;
         for (Vertex v : tetrahedralization.getUniverse()) {
             fourCorners.add(v.asPoint3f());
         }
-        highlightTransparency = new TransparencyAttributes(2, (float) (Math.log(50) / Math.log(200D)), 2, 1);
-        diagramTransparency = new TransparencyAttributes(2, (float) (Math.log(180) / Math.log(200D)), 2, 1);
-        diagramTransparency.setCapability(3);
-        createSceneGraph();
         updateDiagram();
-    }
-
-    public TetrahedralizationView(Tetrahedralization dt) {
-        this(SimpleUniverse.getPreferredConfiguration(), dt);
     }
 
     public Tetrahedralization getTetrahedralization() {
@@ -81,60 +71,27 @@ public class TetrahedralizationView extends GraphicsView {
 
     public void highlightRegions(boolean highlight, List<Vertex> vertices) {
         assert vertices != null;
-
-        if (diagram != null) {
-            if (highlightedRegions != null) {
-                for (int i = 0; i < diagram.numChildren(); i++) {
-                    if (diagram != null && diagram.getChild(i).equals(highlightedRegions)) {
-                        diagram.removeChild(i);
-                    }
-                }
-
-            }
-        }
-        highlightedRegions = new BranchGroup();
-        highlightedRegions.setCapability(GROUP_ALLOW_CHILDREN_EXTEND);
-        highlightedRegions.setCapability(GROUP_ALLOW_CHILDREN_READ);
-        highlightedRegions.setCapability(BRANCH_GROUP_ALLOW_DETACH);
-        Appearance appearance = getCapabilities(highlightTransparency);
         if (highlight) {
             for (Vertex v : vertices) {
-                render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions, true,
-                       appearance);
+                render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, true);
             }
-            displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions);
+            displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION);
         }
-        diagram.addChild(highlightedRegions);
-        doLayout();
-    }
-
-    public void setTransparency(int aValue) {
-        float transparency = 0.0F;
-        if (aValue <= 0) {
-            transparency = 0.0F;
-        } else {
-            transparency = (float) (Math.log(aValue) / Math.log(200D));
-        }
-        diagramTransparency.setTransparency(transparency);
+        getChildren().add(highlightedRegions);
     }
 
     public void update(boolean showVD, boolean showDT, boolean showFaces, boolean showAllPoints) {
         updateDiagram();
         createDiagram();
-        Appearance appearance = getCapabilities(diagramTransparency);
         if (showVD) {
-            render(voronoiFaces, COLOR_OF_VD, diagram, showFaces, appearance);
+            render(voronoiFaces, Colors.blueMaterial, showFaces);
         }
         if (showDT) {
-            render(delaunayFaces, COLOR_OF_DT, diagram, showFaces, appearance);
+            render(delaunayFaces, Colors.redMaterial, showFaces);
         }
         if (showAllPoints) {
-            BranchGroup allPointsBG = new BranchGroup();
-            displaySpheres(vertices, 0.01F, COLOR_OF_DT, allPointsBG);
-            diagram.addChild(allPointsBG);
+            displaySpheres(vertices, 0.01F, Colors.redMaterial);
         }
-        transformGroup.addChild(diagram);
-        doLayout();
     }
 
     public void updateDiagram() {
@@ -158,7 +115,7 @@ public class TetrahedralizationView extends GraphicsView {
         if (face.length < 3) {
             return true;
         }
-        for (Point3f v : face) {
+        for (var v : face) {
             if (fourCorners.contains(v)) {
                 return true;
             }
