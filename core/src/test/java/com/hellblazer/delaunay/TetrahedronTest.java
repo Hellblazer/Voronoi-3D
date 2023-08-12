@@ -79,7 +79,7 @@ public class TetrahedronTest {
 
         Vertex N = new Vertex(100, 100, 100);
 
-        List<OrientedFace> unlinkedFacets = new ArrayList<OrientedFace>();
+        List<OrientedFace> unlinkedFacets = new ArrayList<>();
 
         Tetrahedron tIV = U.flip1to4(N, unlinkedFacets);
         assertNotNull(tIV);

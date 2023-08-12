@@ -39,8 +39,6 @@ import java.util.Set;
 
 import javax.vecmath.Point3f;
 
-import com.hellblazer.utils.collections.IdentitySet;
-
 /**
  * A Delaunay tetrahedralization.
  *
@@ -49,8 +47,7 @@ import com.hellblazer.utils.collections.IdentitySet;
  */
 
 public class Tetrahedralization {
-    private static class EmptySet<T> extends AbstractSet<T> implements
-            Serializable {
+    private static class EmptySet<T> extends AbstractSet<T> implements Serializable {
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -75,7 +72,7 @@ public class Tetrahedralization {
 
         @Override
         public Iterator<T> iterator() {
-            return new Iterator<T>() {
+            return new Iterator<>() {
                 @Override
                 public boolean hasNext() {
                     return false;
@@ -102,29 +99,28 @@ public class Tetrahedralization {
     /**
      * Cannonical enumeration of the vertex ordinals
      */
-    public final static V[]      VERTICES = { A, B, C, D };
+    public final static V[] VERTICES = { A, B, C, D };
 
     /**
      * A pre-built table of all the permutations of remaining faces to check in
      * location.
      */
-    private static final V[][][] ORDER    = new V[][][] {
-            { { B, C, D }, { C, B, D }, { C, D, B }, { B, D, C }, { D, B, C },
-            { D, C, B } },
+    private static final V[][][] ORDER = new V[][][] { { { B, C, D }, { C, B, D }, { C, D, B }, { B, D, C },
+                                                         { D, B, C }, { D, C, B } },
 
-            { { A, C, D }, { C, A, D }, { C, D, A }, { A, D, C }, { D, A, C },
-            { D, C, A } },
+                                                       { { A, C, D }, { C, A, D }, { C, D, A }, { A, D, C },
+                                                         { D, A, C }, { D, C, A } },
 
-            { { B, A, D }, { A, B, D }, { A, D, B }, { B, D, A }, { D, B, A },
-            { D, A, B } },
+                                                       { { B, A, D }, { A, B, D }, { A, D, B }, { B, D, A },
+                                                         { D, B, A }, { D, A, B } },
 
-            { { B, C, A }, { C, B, A }, { C, A, B }, { B, A, C }, { A, B, C },
-            { A, C, B } }                };
+                                                       { { B, C, A }, { C, B, A }, { C, A, B }, { B, A, C },
+                                                         { A, B, C }, { A, C, B } } };
 
     /**
      * Scale of the universe
      */
-    private static double        SCALE    = Math.pow(2D, 30D);
+    private static double SCALE = Math.pow(2D, 30D);
 
     public static Vertex[] getFourCorners() {
         Vertex[] fourCorners = new Vertex[4];
@@ -136,28 +132,27 @@ public class Tetrahedralization {
     }
 
     /**
-     * The four cornders of the maximally bounding tetrahedron
+     * The four corners of the maximally bounding tetrahedron
      */
     private final Vertex[] fourCorners;
 
     /**
      * The last valid tetrahedron noted
      */
-    private Tetrahedron    last;
+    private Tetrahedron last;
 
     /**
      * A random number generator
      */
-    private final Random   random;
+    private final Random random;
 
     /**
      * The number of points in this tetrahedralization
      */
-    private int            size = 0;
+    private int size = 0;
 
     /**
-     * Construct a new tetrahedralization with the default random number
-     * generator
+     * Construct a new tetrahedralization with the default random number generator
      */
     public Tetrahedralization() {
         this(new Random());
@@ -178,12 +173,11 @@ public class Tetrahedralization {
     /**
      * Delete the vertex from the tetrahedralization. This algorithm is the
      * deleteInSphere algorithm from Ledoux. See "Flipping to Robustly Delete a
-     * Vertex in a Delaunay Tetrahedralization", H. Ledoux, C.M. Gold and G.
-     * Baciu, 2005
+     * Vertex in a Delaunay Tetrahedralization", H. Ledoux, C.M. Gold and G. Baciu,
+     * 2005
      * <p>
      *
-     * @param v
-     *            - the vertex to be deleted
+     * @param v - the vertex to be deleted
      */
     public void delete(Vertex v) {
         assert v != null;
@@ -210,21 +204,18 @@ public class Tetrahedralization {
     }
 
     /**
-     * Answer the collection of neighboring vertices around the indicated
-     * vertex.
+     * Answer the collection of neighboring vertices around the indicated vertex.
      *
-     * @param v
-     *            - the vertex determining the neighborhood
+     * @param v - the vertex determining the neighborhood
      * @return the collection of neighboring vertices
      */
     public Collection<Vertex> getNeighbors(Vertex v) {
         assert v != null && v.getAdjacent() != null;
 
-        final Set<Vertex> neighbors = new IdentitySet<Vertex>();
+        final Set<Vertex> neighbors = new IdentitySet<>();
         v.getAdjacent().visitStar(v, new StarVisitor() {
             @Override
-            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y,
-                              Vertex z) {
+            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
                 neighbors.add(x);
                 neighbors.add(y);
                 neighbors.add(z);
@@ -236,12 +227,11 @@ public class Tetrahedralization {
     public Deque<OrientedFace> getStar(Vertex v) {
         assert v != null && v.getAdjacent() != null;
 
-        final Deque<OrientedFace> star = new ArrayDeque<OrientedFace>();
+        final Deque<OrientedFace> star = new ArrayDeque<>();
         v.getAdjacent().visitStar(v, new StarVisitor() {
 
             @Override
-            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y,
-                              Vertex z) {
+            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
                 star.push(t.getFace(vertex));
             }
         });
@@ -254,8 +244,8 @@ public class Tetrahedralization {
      * @return
      */
     public Set<Tetrahedron> getTetrahedrons() {
-        Set<Tetrahedron> all = new IdentitySet<Tetrahedron>(size);
-        last.traverse(all, new EmptySet<Vertex>());
+        Set<Tetrahedron> all = new IdentitySet<>(size);
+        last.traverse(all, new EmptySet<>());
         return all;
     }
 
@@ -274,8 +264,8 @@ public class Tetrahedralization {
      * @return
      */
     public Set<Vertex> getVertices() {
-        Set<Tetrahedron> allTets = new IdentitySet<Tetrahedron>(size);
-        Set<Vertex> allVertices = new IdentitySet<Vertex>(size);
+        Set<Tetrahedron> allTets = new IdentitySet<>(size);
+        Set<Vertex> allVertices = new IdentitySet<>(size);
         last.traverse(allTets, allVertices);
         for (Vertex v : fourCorners) {
             allVertices.remove(v);
@@ -286,20 +276,18 @@ public class Tetrahedralization {
     /**
      * Answer the faces of the voronoi region around the vertex
      *
-     * @param v
-     *            - the vertex of interest
+     * @param v - the vertex of interest
      * @return the list of faces defining the voronoi region defined by v
      */
     public List<Point3f[]> getVoronoiRegion(final Vertex v) {
         assert v != null && v.getAdjacent() != null;
 
-        final ArrayList<Point3f[]> faces = new ArrayList<Point3f[]>();
+        final ArrayList<Point3f[]> faces = new ArrayList<>();
         v.getAdjacent().visitStar(v, new StarVisitor() {
-            Set<Vertex> neighbors = new IdentitySet<Vertex>(10);
+            Set<Vertex> neighbors = new IdentitySet<>(10);
 
             @Override
-            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y,
-                              Vertex z) {
+            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
                 if (neighbors.add(x)) {
                     t.traverseVoronoiFace(v, x, faces);
                 }
@@ -315,18 +303,16 @@ public class Tetrahedralization {
     }
 
     /**
-     * Insert the vertex into the tetrahedralization. See
-     * "Computing the 3D Voronoi Diagram Robustly: An Easy Explanation", by Hugo
-     * Ledoux
+     * Insert the vertex into the tetrahedralization. See "Computing the 3D Voronoi
+     * Diagram Robustly: An Easy Explanation", by Hugo Ledoux
      * <p>
      *
-     * @param v
-     *            - the vertex to be inserted
+     * @param v - the vertex to be inserted
      */
     public void insert(Vertex v) {
         assert v != null;
         v.reset();
-        List<OrientedFace> ears = new ArrayList<OrientedFace>();
+        List<OrientedFace> ears = new ArrayList<>();
         last = locate(v).flip1to4(v, ears);
         while (!ears.isEmpty()) {
             Tetrahedron l = ears.remove(ears.size() - 1).flip(v, ears);
@@ -338,25 +324,23 @@ public class Tetrahedralization {
     }
 
     /**
-     * Locate the tetrahedron which contains the query point via a stochastic
-     * walk through the delaunay triangulation. This location algorithm is a
-     * slight variation of the 3D jump and walk algorithm found in: "Fast
-     * randomized point location without preprocessing in two- and
-     * three-dimensional Delaunay triangulations", Computational Geometry 12
-     * (1999) 63-83.
+     * Locate the tetrahedron which contains the query point via a stochastic walk
+     * through the delaunay triangulation. This location algorithm is a slight
+     * variation of the 3D jump and walk algorithm found in: "Fast randomized point
+     * location without preprocessing in two- and three-dimensional Delaunay
+     * triangulations", Computational Geometry 12 (1999) 63-83.
      * <p>
-     * In this variant, the intial "random" triangle used is simply the one of
-     * the triangles in the last tetrahedron created by a flip, or the
-     * previously located tetrahedron.
+     * In this variant, the intial "random" triangle used is simply the one of the
+     * triangles in the last tetrahedron created by a flip, or the previously
+     * located tetrahedron.
      * <p>
      * This location algorithm provides fast location results with no memory
      * overhead. Further, because there is no search structure to maintain, this
-     * algorithm is ideally suited for incremental deletions and kinetic
-     * maintenance of the delaunay tetrahedralization.
+     * algorithm is ideally suited for incremental deletions and kinetic maintenance
+     * of the delaunay tetrahedralization.
      * <p>
      *
-     * @param query
-     *            - the query point
+     * @param query - the query point
      * @return
      */
     public Tetrahedron locate(Vertex query) {
@@ -409,9 +393,8 @@ public class Tetrahedralization {
 
     /**
      * Traverse all the tetrahedrons in the tetrahedralization. The set of
-     * tetrahedons will be filled with all the tetrahedrons and the set of
-     * vertices will be filled with all the vertices defining the
-     * tetrahedralization.
+     * tetrahedons will be filled with all the tetrahedrons and the set of vertices
+     * will be filled with all the vertices defining the tetrahedralization.
      * <p>
      *
      * @param tetrahedrons
@@ -424,17 +407,15 @@ public class Tetrahedralization {
     }
 
     /**
-     * Perform the 4->1 bistellar flip. This flip is the inverse of the 4->1
-     * flip.
+     * Perform the 4->1 bistellar flip. This flip is the inverse of the 4->1 flip.
      *
-     * @param n
-     *            - the vertex who's star defines the 4 tetrahedron
+     * @param n - the vertex who's star defines the 4 tetrahedron
      *
      * @return the tetrahedron created from the flip
      */
     protected Tetrahedron flip4to1(Vertex n) {
         Deque<OrientedFace> star = getStar(n);
-        ArrayList<Tetrahedron> deleted = new ArrayList<Tetrahedron>();
+        ArrayList<Tetrahedron> deleted = new ArrayList<>();
         for (OrientedFace f : star) {
             deleted.add(f.getIncident());
         }

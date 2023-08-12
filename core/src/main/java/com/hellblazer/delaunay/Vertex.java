@@ -23,15 +23,12 @@ import java.util.Random;
 
 import javax.vecmath.Point3f;
 
-import com.hellblazer.utils.math.Geometry;
-
 /**
  *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
 public class Vertex {
-
     /**
      * Minimal zero
      */
@@ -47,8 +44,7 @@ public class Vertex {
      * @param inSphere
      * @return
      */
-    public static Vertex[] getRandomPoints(Random random, int numberOfPoints,
-                                           double radius, boolean inSphere) {
+    public static Vertex[] getRandomPoints(Random random, int numberOfPoints, double radius, boolean inSphere) {
         double radiusSquared = radius * radius;
         Vertex ourPoints[] = new Vertex[numberOfPoints];
         for (int i = 0; i < ourPoints.length; i++) {
@@ -93,8 +89,7 @@ public class Vertex {
      * @return
      */
     public static Vertex randomPoint(Random random, double min, double max) {
-        return new Vertex(random(random, min, max), random(random, min, max),
-                          random(random, min, max));
+        return new Vertex(random(random, min, max), random(random, min, max), random(random, min, max));
     }
 
     public final double x;
@@ -111,7 +106,7 @@ public class Vertex {
     /**
      * The number of tetrahedra adjacent to the vertex
      */
-    private int         order = 0;
+    private int order = 0;
 
     public Vertex(double i, double j, double k) {
         x = i;
@@ -144,6 +139,11 @@ public class Vertex {
         return dx * dx + dy * dy + dz * dz;
     }
 
+    public void freshenAdjacent(Tetrahedron tetrahedron) {
+        if (adjacent == null || adjacent.isDeleted())
+            adjacent = tetrahedron;
+    }
+
     /**
      * Answer one of the adjacent tetrahedron
      *
@@ -165,23 +165,21 @@ public class Vertex {
     }
 
     /**
-     * Return +1 if the receiver lies inside the sphere passing through a, b, c,
-     * and d; -1 if it lies outside; and 0 if the five points are cospherical.
-     * The vertices a, b, c, and d must be ordered so that they have a positive
-     * orientation (as defined by {@link #orientation(Vertex, Vertex, Vertex)}),
-     * or the sign of the result will be reversed.
+     * Return +1 if the receiver lies inside the sphere passing through a, b, c, and
+     * d; -1 if it lies outside; and 0 if the five points are cospherical. The
+     * vertices a, b, c, and d must be ordered so that they have a positive
+     * orientation (as defined by {@link #orientation(Vertex, Vertex, Vertex)}), or
+     * the sign of the result will be reversed.
      * <p>
      *
-     * @param a
-     *            , b, c, d - the points defining the sphere, in oriented order
-     * @return +1 if the receiver lies inside the sphere passing through a, b,
-     *         c, and d; -1 if it lies outside; and 0 if the five points are
+     * @param a , b, c, d - the points defining the sphere, in oriented order
+     * @return +1 if the receiver lies inside the sphere passing through a, b, c,
+     *         and d; -1 if it lies outside; and 0 if the five points are
      *         cospherical
      */
 
     public final int inSphere(Vertex a, Vertex b, Vertex c, Vertex d) {
-        double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x,
-                                          c.y, c.z, d.x, d.y, d.z, x, y, z);
+        double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -192,19 +190,17 @@ public class Vertex {
     }
 
     /**
-     * Answer +1 if the orientation of the receiver is positive with respect to
-     * the plane defined by {a, b, c}, -1 if negative, or 0 if the test point is
+     * Answer +1 if the orientation of the receiver is positive with respect to the
+     * plane defined by {a, b, c}, -1 if negative, or 0 if the test point is
      * coplanar
      * <p>
      *
-     * @param a
-     *            , b, c - the points defining the plane
-     * @return +1 if the orientation of the query point is positive with respect
-     *         to the plane, -1 if negative and 0 if the test point is coplanar
+     * @param a , b, c - the points defining the plane
+     * @return +1 if the orientation of the query point is positive with respect to
+     *         the plane, -1 if negative and 0 if the test point is coplanar
      */
     public final int orientation(Vertex a, Vertex b, Vertex c) {
-        double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x,
-                                             c.y, c.z, x, y, z);
+        double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {

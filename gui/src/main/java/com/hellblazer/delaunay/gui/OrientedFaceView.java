@@ -19,16 +19,15 @@
 
 package com.hellblazer.delaunay.gui;
 
-import java.awt.GraphicsConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.j3d.Appearance;
 import javax.vecmath.Point3f;
 
 import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Vertex;
-import com.sun.j3d.utils.universe.SimpleUniverse;
+
+import javafx.geometry.Point3D;
 
 /**
  * A visualization of an oriented face of a tetrahedron in a delaunay
@@ -38,22 +37,16 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  *
  */
 public class OrientedFaceView extends GraphicsView {
-    private static final long  serialVersionUID = 1L;
     private Point3f            adjacent;
-    private List<Point3f[]>    adjacentFaces    = new ArrayList<Point3f[]>();
+    private List<Point3f[]>    adjacentFaces = new ArrayList<>();
     private final OrientedFace face;
     private Point3f            incident;
-    private List<Point3f[]>    incidentFaces    = new ArrayList<Point3f[]>();
-    private Point3f[]          myFace           = new Point3f[3];
+    private List<Point3f[]>    incidentFaces = new ArrayList<>();
+    private Point3f[]          myFace        = new Point3f[3];
 
     public OrientedFaceView(OrientedFace face) {
-        this(face, SimpleUniverse.getPreferredConfiguration());
-    }
-
-    public OrientedFaceView(OrientedFace face, GraphicsConfiguration gC) {
-        super(gC);
+        super();
         this.face = face;
-        createSceneGraph();
         update();
     }
 
@@ -62,19 +55,14 @@ public class OrientedFaceView extends GraphicsView {
         updateDiagram();
 
         for (Point3f p : myFace) {
-            diagram.addChild(createSphereAround(p, COLOR_OF_VD, 0.01F));
+            getChildren().add(sphere(0.01F, new Point3D(p.x, p.y, p.z), Colors.blueMaterial));
         }
-        Appearance appearance = getCapabilities();
-        diagram.addChild(createSphereAround(incident,
-                                            COLOR_OF_HIGHLIGHTED_REGION, 0.01F));
+        getChildren().add(sphere(0.01F, new Point3D(incident.x, incident.y, incident.z), Colors.cyanMaterial));
         if (adjacent != null) {
-            diagram.addChild(createSphereAround(adjacent, COLOR_OF_DT, 0.01F));
-            render(adjacentFaces, COLOR_OF_DT, diagram, false, appearance);
+            getChildren().add(sphere(0.01F, new Point3D(adjacent.x, adjacent.y, adjacent.z), Colors.redMaterial));
+            render(adjacentFaces, Colors.yellowMaterial, false);
         }
-        render(incidentFaces, COLOR_OF_HIGHLIGHTED_REGION, diagram, false,
-               appearance);
-        transformGroup.addChild(diagram);
-        doLayout();
+        render(incidentFaces, Colors.purpleMaterial, false);
     }
 
     private void updateDiagram() {

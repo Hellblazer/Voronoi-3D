@@ -42,20 +42,20 @@ public class PointModel extends AbstractTableModel {
     PointModel() {
         data = null;
         numberFormatter = new DecimalFormat("0.000");
-        data = new ArrayList<Vertex>();
+        data = new ArrayList<>();
     }
 
     PointModel(List<Vertex> somePoints) {
         data = null;
         numberFormatter = new DecimalFormat("0.000");
         if (somePoints != null && somePoints.size() != 0) {
-            data = new ArrayList<Vertex>(somePoints.size());
-            for (int i = 0; i < somePoints.size(); i++) {
-                data.add(somePoints.get(i));
+            data = new ArrayList<>(somePoints.size());
+            for (Vertex somePoint : somePoints) {
+                data.add(somePoint);
             }
 
         } else {
-            data = new ArrayList<Vertex>();
+            data = new ArrayList<>();
         }
     }
 
@@ -76,14 +76,14 @@ public class PointModel extends AbstractTableModel {
             return null;
         }
         switch (columnIndex) {
-            case 0:
-                return "x";
+        case 0:
+            return "x";
 
-            case 1:
-                return "y";
+        case 1:
+            return "y";
 
-            case 2:
-                return "z";
+        case 2:
+            return "z";
         }
         return null;
     }
@@ -100,14 +100,14 @@ public class PointModel extends AbstractTableModel {
         }
         if (data != null && data.size() > 0) {
             switch (columnIndex) {
-                case 0:
-                    return numberFormatter.format(data.get(rowIndex).asPoint3f().x);
+            case 0:
+                return numberFormatter.format(data.get(rowIndex).asPoint3f().x);
 
-                case 1:
-                    return numberFormatter.format(data.get(rowIndex).asPoint3f().y);
+            case 1:
+                return numberFormatter.format(data.get(rowIndex).asPoint3f().y);
 
-                case 2:
-                    return numberFormatter.format(data.get(rowIndex).asPoint3f().z);
+            case 2:
+                return numberFormatter.format(data.get(rowIndex).asPoint3f().z);
             }
             return null;
         } else {
