@@ -40,12 +40,12 @@ public class Inspector extends Jfx3dViewerApp {
     protected void initializeContentModel() {
         final var random = new Random(666);
         final var tet = new Tetrahedralization(random);
-        Vertex ourPoints[] = Vertex.getRandomPoints(random, 120, 40.0D, false);
+        Vertex ourPoints[] = Vertex.getRandomPoints(random, 120, 5.0D, true);
         for (Vertex v : ourPoints) {
             tet.insert(v);
         }
         view = new TetrahedralizationView(tet);
-        view.update(true, false, false, true);
+        view.update(true, false, true, true);
 
         var content = getContentModel();
         var group = new Group();

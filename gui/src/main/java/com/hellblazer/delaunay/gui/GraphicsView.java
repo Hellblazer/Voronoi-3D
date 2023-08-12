@@ -12,6 +12,7 @@ import com.hellblazer.delaunay.Vertex;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -112,6 +113,8 @@ public class GraphicsView extends Group {
             if (isAuxillary(face)) {
                 continue;
             }
+            final var c = color.getDiffuseColor();
+            color = new PhongMaterial(new Color(c.getRed(), c.getGreen(), c.getBlue(), 0.1));
             newFace(face, color, showFaces);
         }
     }

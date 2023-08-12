@@ -87,7 +87,7 @@ public class TetrahedralizationView extends GraphicsView {
             render(voronoiFaces, Colors.blueMaterial, showFaces);
         }
         if (showDT) {
-            render(delaunayFaces, Colors.redMaterial, showFaces);
+            render(delaunayFaces, Colors.yellowMaterial, showFaces);
         }
         if (showAllPoints) {
             displaySpheres(vertices, 0.01F, Colors.redMaterial);
@@ -117,6 +117,8 @@ public class TetrahedralizationView extends GraphicsView {
         }
         for (var v : face) {
             if (fourCorners.contains(v)) {
+                return true;
+            } else if (v.distance(new Point3f()) > 1000000) {
                 return true;
             }
         }
