@@ -79,7 +79,7 @@ public class GraphicsView extends Group {
         }
         vertices = Stream.of(verts).map(v -> p(v)).collect(Collectors.toList());
         vertices.add(vertices.get(0));
-        getChildren().add(new PolyLine(vertices, 0.005, Colors.blackMaterial));
+        getChildren().add(new PolyLine(vertices, 0.01, Colors.blackMaterial));
     }
 
     public Sphere sphere(double radius, Point3D position, Material material) {

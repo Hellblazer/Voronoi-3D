@@ -1,13 +1,9 @@
 package com.hellblazer.delaunay.gui;
 
-import static com.hellblazer.delaunay.gui.Colors.blackMaterial;
-
 import java.util.Random;
 
-import com.hellblazer.delaunay.Examples;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Vertex;
-import com.hellblazer.delaunay.gui.CubicGrid.Neighborhood;
 import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
 
 import javafx.scene.Group;
@@ -44,7 +40,7 @@ public class Inspector extends Jfx3dViewerApp {
     protected void initializeContentModel() {
         final var random = new Random(666);
         final var tet = new Tetrahedralization(random);
-        Vertex ourPoints[] = Examples.getCubicCrystalStructure(); // Vertex.getRandomPoints(random, 600, 1.0D, false);
+        Vertex ourPoints[] = Vertex.getRandomPoints(random, 120, 40.0D, false);
         for (Vertex v : ourPoints) {
             tet.insert(v);
         }
@@ -54,8 +50,7 @@ public class Inspector extends Jfx3dViewerApp {
         var content = getContentModel();
         var group = new Group();
 
-        var grid = new CubicGrid(Neighborhood.EIGHT, PhiCoordinates.Cubes[3], 1);
-        group.getChildren().add(grid.construct(blackMaterial, blackMaterial, blackMaterial));
+//        group.getChildren().add(new CubicGrid(Neighborhood.EIGHT, PhiCoordinates.Cubes[3], 1).construct(blackMaterial, blackMaterial, blackMaterial));
         group.getChildren().add(view);
 
         content.setContent(group);
