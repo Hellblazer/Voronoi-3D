@@ -19,14 +19,12 @@
 
 package com.hellblazer.delaunay.gui;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.vecmath.Point3f;
 
-import com.hellblazer.delaunay.IdentitySet;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Tetrahedron;
 import com.hellblazer.delaunay.Vertex;
@@ -44,13 +42,12 @@ public class TetrahedralizationView extends GraphicsView {
 
     private static final PhongMaterial COLOR_OF_HIGHLIGHTED_REGION = null;
 
-    private List<Point3f[]>    delaunayFaces = new ArrayList<>();
-    private Set<Point3f>       fourCorners   = new HashSet<>();
-    private Group              highlightedRegions;
-    private Tetrahedralization tetrahedralization;
-    private Set<Tetrahedron>   tetrahedrons  = new IdentitySet<>(100);
-    private final Set<Vertex>  vertices      = new IdentitySet<>(100);
-    private List<Point3f[]>    voronoiFaces  = new ArrayList<>();
+    private final Group              delaunay           = new Group();
+    private final Set<Point3f>       fourCorners        = new HashSet<>();
+    private final Group              highlightedRegions = new Group();
+    private final Tetrahedralization tetrahedralization;
+    private final Group              vertexes           = new Group();
+    private final Group              voronoi            = new Group();
 
     public TetrahedralizationView() {
         this(new Tetrahedralization());
@@ -71,43 +68,48 @@ public class TetrahedralizationView extends GraphicsView {
 
     public void highlightRegions(boolean highlight, List<Vertex> vertices) {
         assert vertices != null;
+        highlightedRegions.getChildren().clear();
         if (highlight) {
             for (Vertex v : vertices) {
-                render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, true);
+                render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, true, highlightedRegions);
             }
-            displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION);
+            displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions);
         }
         getChildren().add(highlightedRegions);
     }
 
-    public void update(boolean showVD, boolean showDT, boolean showFaces, boolean showAllPoints) {
-        updateDiagram();
-        createDiagram();
+    public void update(boolean showVD, boolean showDT, boolean showAllPoints) {
+        var children = getChildren();
+        children.clear();
+
         if (showVD) {
-            render(voronoiFaces, Colors.blueMaterial, showFaces);
+            children.add(voronoi);
         }
         if (showDT) {
-            render(delaunayFaces, Colors.yellowMaterial, showFaces);
+            children.add(delaunay);
         }
         if (showAllPoints) {
-            displaySpheres(vertices, 0.01F, Colors.redMaterial);
+            children.add(vertexes);
         }
     }
 
     public void updateDiagram() {
-        tetrahedrons.clear();
-        vertices.clear();
+        var tetrahedrons = new HashSet<Tetrahedron>();
+        var vertices = new HashSet<Vertex>();
         tetrahedralization.traverse(tetrahedrons, vertices);
-        voronoiFaces.clear();
-        delaunayFaces.clear();
+        voronoi.getChildren().clear();
+        delaunay.getChildren().clear();
         for (Tetrahedron t : tetrahedrons) {
-            t.addFacesCoordinates(delaunayFaces);
+            for (Point3f[] face : t.getFacesCoordinates()) {
+                render(face, Colors.yellowMaterial, false, delaunay);
+            }
         }
         for (Vertex v : vertices) {
             for (Point3f[] face : tetrahedralization.getVoronoiRegion(v)) {
-                voronoiFaces.add(face);
+                render(face, Colors.cyanMaterial, false, voronoi);
             }
         }
+        displaySpheres(vertices, 0.01, Colors.yellowMaterial, vertexes);
     }
 
     @Override

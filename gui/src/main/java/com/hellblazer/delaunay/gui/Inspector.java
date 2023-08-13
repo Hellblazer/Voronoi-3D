@@ -45,7 +45,7 @@ public class Inspector extends Jfx3dViewerApp {
             tet.insert(v);
         }
         view = new TetrahedralizationView(tet);
-        view.update(true, false, true, true);
+        view.update(true, false, true);
 
         var content = getContentModel();
         var group = new Group();

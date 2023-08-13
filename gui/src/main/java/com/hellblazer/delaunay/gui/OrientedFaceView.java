@@ -51,7 +51,6 @@ public class OrientedFaceView extends GraphicsView {
     }
 
     public void update() {
-        createDiagram();
         updateDiagram();
 
         for (Point3f p : myFace) {
@@ -60,9 +59,9 @@ public class OrientedFaceView extends GraphicsView {
         getChildren().add(sphere(0.01F, new Point3D(incident.x, incident.y, incident.z), Colors.cyanMaterial));
         if (adjacent != null) {
             getChildren().add(sphere(0.01F, new Point3D(adjacent.x, adjacent.y, adjacent.z), Colors.redMaterial));
-            render(adjacentFaces, Colors.yellowMaterial, false);
+            render(adjacentFaces, Colors.yellowMaterial, false, this);
         }
-        render(incidentFaces, Colors.purpleMaterial, false);
+        render(incidentFaces, Colors.purpleMaterial, false, this);
     }
 
     private void updateDiagram() {

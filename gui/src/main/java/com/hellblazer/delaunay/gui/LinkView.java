@@ -28,13 +28,13 @@ public class LinkView extends GraphicsView {
     }
 
     public void update() {
-        createDiagram();
+        getChildren().clear();
         for (OrientedFace ear : ears) {
             Vertex[] edge = ear.getEdge(v);
             Point3f[] line = new Point3f[] { edge[0].asPoint3f(), edge[1].asPoint3f() };
-            newFace(line, Colors.yellowMaterial, false);
+            newFace(line, Colors.yellowMaterial, false, this);
         }
         sphere(0.01F, new Point3D(v.x, v.y, v.z), Colors.violetMaterial);
-        render(voronoiRegion, Colors.redMaterial, true);
+        render(voronoiRegion, Colors.redMaterial, true, this);
     }
 }

@@ -748,6 +748,15 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         return getFace(ordinalOf(v));
     }
 
+    public List<Point3f[]> getFacesCoordinates() {
+        var faces = new ArrayList<Point3f[]>();
+        faces.add(new Point3f[] { a.asPoint3f(), d.asPoint3f(), b.asPoint3f() });
+        faces.add(new Point3f[] { b.asPoint3f(), c.asPoint3f(), a.asPoint3f() });
+        faces.add(new Point3f[] { c.asPoint3f(), b.asPoint3f(), d.asPoint3f() });
+        faces.add(new Point3f[] { d.asPoint3f(), a.asPoint3f(), c.asPoint3f() });
+        return faces;
+    }
+
     /**
      * Answer the neighbor that is adjacent to the face opposite of the vertex
      * <p>

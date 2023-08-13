@@ -19,7 +19,7 @@ public class OrientedFaceInspector extends Jfx3dViewerApp {
     public static class Launcher {
 
         public static void main(String[] argv) {
-            LinkInspector.main(argv);
+            OrientedFaceInspector.main(argv);
         }
     }
 
