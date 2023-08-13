@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.9.1</junit.version>
         <logback.version>1.2.12</logback.version>
+        <fxyz.version>0.5.4</fxyz.version>
     </properties>
 
     <modules>
@@ -45,6 +46,16 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-swing</artifactId>
                 <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fxyz3d</groupId>
+                <artifactId>fxyz3d</artifactId>
+                <version>${fxyz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fxyz3d</groupId>
+                <artifactId>fxyz3d-importers</artifactId>
+                <version>${fxyz.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.vecmath</groupId>
