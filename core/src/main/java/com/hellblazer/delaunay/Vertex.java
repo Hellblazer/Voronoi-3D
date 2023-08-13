@@ -93,9 +93,7 @@ public class Vertex {
     }
 
     public final double x;
-
     public final double y;
-
     public final double z;
 
     /**

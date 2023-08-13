@@ -24,18 +24,15 @@ import static com.hellblazer.delaunay.V.B;
 import static com.hellblazer.delaunay.V.C;
 import static com.hellblazer.delaunay.V.D;
 
-import java.io.Serializable;
-import java.util.AbstractSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.vecmath.Point3f;
 
@@ -47,55 +44,6 @@ import javax.vecmath.Point3f;
  */
 
 public class Tetrahedralization {
-    private static class EmptySet<T> extends AbstractSet<T> implements Serializable {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public boolean add(T e) {
-            return false;
-        }
-
-        @Override
-        public boolean addAll(Collection<? extends T> c) {
-            return false;
-        }
-
-        @Override
-        public boolean contains(Object obj) {
-            return false;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return true;
-        }
-
-        @Override
-        public Iterator<T> iterator() {
-            return new Iterator<>() {
-                @Override
-                public boolean hasNext() {
-                    return false;
-                }
-
-                @Override
-                public T next() {
-                    throw new NoSuchElementException();
-                }
-
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
-        }
-
-        @Override
-        public int size() {
-            return 0;
-        }
-    }
-
     /**
      * Cannonical enumeration of the vertex ordinals
      */
@@ -213,13 +161,10 @@ public class Tetrahedralization {
         assert v != null && v.getAdjacent() != null;
 
         final Set<Vertex> neighbors = new IdentitySet<>();
-        v.getAdjacent().visitStar(v, new StarVisitor() {
-            @Override
-            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
-                neighbors.add(x);
-                neighbors.add(y);
-                neighbors.add(z);
-            }
+        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
+            neighbors.add(x);
+            neighbors.add(y);
+            neighbors.add(z);
         });
         return neighbors;
     }
@@ -228,12 +173,8 @@ public class Tetrahedralization {
         assert v != null && v.getAdjacent() != null;
 
         final Deque<OrientedFace> star = new ArrayDeque<>();
-        v.getAdjacent().visitStar(v, new StarVisitor() {
-
-            @Override
-            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
-                star.push(t.getFace(vertex));
-            }
+        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
+            star.push(t.getFace(vertex));
         });
         return star;
     }
@@ -245,7 +186,14 @@ public class Tetrahedralization {
      */
     public Set<Tetrahedron> getTetrahedrons() {
         Set<Tetrahedron> all = new IdentitySet<>(size);
-        last.traverse(all, new EmptySet<>());
+        var stack = new Stack<Tetrahedron>();
+        stack.push(last);
+        while (!stack.isEmpty()) {
+            var next = stack.pop();
+            if (all.add(next)) {
+                next.children(stack, all);
+            }
+        }
         return all;
     }
 
@@ -264,13 +212,21 @@ public class Tetrahedralization {
      * @return
      */
     public Set<Vertex> getVertices() {
-        Set<Tetrahedron> allTets = new IdentitySet<>(size);
-        Set<Vertex> allVertices = new IdentitySet<>(size);
-        last.traverse(allTets, allVertices);
-        for (Vertex v : fourCorners) {
-            allVertices.remove(v);
+        Set<Tetrahedron> tetrahedrons = new IdentitySet<>(size);
+        Set<Vertex> vertices = new IdentitySet<Vertex>(size);
+        var stack = new Stack<Tetrahedron>();
+        stack.push(last);
+        while (!stack.isEmpty()) {
+            var next = stack.pop();
+            if (tetrahedrons.add(next)) {
+                vertices.add(next.getA());
+                vertices.add(next.getB());
+                vertices.add(next.getC());
+                vertices.add(next.getD());
+                next.children(stack, tetrahedrons);
+            }
         }
-        return allVertices;
+        return vertices;
     }
 
     /**
@@ -283,20 +239,16 @@ public class Tetrahedralization {
         assert v != null && v.getAdjacent() != null;
 
         final ArrayList<Point3f[]> faces = new ArrayList<>();
-        v.getAdjacent().visitStar(v, new StarVisitor() {
-            Set<Vertex> neighbors = new IdentitySet<>(10);
-
-            @Override
-            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
-                if (neighbors.add(x)) {
-                    t.traverseVoronoiFace(v, x, faces);
-                }
-                if (neighbors.add(y)) {
-                    t.traverseVoronoiFace(v, y, faces);
-                }
-                if (neighbors.add(z)) {
-                    t.traverseVoronoiFace(v, z, faces);
-                }
+        Set<Vertex> neighbors = new IdentitySet<>(10);
+        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
+            if (neighbors.add(x)) {
+                t.traverseVoronoiFace(v, x, faces);
+            }
+            if (neighbors.add(y)) {
+                t.traverseVoronoiFace(v, y, faces);
+            }
+            if (neighbors.add(z)) {
+                t.traverseVoronoiFace(v, z, faces);
             }
         });
         return faces;
@@ -401,9 +353,18 @@ public class Tetrahedralization {
      * @param vertices
      */
     public void traverse(Set<Tetrahedron> tetrahedrons, Set<Vertex> vertices) {
-        assert tetrahedrons.isEmpty() && vertices.isEmpty();
-
-        last.traverse(tetrahedrons, vertices);
+        var stack = new Stack<Tetrahedron>();
+        stack.push(last);
+        while (!stack.isEmpty()) {
+            var next = stack.pop();
+            if (tetrahedrons.add(next)) {
+                vertices.add(next.getA());
+                vertices.add(next.getB());
+                vertices.add(next.getC());
+                vertices.add(next.getD());
+                next.children(stack, tetrahedrons);
+            }
+        }
     }
 
     /**

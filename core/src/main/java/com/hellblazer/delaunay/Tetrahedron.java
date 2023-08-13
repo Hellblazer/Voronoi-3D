@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.vecmath.Point3f;
 
@@ -1007,32 +1008,18 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         return buf.toString();
     }
 
-    /**
-     * Traverse all the tetradrons in a tetrahedralization, filling in the set of
-     * all visited tetrahedron and the vertices defining them
-     * <p>
-     *
-     * @param visited  - the set of visited tetrahedrons
-     * @param vertices - the set of visited vertices
-     */
-    public void traverse(Set<Tetrahedron> visited, Set<Vertex> vertices) {
-        if (visited.add(this)) {
-            vertices.add(a);
-            vertices.add(b);
-            vertices.add(c);
-            vertices.add(d);
-            if (nA != null) {
-                nA.traverse(visited, vertices);
-            }
-            if (nB != null) {
-                nB.traverse(visited, vertices);
-            }
-            if (nC != null) {
-                nC.traverse(visited, vertices);
-            }
-            if (nD != null) {
-                nD.traverse(visited, vertices);
-            }
+    protected void children(Stack<Tetrahedron> stack, Set<Tetrahedron> processed) {
+        if (nA != null && !processed.contains(nA)) {
+            stack.push(nA);
+        }
+        if (nB != null && !processed.contains(nB)) {
+            stack.push(nB);
+        }
+        if (nC != null && !processed.contains(nC)) {
+            stack.push(nC);
+        }
+        if (nD != null && !processed.contains(nD)) {
+            stack.push(nD);
         }
     }
 
