@@ -368,7 +368,7 @@ public class Tetrahedralization {
     }
 
     /**
-     * Perform the 4->1 bistellar flip. This flip is the inverse of the 4->1 flip.
+     * Perform the 4->1 bistellar flip. This flip is the inverse of the 1->4 flip.
      *
      * @param n - the vertex who's star defines the 4 tetrahedron
      *
