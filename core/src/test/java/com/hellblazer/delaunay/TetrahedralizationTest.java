@@ -88,7 +88,7 @@ public class TetrahedralizationTest {
     @Test
     public void testLargeRandom() {
         Random random = new Random(666);
-        Vertex ourPoints[] = getRandomPoints(random, 600, 1.0D, false);
+        Vertex ourPoints[] = getRandomPoints(random, 60000, 100.0D, false);
 
         Tetrahedralization T = new Tetrahedralization(random);
 
@@ -97,7 +97,7 @@ public class TetrahedralizationTest {
         }
 
         Set<Tetrahedron> L = T.getTetrahedrons();
-        assertEquals(3903, L.size());
+        assertEquals(403094, L.size());
     }
 
     /**

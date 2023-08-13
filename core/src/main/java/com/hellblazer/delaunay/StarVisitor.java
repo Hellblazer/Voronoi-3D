@@ -22,6 +22,7 @@ package com.hellblazer.delaunay;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
+@FunctionalInterface
 public interface StarVisitor {
     void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z);
 }

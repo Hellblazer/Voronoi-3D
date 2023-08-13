@@ -38,7 +38,7 @@ public class GraphicsView extends Group {
         return tmp;
     }
 
-    public void newFace(Point3f[] verts, PhongMaterial color, boolean showFace) {
+    public void newFace(Point3f[] verts, PhongMaterial color, boolean showFace, Group group) {
         List<Point3D> vertices;
         if (showFace) {
             Mesh mesh = new Mesh();
@@ -54,11 +54,11 @@ public class GraphicsView extends Group {
             MeshView view = face.constructMeshView();
             view.setCullFace(CullFace.BACK);
             view.setMaterial(color);
-            getChildren().addAll(view);
+            group.getChildren().addAll(view);
         }
         vertices = Stream.of(verts).map(v -> p(v)).collect(Collectors.toList());
         vertices.add(vertices.get(0));
-        getChildren().add(new PolyLine(vertices, 0.01, Colors.blackMaterial));
+        group.getChildren().add(new PolyLine(vertices, 0.01, Colors.blackMaterial));
     }
 
     public Sphere sphere(double radius, Point3D position, Material material) {
@@ -71,12 +71,8 @@ public class GraphicsView extends Group {
         return sphere;
     }
 
-    protected void createDiagram() {
-        getChildren().clear();
-    }
-
-    protected void displaySpheres(Collection<Vertex> selected, float aRadius, PhongMaterial aColor) {
-        final var children = getChildren();
+    protected void displaySpheres(Collection<Vertex> selected, double aRadius, PhongMaterial aColor, Group group) {
+        final var children = group.getChildren();
         for (Vertex v : selected) {
             children.add(sphere(aRadius, p(v), aColor));
         }
@@ -86,15 +82,19 @@ public class GraphicsView extends Group {
         return false;
     }
 
-    protected void render(List<Point3f[]> region, PhongMaterial color, boolean showFaces) {
+    protected void render(List<Point3f[]> region, PhongMaterial color, boolean showFaces, Group group) {
         for (var face : region) {
-            if (isAuxillary(face)) {
-                continue;
-            }
+            color = render(face, color, showFaces, group);
+        }
+    }
+
+    protected PhongMaterial render(Point3f[] face, PhongMaterial color, boolean showFaces, Group group) {
+        if (!isAuxillary(face)) {
             final var c = color.getDiffuseColor();
             color = new PhongMaterial(new Color(c.getRed(), c.getGreen(), c.getBlue(), 0.1));
-            newFace(face, color, showFaces);
+            newFace(face, color, showFaces, group);
         }
+        return color;
     }
 
     private Point3D p(Point3f v) {
