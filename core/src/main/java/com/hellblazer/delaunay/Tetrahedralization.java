@@ -226,6 +226,9 @@ public class Tetrahedralization {
                 next.children(stack, tetrahedrons);
             }
         }
+        for (Vertex v : fourCorners) {
+            vertices.remove(v);
+        }
         return vertices;
     }
 
@@ -364,6 +367,9 @@ public class Tetrahedralization {
                 vertices.add(next.getD());
                 next.children(stack, tetrahedrons);
             }
+        }
+        for (Vertex v : fourCorners) {
+            vertices.remove(v);
         }
     }
 
