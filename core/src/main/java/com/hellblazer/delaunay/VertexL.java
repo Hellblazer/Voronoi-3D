@@ -184,10 +184,10 @@ public class VertexL implements Vertex<Vertex.LongType> {
 
     @Override
     public final int inSphere(Vertex<LongType> a, Vertex<LongType> b, Vertex<LongType> c, Vertex<LongType> d) {
-        double result = Geometry.inSphere(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
-                                          b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
-                                          c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(),
-                                          d.vertices().getX(), d.vertices().getY(), d.vertices().getZ(), x, y, z);
+        long result = Geometry.inSphere(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                        b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                        c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(),
+                                        d.vertices().getX(), d.vertices().getY(), d.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -209,9 +209,9 @@ public class VertexL implements Vertex<Vertex.LongType> {
      */
     @Override
     public final int orientation(Vertex<LongType> a, Vertex<LongType> b, Vertex<LongType> c) {
-        double result = Geometry.leftOfPlane(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
-                                             b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
-                                             c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(), x, y, z);
+        long result = Geometry.leftOfPlane(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                           b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                           c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {

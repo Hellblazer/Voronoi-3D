@@ -33,7 +33,7 @@ import com.hellblazer.delaunay.Vertex.DoubleType;
  *
  */
 
-public class TestTimeInsert {
+public class TestTimeInsertD {
 
     int iterations = 100;
 

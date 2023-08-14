@@ -39,7 +39,7 @@ import com.hellblazer.delaunay.Vertex.DoubleType;
  *
  */
 
-public class OrientedFaceTest {
+public class OrientedFaceTestD {
 
     @Test
     public void testFlip2to3() {
