@@ -6,7 +6,7 @@ import java.util.Random;
 
 import com.hellblazer.delaunay.Examples;
 import com.hellblazer.delaunay.Tetrahedralization;
-import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.VertexD;
 import com.hellblazer.delaunay.gui.CubicGrid.Neighborhood;
 import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
 
@@ -29,11 +29,11 @@ public class LinkInspector extends Jfx3dViewerApp {
     @Override
     protected void initializeContentModel() {
         final Tetrahedralization tet = new Tetrahedralization(new Random(666));
-        Vertex[] vertices = Examples.getCubicCrystalStructure();
-        for (Vertex v : vertices) {
+        VertexD[] vertices = Examples.getCubicCrystalStructure();
+        for (VertexD v : vertices) {
             tet.insert(v);
         }
-        Vertex v = vertices[13];
+        VertexD v = vertices[13];
         view = new LinkView(v, tet.getEars(v), tet.getVoronoiRegion(v));
 
         var content = getContentModel();

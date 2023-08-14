@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
-import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.VertexD;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -24,14 +24,14 @@ import mesh.PolyLine;
 
 public class GraphicsView extends Group {
 
-    public static Point3D p(Vertex v) {
+    public static Point3D p(VertexD v) {
         return new Point3D(v.x, v.y, v.z);
     }
 
-    protected static Point3f[] convertToPoint3f(List<Vertex> somePoints) {
+    protected static Point3f[] convertToPoint3f(List<VertexD> somePoints) {
         Point3f tmp[] = new Point3f[somePoints.size()];
         int i = 0;
-        for (Vertex v : somePoints) {
+        for (VertexD v : somePoints) {
             tmp[i++] = v.asPoint3f();
         }
 
@@ -71,9 +71,9 @@ public class GraphicsView extends Group {
         return sphere;
     }
 
-    protected void displaySpheres(Collection<Vertex> selected, double aRadius, PhongMaterial aColor, Group group) {
+    protected void displaySpheres(Collection<VertexD> selected, double aRadius, PhongMaterial aColor, Group group) {
         final var children = group.getChildren();
-        for (Vertex v : selected) {
+        for (VertexD v : selected) {
             children.add(sphere(aRadius, p(v), aColor));
         }
     }

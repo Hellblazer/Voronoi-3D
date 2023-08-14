@@ -45,7 +45,7 @@ public class TetrahedronTest {
     public void testCreateUniverse() {
         Tetrahedron idaho = new Tetrahedralization().myOwnPrivateIdaho();
         assertNotNull(idaho);
-        Vertex[] vertices = idaho.getVertices();
+        VertexD[] vertices = idaho.getVertices();
         assertNotNull(vertices);
         assertEquals(4, vertices.length);
         assertNotSame(vertices[0], vertices[1]);
@@ -72,12 +72,12 @@ public class TetrahedronTest {
     @Test
     public void testFlip14() {
         Tetrahedron U = new Tetrahedralization().myOwnPrivateIdaho();
-        Vertex a = U.getVertex(A);
-        Vertex b = U.getVertex(B);
-        Vertex c = U.getVertex(C);
-        Vertex d = U.getVertex(D);
+        VertexD a = U.getVertex(A);
+        VertexD b = U.getVertex(B);
+        VertexD c = U.getVertex(C);
+        VertexD d = U.getVertex(D);
 
-        Vertex N = new Vertex(100, 100, 100);
+        VertexD N = new VertexD(100, 100, 100);
 
         List<OrientedFace> unlinkedFacets = new ArrayList<>();
 

@@ -24,5 +24,5 @@ package com.hellblazer.delaunay;
  */
 @FunctionalInterface
 public interface StarVisitor {
-    void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z);
+    void visit(V vertex, Tetrahedron t, VertexD x, VertexD y, VertexD z);
 }

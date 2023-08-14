@@ -37,7 +37,7 @@ import java.util.function.Function;
  *
  */
 
-public abstract class OrientedFace implements Iterable<Vertex> {
+public abstract class OrientedFace implements Iterable<VertexD> {
 
     /**
      * The vertex in the adjacent tetrahedron opposite of this face
@@ -60,7 +60,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * @param n     - the vertex to be deleted
      * @return true if the receiver is to be deleted from the list of ears
      */
-    public boolean flip(int index, LinkedList<OrientedFace> ears, Vertex n) {
+    public boolean flip(int index, LinkedList<OrientedFace> ears, VertexD n) {
         if (!isValid()) {
             return true;
         }
@@ -90,7 +90,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
             return true;
         } else if (reflexEdges == 1) {
             // Two faces of the opposing tetrahedron are visible
-            Vertex opposingVertex = getVertex(reflexEdge);
+            VertexD opposingVertex = getVertex(reflexEdge);
             Tetrahedron t1 = getIncident().getNeighbor(opposingVertex);
             Tetrahedron t2 = getAdjacent().getNeighbor(opposingVertex);
             if (t1 != null && t1 == t2 && isFlippable3ear(n) && isLocallyDelaunay(index, n, ears)) {
@@ -111,7 +111,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * @param ears - the stack of oriented faces left to process
      * @return - the last valid tetrahedron noted, or null if no flip was performed.
      */
-    public Tetrahedron flip(Vertex n, List<OrientedFace> ears) {
+    public Tetrahedron flip(VertexD n, List<OrientedFace> ears) {
         if (!isValid()) {
             return null;
         }
@@ -138,7 +138,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
             }
         } else if (reflexEdges == 1 && !isRegular()) {
             // Two faces of the opposing tetrahedron are visible
-            Vertex opposingVertex = getVertex(reflexEdge);
+            VertexD opposingVertex = getVertex(reflexEdge);
             Tetrahedron t1 = getIncident().getNeighbor(opposingVertex);
             Tetrahedron t2 = getAdjacent().getNeighbor(opposingVertex);
             if (t1 != null && t1 == t2) {
@@ -165,8 +165,8 @@ public abstract class OrientedFace implements Iterable<Vertex> {
         assert adjacentVertexOrdinal != null;
         Tetrahedron incident = getIncident();
 
-        Vertex opposingVertex = getAdjacentVertex();
-        Vertex incidentVertex = getIncidentVertex();
+        VertexD opposingVertex = getAdjacentVertex();
+        VertexD incidentVertex = getIncidentVertex();
         Tetrahedron t0 = new Tetrahedron(getVertex(0), incidentVertex, getVertex(1), opposingVertex);
         Tetrahedron t1 = new Tetrahedron(getVertex(1), incidentVertex, getVertex(2), opposingVertex);
         Tetrahedron t2 = new Tetrahedron(getVertex(0), getVertex(2), incidentVertex, opposingVertex);
@@ -232,8 +232,8 @@ public abstract class OrientedFace implements Iterable<Vertex> {
         Tetrahedron incident = getIncident();
         Tetrahedron o2 = getIncident().getNeighbor(getVertex(reflexEdge));
 
-        Vertex top0 = null;
-        Vertex top1 = null;
+        VertexD top0 = null;
+        VertexD top1 = null;
 
         switch (reflexEdge) {
         case 0:
@@ -252,9 +252,9 @@ public abstract class OrientedFace implements Iterable<Vertex> {
             throw new IllegalArgumentException("Invalid reflex edge index: " + reflexEdge);
         }
 
-        Vertex x = getVertex(reflexEdge);
-        Vertex y = getIncidentVertex();
-        Vertex z = getAdjacentVertex();
+        VertexD x = getVertex(reflexEdge);
+        VertexD y = getIncidentVertex();
+        VertexD z = getAdjacentVertex();
 
         Tetrahedron t0;
         Tetrahedron t1;
@@ -299,7 +299,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      *
      * @return
      */
-    public Vertex getAdjacentVertex() {
+    public VertexD getAdjacentVertex() {
         if (adjacentVertexOrdinal == null) {
             return null;
         }
@@ -322,7 +322,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * @param v - the vertex defining the edge
      * @return the array of two vertices defining the edge
      */
-    abstract public Vertex[] getEdge(Vertex v);
+    abstract public VertexD[] getEdge(VertexD v);
 
     /**
      * Answer the tetrahedron which is incident with this face
@@ -336,7 +336,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      *
      * @return
      */
-    abstract public Vertex getIncidentVertex();
+    abstract public VertexD getIncidentVertex();
 
     /**
      * Answer the canonical vertex for this face
@@ -344,13 +344,13 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * @param anIndex
      * @return
      */
-    abstract public Vertex getVertex(int anIndex);
+    abstract public VertexD getVertex(int anIndex);
 
     public boolean hasAdjacent() {
         return adjacentVertexOrdinal != null;
     }
 
-    abstract public boolean includes(Vertex v);
+    abstract public boolean includes(VertexD v);
 
     /**
      * Answer the edge index corresponding to the vertex
@@ -358,7 +358,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * @param v - the vertex
      * @return the index of the edge
      */
-    abstract public int indexOf(Vertex v);
+    abstract public int indexOf(VertexD v);
 
     /**
      * Answer true if the faces joined by the edge are concave when viewed from the
@@ -393,7 +393,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
     }
 
     @Override
-    public Iterator<Vertex> iterator() {
+    public Iterator<VertexD> iterator() {
         return new Iterator<>() {
             int i = 0;
 
@@ -403,7 +403,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
             }
 
             @Override
-            public Vertex next() {
+            public VertexD next() {
                 if (i == 3) {
                     throw new NoSuchElementException("No vertices left on this face");
                 }
@@ -425,27 +425,27 @@ public abstract class OrientedFace implements Iterable<Vertex> {
      * @return +1 if the orientation of the query point is positive with respect to
      *         the face, -1 if negative and 0 if the query point is coplanar
      */
-    abstract public int orientationOf(Vertex query);
+    abstract public int orientationOf(VertexD query);
 
-    private boolean inSphere(Vertex query, Vertex b, Vertex c, Vertex d) {
-        Vertex a = getIncidentVertex();
+    private boolean inSphere(VertexD query, VertexD b, VertexD c, VertexD d) {
+        VertexD a = getIncidentVertex();
         if (d.orientation(a, b, c) < 0) {
-            Vertex tmp = b;
+            VertexD tmp = b;
             b = a;
             a = tmp;
         }
         return query.inSphere(a, b, c, d) > 0;
     }
 
-    private boolean isFlippable3ear(Vertex n) {
+    private boolean isFlippable3ear(VertexD n) {
         OrientedFace opposingFace = getIncident().getFace(n);
         opposingFace.getAdjacent().getFace(opposingFace.getAdjacentVertex());
         return opposingFace.orientationOf(n) > 0;
 
     }
 
-    private boolean isLocallyDelaunay(int index, Vertex v, LinkedList<OrientedFace> ears) {
-        Function<Vertex, Boolean> circumSphere = query -> {
+    private boolean isLocallyDelaunay(int index, VertexD v, LinkedList<OrientedFace> ears) {
+        Function<VertexD, Boolean> circumSphere = query -> {
             switch (indexOf(v)) {
             case 0:
                 return inSphere(query, getVertex(1), getVertex(2), getVertex(0));
@@ -459,7 +459,7 @@ public abstract class OrientedFace implements Iterable<Vertex> {
             if (index != i) {
                 OrientedFace ear = ears.get(i);
                 if (ear != this && ear.isValid()) {
-                    for (Vertex e : ear) {
+                    for (VertexD e : ear) {
                         if (e != v && circumSphere.apply(e)) {
                             return false;
                         }

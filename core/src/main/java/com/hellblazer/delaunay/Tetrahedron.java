@@ -57,16 +57,16 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex[] getEdge(Vertex v) {
+        public VertexD[] getEdge(VertexD v) {
             switch (ordinalOf(v)) {
             case A: {
-                return new Vertex[] { d, b };
+                return new VertexD[] { d, b };
             }
             case D: {
-                return new Vertex[] { b, a };
+                return new VertexD[] { b, a };
             }
             case B: {
-                return new Vertex[] { a, d };
+                return new VertexD[] { a, d };
             }
             default:
                 throw new IllegalArgumentException("Invalid vertex ordinal");
@@ -79,12 +79,12 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex getIncidentVertex() {
+        public VertexD getIncidentVertex() {
             return c;
         }
 
         @Override
-        public Vertex getVertex(int v) {
+        public VertexD getVertex(int v) {
             switch (v) {
             case 0:
                 return a;
@@ -98,7 +98,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public boolean includes(Vertex v) {
+        public boolean includes(VertexD v) {
             if ((a == v) || (d == v) || (b == v)) {
                 return true;
             }
@@ -106,7 +106,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int indexOf(Vertex v) {
+        public int indexOf(VertexD v) {
             if (v == a) {
                 return 0;
             }
@@ -121,7 +121,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isConvex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -139,7 +139,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isReflex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -156,7 +156,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int orientationOf(Vertex query) {
+        public int orientationOf(VertexD query) {
             return orientationWrtADB(query);
         }
 
@@ -181,16 +181,16 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex[] getEdge(Vertex v) {
+        public VertexD[] getEdge(VertexD v) {
             switch (ordinalOf(v)) {
             case B: {
-                return new Vertex[] { c, a };
+                return new VertexD[] { c, a };
             }
             case C: {
-                return new Vertex[] { a, b };
+                return new VertexD[] { a, b };
             }
             case A: {
-                return new Vertex[] { b, c };
+                return new VertexD[] { b, c };
             }
             default:
                 throw new IllegalArgumentException("Invalid vertex ordinal");
@@ -203,12 +203,12 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex getIncidentVertex() {
+        public VertexD getIncidentVertex() {
             return d;
         }
 
         @Override
-        public Vertex getVertex(int v) {
+        public VertexD getVertex(int v) {
             switch (v) {
             case 0:
                 return b;
@@ -222,7 +222,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public boolean includes(Vertex v) {
+        public boolean includes(VertexD v) {
             if ((b == v) || (c == v) || (a == v)) {
                 return true;
             }
@@ -230,7 +230,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int indexOf(Vertex v) {
+        public int indexOf(VertexD v) {
             if (v == b) {
                 return 0;
             }
@@ -245,7 +245,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isConvex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -264,7 +264,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isReflex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -282,7 +282,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int orientationOf(Vertex query) {
+        public int orientationOf(VertexD query) {
             return orientationWrtBCA(query);
         }
 
@@ -307,16 +307,16 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex[] getEdge(Vertex v) {
+        public VertexD[] getEdge(VertexD v) {
             switch (ordinalOf(v)) {
             case C: {
-                return new Vertex[] { b, d };
+                return new VertexD[] { b, d };
             }
             case B: {
-                return new Vertex[] { d, c };
+                return new VertexD[] { d, c };
             }
             case D: {
-                return new Vertex[] { c, b };
+                return new VertexD[] { c, b };
             }
             default:
                 throw new IllegalArgumentException("Invalid vertex ordinal");
@@ -329,12 +329,12 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex getIncidentVertex() {
+        public VertexD getIncidentVertex() {
             return a;
         }
 
         @Override
-        public Vertex getVertex(int v) {
+        public VertexD getVertex(int v) {
             switch (v) {
             case 0:
                 return c;
@@ -348,7 +348,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public boolean includes(Vertex v) {
+        public boolean includes(VertexD v) {
             if ((c == v) || (b == v) || (d == v)) {
                 return true;
             }
@@ -356,7 +356,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int indexOf(Vertex v) {
+        public int indexOf(VertexD v) {
             if (v == c) {
                 return 0;
             }
@@ -371,7 +371,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isConvex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -389,7 +389,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isReflex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -406,7 +406,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int orientationOf(Vertex query) {
+        public int orientationOf(VertexD query) {
             return orientationWrtCBD(query);
         }
 
@@ -431,16 +431,16 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex[] getEdge(Vertex v) {
+        public VertexD[] getEdge(VertexD v) {
             switch (ordinalOf(v)) {
             case D: {
-                return new Vertex[] { a, c };
+                return new VertexD[] { a, c };
             }
             case A: {
-                return new Vertex[] { c, d };
+                return new VertexD[] { c, d };
             }
             case C: {
-                return new Vertex[] { d, a };
+                return new VertexD[] { d, a };
             }
             default:
                 throw new IllegalArgumentException("Invalid vertex ordinal");
@@ -453,12 +453,12 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public Vertex getIncidentVertex() {
+        public VertexD getIncidentVertex() {
             return b;
         }
 
         @Override
-        public Vertex getVertex(int v) {
+        public VertexD getVertex(int v) {
             switch (v) {
             case 0:
                 return d;
@@ -472,7 +472,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public boolean includes(Vertex v) {
+        public boolean includes(VertexD v) {
             if ((d == v) || (a == v) || (c == v)) {
                 return true;
             }
@@ -480,7 +480,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int indexOf(Vertex v) {
+        public int indexOf(VertexD v) {
             if (v == d) {
                 return 0;
             }
@@ -495,7 +495,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isConvex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -513,7 +513,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
         @Override
         public boolean isReflex(int vertex) {
-            Vertex adjacentVertex = getAdjacentVertex();
+            VertexD adjacentVertex = getAdjacentVertex();
             if (adjacentVertex == null) {
                 return false;
             }
@@ -530,7 +530,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         }
 
         @Override
-        public int orientationOf(Vertex query) {
+        public int orientationOf(VertexD query) {
             return orientationWrtDAC(query);
         }
 
@@ -562,22 +562,22 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     /**
      * Vertex A
      */
-    private Vertex a;
+    private VertexD a;
 
     /**
      * Vertx B
      */
-    private Vertex b;
+    private VertexD b;
 
     /**
      * Vertex C
      */
-    private Vertex c;
+    private VertexD c;
 
     /**
      * Vertex D
      */
-    private Vertex d;
+    private VertexD d;
 
     /**
      * The neighboring tetrahedron opposite of vertex A
@@ -607,7 +607,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param z
      * @param w
      */
-    public Tetrahedron(Vertex x, Vertex y, Vertex z, Vertex w) {
+    public Tetrahedron(VertexD x, VertexD y, VertexD z, VertexD w) {
         assert x != null & y != null & z != null & w != null;
 
         a = x;
@@ -626,7 +626,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      *
      * @param vertices
      */
-    public Tetrahedron(Vertex[] vertices) {
+    public Tetrahedron(VertexD[] vertices) {
         this(vertices[0], vertices[1], vertices[2], vertices[3]);
         assert vertices.length == 4;
     }
@@ -636,11 +636,11 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      *
      * @param faces
      */
-    public void addFaces(List<Vertex[]> faces) {
-        faces.add(new Vertex[] { a, d, b });
-        faces.add(new Vertex[] { b, c, a });
-        faces.add(new Vertex[] { c, b, d });
-        faces.add(new Vertex[] { d, a, c });
+    public void addFaces(List<VertexD[]> faces) {
+        faces.add(new VertexD[] { a, d, b });
+        faces.add(new VertexD[] { b, c, a });
+        faces.add(new VertexD[] { c, b, d });
+        faces.add(new VertexD[] { d, a, c });
     }
 
     /**
@@ -668,7 +668,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      *             inserted point
      * @return one of the four new tetrahedra
      */
-    public Tetrahedron flip1to4(Vertex n, List<OrientedFace> ears) {
+    public Tetrahedron flip1to4(VertexD n, List<OrientedFace> ears) {
         Tetrahedron t0 = new Tetrahedron(a, b, c, n);
         Tetrahedron t1 = new Tetrahedron(a, d, b, n);
         Tetrahedron t2 = new Tetrahedron(a, c, d, n);
@@ -745,7 +745,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param v
      * @return
      */
-    public OrientedFace getFace(Vertex v) {
+    public OrientedFace getFace(VertexD v) {
         return getFace(ordinalOf(v));
     }
 
@@ -787,7 +787,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param vertex
      * @return
      */
-    public Tetrahedron getNeighbor(Vertex vertex) {
+    public Tetrahedron getNeighbor(VertexD vertex) {
         return getNeighbor(ordinalOf(vertex));
     }
 
@@ -797,7 +797,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param v the vertex
      * @return the vertex
      */
-    public Vertex getVertex(V v) {
+    public VertexD getVertex(V v) {
         switch (v) {
         case A:
             return a;
@@ -817,11 +817,11 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      *
      * @return
      */
-    public Vertex[] getVertices() {
-        return new Vertex[] { a, b, c, d };
+    public VertexD[] getVertices() {
+        return new VertexD[] { a, b, c, d };
     }
 
-    public boolean includes(Vertex query) {
+    public boolean includes(VertexD query) {
         return a == query || b == query || c == query || d == query;
     }
 
@@ -832,8 +832,12 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public boolean inSphere(Vertex query) {
+    public boolean inSphere(VertexD query) {
         return query.inSphere(a, b, c, d) > 0;
+    }
+
+    public boolean isDeleted() {
+        return a == null;
     }
 
     /**
@@ -873,7 +877,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @return the indicator of this vertex or null if not a vertex of this
      *         tetrahedron or the supplied vertex is null
      */
-    public V ordinalOf(Vertex v) {
+    public V ordinalOf(VertexD v) {
         if (v == null) {
             return null;
         }
@@ -899,7 +903,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrt(V face, Vertex query) {
+    public int orientationWrt(V face, VertexD query) {
         switch (face) {
         case A:
             return orientationWrtCBD(query);
@@ -921,7 +925,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrtADB(Vertex query) {
+    public int orientationWrtADB(VertexD query) {
         return query.orientation(a, d, b);
     }
 
@@ -932,7 +936,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrtBCA(Vertex query) {
+    public int orientationWrtBCA(VertexD query) {
         return query.orientation(b, c, a);
     }
 
@@ -943,7 +947,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrtCBD(Vertex query) {
+    public int orientationWrtCBD(VertexD query) {
         return query.orientation(c, b, d);
     }
 
@@ -954,7 +958,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrtDAC(Vertex query) {
+    public int orientationWrtDAC(VertexD query) {
         return query.orientation(d, a, c);
     }
 
@@ -1000,7 +1004,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
             buf.append("DELETED]");
             return buf.toString();
         }
-        for (Vertex v : getVertices()) {
+        for (VertexD v : getVertices()) {
             buf.append(v);
             buf.append(", ");
         }
@@ -1035,24 +1039,20 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         a = b = c = d = null;
     }
 
-    Vertex getA() {
+    VertexD getA() {
         return a;
     }
 
-    Vertex getB() {
+    VertexD getB() {
         return b;
     }
 
-    Vertex getC() {
+    VertexD getC() {
         return c;
     }
 
-    Vertex getD() {
+    VertexD getD() {
         return d;
-    }
-
-    boolean isDeleted() {
-        return a == null;
     }
 
     /**
@@ -1108,7 +1108,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param n
      * @param vNew
      */
-    void patch(Vertex old, Tetrahedron n, V vNew) {
+    void patch(VertexD old, Tetrahedron n, V vNew) {
         patch(ordinalOf(old), n, vNew);
     }
 
@@ -1159,7 +1159,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param axis
      * @param face
      */
-    void traverseVoronoiFace(Tetrahedron origin, Tetrahedron from, Vertex vC, Vertex axis, List<Point3f> face) {
+    void traverseVoronoiFace(Tetrahedron origin, Tetrahedron from, VertexD vC, VertexD axis, List<Point3f> face) {
         if (origin == this) {
             return;
         }
@@ -1183,7 +1183,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param axis
      * @param face
      */
-    void traverseVoronoiFace(Vertex vC, Vertex axis, List<Point3f[]> faces) {
+    void traverseVoronoiFace(VertexD vC, VertexD axis, List<Point3f[]> faces) {
         ArrayList<Point3f> face = new ArrayList<>();
         double[] center = new double[3];
         centerSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, center);
@@ -1202,7 +1202,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param vC      - the center vertex
      * @param visitor - the visitor to invoke for each tetrahedron in the star
      */
-    void visitStar(Vertex vC, StarVisitor visitor) {
+    void visitStar(VertexD vC, StarVisitor visitor) {
         IdentitySet<Tetrahedron> visited = new IdentitySet<>(10);
         visitStar(vC, visitor, visited);
     }
@@ -1214,7 +1214,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param visitor - the visitor to invoke for each tetrahedron in the star
      * @param visited - the set of previously visited tetrahedra
      */
-    void visitStar(Vertex vC, StarVisitor visitor, IdentitySet<Tetrahedron> visited) {
+    void visitStar(VertexD vC, StarVisitor visitor, IdentitySet<Tetrahedron> visited) {
         if (visited.add(this)) {
             switch (ordinalOf(vC)) {
             case A:
@@ -1279,10 +1279,10 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         patch(vf1, nF1_that, nF1_that.ordinalOf(nE));
         patch(vf2, nF2_that, nF2_that.ordinalOf(nE));
 
-        Vertex e1 = getVertex(ve1);
-        Vertex e2 = getVertex(ve2);
-        Vertex f1 = getVertex(vf1);
-        Vertex f2 = getVertex(vf2);
+        VertexD e1 = getVertex(ve1);
+        VertexD e2 = getVertex(ve2);
+        VertexD f1 = getVertex(vf1);
+        VertexD f2 = getVertex(vf2);
 
         delete();
         nE.delete();

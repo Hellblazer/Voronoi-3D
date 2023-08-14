@@ -3,7 +3,7 @@ package com.hellblazer.delaunay.gui;
 import java.util.Random;
 
 import com.hellblazer.delaunay.Tetrahedralization;
-import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.VertexD;
 import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
 
 import javafx.scene.Group;
@@ -40,8 +40,8 @@ public class Inspector extends Jfx3dViewerApp {
     protected void initializeContentModel() {
         final var random = new Random(666);
         final var tet = new Tetrahedralization(random);
-        Vertex ourPoints[] = Vertex.getRandomPoints(random, 120, 5.0D, true);
-        for (Vertex v : ourPoints) {
+        VertexD ourPoints[] = VertexD.getRandomPoints(random, 120, 5.0D, true);
+        for (VertexD v : ourPoints) {
             tet.insert(v);
         }
         view = new TetrahedralizationView(tet);

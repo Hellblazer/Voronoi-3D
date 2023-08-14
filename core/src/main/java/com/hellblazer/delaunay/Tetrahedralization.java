@@ -70,19 +70,19 @@ public class Tetrahedralization {
      */
     private static double SCALE = Math.pow(2D, 30D);
 
-    public static Vertex[] getFourCorners() {
-        Vertex[] fourCorners = new Vertex[4];
-        fourCorners[0] = new Vertex(-1, 1, -1, SCALE);
-        fourCorners[1] = new Vertex(1, 1, 1, SCALE);
-        fourCorners[2] = new Vertex(1, -1, -1, SCALE);
-        fourCorners[3] = new Vertex(-1, -1, 1, SCALE);
+    public static VertexD[] getFourCorners() {
+        VertexD[] fourCorners = new VertexD[4];
+        fourCorners[0] = new VertexD(-1, 1, -1, SCALE);
+        fourCorners[1] = new VertexD(1, 1, 1, SCALE);
+        fourCorners[2] = new VertexD(1, -1, -1, SCALE);
+        fourCorners[3] = new VertexD(-1, -1, 1, SCALE);
         return fourCorners;
     }
 
     /**
      * The four corners of the maximally bounding tetrahedron
      */
-    private final Vertex[] fourCorners;
+    private final VertexD[] fourCorners;
 
     /**
      * The last valid tetrahedron noted
@@ -127,7 +127,7 @@ public class Tetrahedralization {
      *
      * @param v - the vertex to be deleted
      */
-    public void delete(Vertex v) {
+    public void delete(VertexD v) {
         assert v != null;
 
         LinkedList<OrientedFace> ears = getEars(v);
@@ -144,7 +144,7 @@ public class Tetrahedralization {
         size--;
     }
 
-    public LinkedList<OrientedFace> getEars(Vertex v) {
+    public LinkedList<OrientedFace> getEars(VertexD v) {
         assert v != null && v.getAdjacent() != null;
         EarSet aggregator = new EarSet();
         v.getAdjacent().visitStar(v, aggregator);
@@ -157,11 +157,11 @@ public class Tetrahedralization {
      * @param v - the vertex determining the neighborhood
      * @return the collection of neighboring vertices
      */
-    public Collection<Vertex> getNeighbors(Vertex v) {
+    public Collection<VertexD> getNeighbors(VertexD v) {
         assert v != null && v.getAdjacent() != null;
 
-        final Set<Vertex> neighbors = new IdentitySet<>();
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
+        final Set<VertexD> neighbors = new IdentitySet<>();
+        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, VertexD x, VertexD y, VertexD z) -> {
             neighbors.add(x);
             neighbors.add(y);
             neighbors.add(z);
@@ -169,11 +169,11 @@ public class Tetrahedralization {
         return neighbors;
     }
 
-    public Deque<OrientedFace> getStar(Vertex v) {
+    public Deque<OrientedFace> getStar(VertexD v) {
         assert v != null && v.getAdjacent() != null;
 
         final Deque<OrientedFace> star = new ArrayDeque<>();
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
+        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, VertexD x, VertexD y, VertexD z) -> {
             star.push(t.getFace(vertex));
         });
         return star;
@@ -202,7 +202,7 @@ public class Tetrahedralization {
      *
      * @return
      */
-    public Vertex[] getUniverse() {
+    public VertexD[] getUniverse() {
         return fourCorners;
     }
 
@@ -211,9 +211,9 @@ public class Tetrahedralization {
      *
      * @return
      */
-    public Set<Vertex> getVertices() {
+    public Set<VertexD> getVertices() {
         Set<Tetrahedron> tetrahedrons = new IdentitySet<>(size);
-        Set<Vertex> vertices = new IdentitySet<Vertex>(size);
+        Set<VertexD> vertices = new IdentitySet<VertexD>(size);
         var stack = new Stack<Tetrahedron>();
         stack.push(last);
         while (!stack.isEmpty()) {
@@ -235,12 +235,12 @@ public class Tetrahedralization {
      * @param v - the vertex of interest
      * @return the list of faces defining the voronoi region defined by v
      */
-    public List<Point3f[]> getVoronoiRegion(final Vertex v) {
+    public List<Point3f[]> getVoronoiRegion(final VertexD v) {
         assert v != null && v.getAdjacent() != null;
 
         final ArrayList<Point3f[]> faces = new ArrayList<>();
-        Set<Vertex> neighbors = new IdentitySet<>(10);
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
+        Set<VertexD> neighbors = new IdentitySet<>(10);
+        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, VertexD x, VertexD y, VertexD z) -> {
             if (neighbors.add(x)) {
                 t.traverseVoronoiFace(v, x, faces);
             }
@@ -261,7 +261,7 @@ public class Tetrahedralization {
      *
      * @param v - the vertex to be inserted
      */
-    public void insert(Vertex v) {
+    public void insert(VertexD v) {
         assert v != null;
         v.reset();
         List<OrientedFace> ears = new ArrayList<>();
@@ -295,7 +295,7 @@ public class Tetrahedralization {
      * @param query - the query point
      * @return
      */
-    public Tetrahedron locate(Vertex query) {
+    public Tetrahedron locate(VertexD query) {
         assert query != null;
 
         V o = null;
@@ -335,9 +335,9 @@ public class Tetrahedralization {
      * @return
      */
     public Tetrahedron myOwnPrivateIdaho() {
-        Vertex[] U = new Vertex[4];
+        VertexD[] U = new VertexD[4];
         int i = 0;
-        for (Vertex v : fourCorners) {
+        for (VertexD v : fourCorners) {
             U[i++] = v;
         }
         return new Tetrahedron(U);
@@ -352,7 +352,7 @@ public class Tetrahedralization {
      * @param tetrahedrons
      * @param vertices
      */
-    public void traverse(Set<Tetrahedron> tetrahedrons, Set<Vertex> vertices) {
+    public void traverse(Set<Tetrahedron> tetrahedrons, Set<VertexD> vertices) {
         var stack = new Stack<Tetrahedron>();
         stack.push(last);
         while (!stack.isEmpty()) {
@@ -374,7 +374,7 @@ public class Tetrahedralization {
      *
      * @return the tetrahedron created from the flip
      */
-    protected Tetrahedron flip4to1(Vertex n) {
+    protected Tetrahedron flip4to1(VertexD n) {
         Deque<OrientedFace> star = getStar(n);
         ArrayList<Tetrahedron> deleted = new ArrayList<>();
         for (OrientedFace f : star) {
@@ -382,12 +382,12 @@ public class Tetrahedralization {
         }
         assert star.size() == 4;
         OrientedFace base = star.pop();
-        Vertex a = base.getVertex(2);
-        Vertex b = base.getVertex(0);
-        Vertex c = base.getVertex(1);
-        Vertex d = null;
+        VertexD a = base.getVertex(2);
+        VertexD b = base.getVertex(0);
+        VertexD c = base.getVertex(1);
+        VertexD d = null;
         OrientedFace face = star.pop();
-        for (Vertex v : face) {
+        for (VertexD v : face) {
             if (!base.includes(v)) {
                 d = v;
                 break;

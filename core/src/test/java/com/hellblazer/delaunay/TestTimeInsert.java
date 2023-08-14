@@ -19,7 +19,7 @@
 
 package com.hellblazer.delaunay;
 
-import static com.hellblazer.delaunay.Vertex.getRandomPoints;
+import static com.hellblazer.delaunay.VertexD.getRandomPoints;
 
 import java.util.Random;
 
@@ -42,15 +42,15 @@ public class TestTimeInsert {
 
         Tetrahedralization tet = new Tetrahedralization(random);
 
-        Vertex[] cubicCrystalStructure = Examples.getCubicCrystalStructure();
-        for (Vertex v : cubicCrystalStructure) {
+        VertexD[] cubicCrystalStructure = Examples.getCubicCrystalStructure();
+        for (VertexD v : cubicCrystalStructure) {
             tet.insert(v);
         }
 
         long now = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
             tet = new Tetrahedralization(random);
-            for (Vertex v : cubicCrystalStructure) {
+            for (VertexD v : cubicCrystalStructure) {
                 tet.insert(v);
             }
         }
@@ -65,15 +65,15 @@ public class TestTimeInsert {
 
         Tetrahedralization tet = new Tetrahedralization(random);
 
-        Vertex[] grid = Examples.getGrid();
-        for (Vertex v : grid) {
+        VertexD[] grid = Examples.getGrid();
+        for (VertexD v : grid) {
             tet.insert(v);
         }
 
         long now = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
             tet = new Tetrahedralization(random);
-            for (Vertex v : grid) {
+            for (VertexD v : grid) {
                 tet.insert(v);
             }
         }
@@ -84,17 +84,17 @@ public class TestTimeInsert {
     @Test
     public void testLargeRandom() {
         Random random = new Random(666);
-        Vertex ourPoints[] = getRandomPoints(random, 600, 1.0D, false);
+        VertexD ourPoints[] = getRandomPoints(random, 600, 1.0D, false);
 
         Tetrahedralization tet = new Tetrahedralization(random);
 
-        for (Vertex v : ourPoints) {
+        for (VertexD v : ourPoints) {
             tet.insert(v);
         }
         long now = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
             tet = new Tetrahedralization(random);
-            for (Vertex v : ourPoints) {
+            for (VertexD v : ourPoints) {
                 tet.insert(v);
             }
         }
@@ -105,17 +105,17 @@ public class TestTimeInsert {
     @Test
     public void testSuperLargeRandom() {
         Random random = new Random(666);
-        Vertex ourPoints[] = getRandomPoints(random, 6000, 10.0D, false);
+        VertexD ourPoints[] = getRandomPoints(random, 6000, 10.0D, false);
 
         Tetrahedralization tet = new Tetrahedralization(random);
 
-        for (Vertex v : ourPoints) {
+        for (VertexD v : ourPoints) {
             tet.insert(v);
         }
         long now = System.nanoTime();
         for (int i = 0; i < 2; i++) {
             tet = new Tetrahedralization(random);
-            for (Vertex v : ourPoints) {
+            for (VertexD v : ourPoints) {
                 tet.insert(v);
             }
         }
@@ -129,15 +129,15 @@ public class TestTimeInsert {
 
         Tetrahedralization tet = new Tetrahedralization(random);
 
-        Vertex[] worstCase = Examples.getWorstCase();
-        for (Vertex v : worstCase) {
+        VertexD[] worstCase = Examples.getWorstCase();
+        for (VertexD v : worstCase) {
             tet.insert(v);
         }
 
         long now = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
             tet = new Tetrahedralization(random);
-            for (Vertex v : worstCase) {
+            for (VertexD v : worstCase) {
                 tet.insert(v);
             }
         }

@@ -41,11 +41,11 @@ public class OrientedFaceTest {
 
     @Test
     public void testFlip2to3() {
-        Vertex a = new Vertex(0, 100, 0);
-        Vertex b = new Vertex(100, 0, 0);
-        Vertex c = new Vertex(50, 50, 0);
-        Vertex d = new Vertex(0, -50, -100);
-        Vertex e = new Vertex(0, -50, 100);
+        VertexD a = new VertexD(0, 100, 0);
+        VertexD b = new VertexD(100, 0, 0);
+        VertexD c = new VertexD(50, 50, 0);
+        VertexD d = new VertexD(0, -50, -100);
+        VertexD e = new VertexD(0, -50, 100);
 
         Tetrahedron tA = new Tetrahedron(a, b, c, d);
         Tetrahedron tB = new Tetrahedron(e, b, c, a);
@@ -88,11 +88,11 @@ public class OrientedFaceTest {
 
     @Test
     public void testIsConvex() {
-        Vertex a = new Vertex(-1, -1, 1);
-        Vertex b = new Vertex(1, 1, 1);
-        Vertex c = new Vertex(-1, 1, -1);
-        Vertex d = new Vertex(1, -1, -1);
-        Vertex e = new Vertex(-1, 1, 1);
+        VertexD a = new VertexD(-1, -1, 1);
+        VertexD b = new VertexD(1, 1, 1);
+        VertexD c = new VertexD(-1, 1, -1);
+        VertexD d = new VertexD(1, -1, -1);
+        VertexD e = new VertexD(-1, 1, 1);
 
         Tetrahedron tA = new Tetrahedron(a, b, c, d);
         Tetrahedron tB = new Tetrahedron(b, c, a, e);
@@ -109,11 +109,11 @@ public class OrientedFaceTest {
 
     @Test
     public void testIsReflex() {
-        Vertex a = new Vertex(-1, -1, 1);
-        Vertex b = new Vertex(1, 1, 1);
-        Vertex c = new Vertex(-1, 1, -1);
-        Vertex d = new Vertex(1, -1, 100);
-        Vertex e = new Vertex(-1, 1, 100);
+        VertexD a = new VertexD(-1, -1, 1);
+        VertexD b = new VertexD(1, 1, 1);
+        VertexD c = new VertexD(-1, 1, -1);
+        VertexD d = new VertexD(1, -1, 100);
+        VertexD e = new VertexD(-1, 1, 100);
 
         Tetrahedron tA = new Tetrahedron(a, b, c, d);
         Tetrahedron tB = new Tetrahedron(b, c, a, e);

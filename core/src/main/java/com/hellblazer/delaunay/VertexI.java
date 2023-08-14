@@ -28,12 +28,12 @@ import javax.vecmath.Point3f;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
-public class Vertex {
+public class VertexI {
     /**
      * Minimal zero
      */
-    static final double EPSILON = Math.pow(10D, -20D);
-    static final Vertex ORIGIN  = new Vertex(0, 0, 0);
+    static final double  EPSILON = Math.pow(10D, -20D);
+    static final VertexI ORIGIN  = new VertexI(0, 0, 0);
 
     /**
      * Create some random points in a sphere
@@ -44,9 +44,9 @@ public class Vertex {
      * @param inSphere
      * @return
      */
-    public static Vertex[] getRandomPoints(Random random, int numberOfPoints, double radius, boolean inSphere) {
-        double radiusSquared = radius * radius;
-        Vertex ourPoints[] = new Vertex[numberOfPoints];
+    public static VertexI[] getRandomPoints(Random random, int numberOfPoints, int radius, boolean inSphere) {
+        int radiusSquared = radius * radius;
+        VertexI ourPoints[] = new VertexI[numberOfPoints];
         for (int i = 0; i < ourPoints.length; i++) {
             if (inSphere) {
                 do {
@@ -68,8 +68,8 @@ public class Vertex {
      * @param max
      * @return
      */
-    public static double random(Random random, double min, double max) {
-        double result = random.nextDouble();
+    public static int random(Random random, int min, int max) {
+        var result = random.nextInt();
         if (min > max) {
             result *= min - max;
             result += max;
@@ -88,13 +88,13 @@ public class Vertex {
      * @param max
      * @return
      */
-    public static Vertex randomPoint(Random random, double min, double max) {
-        return new Vertex(random(random, min, max), random(random, min, max), random(random, min, max));
+    public static VertexI randomPoint(Random random, int min, int max) {
+        return new VertexI(random(random, min, max), random(random, min, max), random(random, min, max));
     }
 
-    public final double x;
-    public final double y;
-    public final double z;
+    public final int x;
+    public final int y;
+    public final int z;
 
     /**
      * One of the tetrahedra adjacent to the vertex
@@ -106,18 +106,18 @@ public class Vertex {
      */
     private int order = 0;
 
-    public Vertex(double i, double j, double k) {
+    public VertexI(int i, int j, int k) {
         x = i;
         y = j;
         z = k;
     }
 
-    public Vertex(double i, double j, double k, double scale) {
+    public VertexI(int i, int j, int k, int scale) {
         this(i * scale, j * scale, k * scale);
     }
 
     public Point3f asPoint3f() {
-        return new Point3f((float) x, (float) y, (float) z);
+        return new Point3f(x, y, z);
     }
 
     /**
@@ -128,7 +128,7 @@ public class Vertex {
         assert order >= 0;
     }
 
-    public final double distanceSquared(Vertex p1) {
+    public final double distanceSquared(VertexI p1) {
         double dx, dy, dz;
 
         dx = x - p1.x;
@@ -166,8 +166,8 @@ public class Vertex {
      * Return +1 if the receiver lies inside the sphere passing through a, b, c, and
      * d; -1 if it lies outside; and 0 if the five points are cospherical. The
      * vertices a, b, c, and d must be ordered so that they have a positive
-     * orientation (as defined by {@link #orientation(Vertex, Vertex, Vertex)}), or
-     * the sign of the result will be reversed.
+     * orientation (as defined by {@link #orientation(VertexI, VertexI, VertexI)}),
+     * or the sign of the result will be reversed.
      * <p>
      *
      * @param a , b, c, d - the points defining the sphere, in oriented order
@@ -176,8 +176,8 @@ public class Vertex {
      *         cospherical
      */
 
-    public final int inSphere(Vertex a, Vertex b, Vertex c, Vertex d) {
-        double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
+    public final int inSphere(VertexI a, VertexI b, VertexI c, VertexI d) {
+        int result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -197,8 +197,8 @@ public class Vertex {
      * @return +1 if the orientation of the query point is positive with respect to
      *         the plane, -1 if negative and 0 if the test point is coplanar
      */
-    public final int orientation(Vertex a, Vertex b, Vertex c) {
-        double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
+    public final int orientation(VertexI a, VertexI b, VertexI c) {
+        int result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {

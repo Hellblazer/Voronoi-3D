@@ -19,7 +19,7 @@
 
 package com.hellblazer.delaunay;
 
-import static com.hellblazer.delaunay.Vertex.getRandomPoints;
+import static com.hellblazer.delaunay.VertexD.getRandomPoints;
 import static junit.framework.Assert.assertEquals;
 
 import java.util.Random;
@@ -39,7 +39,7 @@ public class TetrahedralizationTest {
         int order = 0;
 
         @Override
-        public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
+        public void visit(V vertex, Tetrahedron t, VertexD x, VertexD y, VertexD z) {
             order++;
         }
     }
@@ -47,7 +47,7 @@ public class TetrahedralizationTest {
     @Test
     public void testCubic() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : Examples.getCubicCrystalStructure()) {
+        for (VertexD v : Examples.getCubicCrystalStructure()) {
             T.insert(v);
         }
 
@@ -57,9 +57,9 @@ public class TetrahedralizationTest {
 
     public void testDelete() {
         Tetrahedralization T = new Tetrahedralization(new Random(666));
-        Vertex N = new Vertex(100, 100, 100);
+        VertexD N = new VertexD(100, 100, 100);
         T.insert(N);
-        Vertex O = new Vertex(5000, -1003, 101);
+        VertexD O = new VertexD(5000, -1003, 101);
         T.insert(O);
         T.delete(N);
         assertEquals(1, T.getTetrahedrons().size());
@@ -68,7 +68,7 @@ public class TetrahedralizationTest {
     @Test
     public void testFlip4to1() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        Vertex N = new Vertex(100, 100, 100);
+        VertexD N = new VertexD(100, 100, 100);
         T.insert(N);
         T.flip4to1(N);
         assertEquals(1, T.getTetrahedrons().size());
@@ -77,7 +77,7 @@ public class TetrahedralizationTest {
     @Test
     public void testGrid() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : Examples.getGrid()) {
+        for (VertexD v : Examples.getGrid()) {
             T.insert(v);
         }
 
@@ -88,11 +88,11 @@ public class TetrahedralizationTest {
     @Test
     public void testLargeRandom() {
         Random random = new Random(666);
-        Vertex ourPoints[] = getRandomPoints(random, 60000, 100.0D, false);
+        VertexD ourPoints[] = getRandomPoints(random, 60000, 100.0D, false);
 
         Tetrahedralization T = new Tetrahedralization(random);
 
-        for (Vertex v : ourPoints) {
+        for (VertexD v : ourPoints) {
             T.insert(v);
         }
 
@@ -116,7 +116,7 @@ public class TetrahedralizationTest {
     @Test
     public void testWorstCase() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : Examples.getWorstCase()) {
+        for (VertexD v : Examples.getWorstCase()) {
             T.insert(v);
         }
 
@@ -124,12 +124,12 @@ public class TetrahedralizationTest {
         assertEquals(610, L.size());
     }
 
-    private void verifyOrder(Vertex[] vertices) {
+    private void verifyOrder(VertexD[] vertices) {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : vertices) {
+        for (VertexD v : vertices) {
             T.insert(v);
         }
-        for (Vertex v : vertices) {
+        for (VertexD v : vertices) {
             OC oc = new OC();
             v.getAdjacent().visitStar(v, oc);
             assertEquals(oc.order, v.getOrder());

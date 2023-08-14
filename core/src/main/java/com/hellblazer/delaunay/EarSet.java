@@ -32,7 +32,7 @@ public class EarSet implements StarVisitor {
         Ear(OrientedFace face) {
             this.face = face;
             int hash = 0;
-            for (Vertex v : face) {
+            for (VertexD v : face) {
                 hash ^= v.hashCode();
             }
             hashcode = hash;
@@ -64,7 +64,7 @@ public class EarSet implements StarVisitor {
     }
 
     @Override
-    public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
+    public void visit(V vertex, Tetrahedron t, VertexD x, VertexD y, VertexD z) {
         OrientedFace face = t.getFace(z);
         if (visited.add(new Ear(face))) {
             ears.add(face);

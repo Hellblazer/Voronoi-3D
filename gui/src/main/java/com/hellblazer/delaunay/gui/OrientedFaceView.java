@@ -25,7 +25,7 @@ import java.util.List;
 import javax.vecmath.Point3f;
 
 import com.hellblazer.delaunay.OrientedFace;
-import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.VertexD;
 
 import javafx.geometry.Point3D;
 
@@ -66,7 +66,7 @@ public class OrientedFaceView extends GraphicsView {
 
     private void updateDiagram() {
         int i = 0;
-        for (Vertex v : face) {
+        for (VertexD v : face) {
             myFace[i++] = v.asPoint3f();
         }
         incidentFaces.clear();

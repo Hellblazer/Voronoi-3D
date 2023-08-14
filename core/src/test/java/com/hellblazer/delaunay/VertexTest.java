@@ -35,7 +35,7 @@ public class VertexTest {
     public void testFlip4to1() {
         Tetrahedralization tetrahedralization = new Tetrahedralization();
         Tetrahedron U = tetrahedralization.myOwnPrivateIdaho();
-        Vertex N = new Vertex(100, 100, 100);
+        VertexD N = new VertexD(100, 100, 100);
 
         List<OrientedFace> unlinkedFacets = new ArrayList<>();
 

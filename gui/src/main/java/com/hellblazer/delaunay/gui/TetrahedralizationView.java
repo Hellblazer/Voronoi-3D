@@ -27,7 +27,7 @@ import javax.vecmath.Point3f;
 
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Tetrahedron;
-import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.VertexD;
 
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
@@ -56,7 +56,7 @@ public class TetrahedralizationView extends GraphicsView {
     public TetrahedralizationView(Tetrahedralization t) {
         super();
         tetrahedralization = t;
-        for (Vertex v : tetrahedralization.getUniverse()) {
+        for (VertexD v : tetrahedralization.getUniverse()) {
             fourCorners.add(v.asPoint3f());
         }
         updateDiagram();
@@ -66,11 +66,11 @@ public class TetrahedralizationView extends GraphicsView {
         return tetrahedralization;
     }
 
-    public void highlightRegions(boolean highlight, List<Vertex> vertices) {
+    public void highlightRegions(boolean highlight, List<VertexD> vertices) {
         assert vertices != null;
         highlightedRegions.getChildren().clear();
         if (highlight) {
-            for (Vertex v : vertices) {
+            for (VertexD v : vertices) {
                 render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, true, highlightedRegions);
             }
             displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions);
@@ -95,7 +95,7 @@ public class TetrahedralizationView extends GraphicsView {
 
     public void updateDiagram() {
         var tetrahedrons = new HashSet<Tetrahedron>();
-        var vertices = new HashSet<Vertex>();
+        var vertices = new HashSet<VertexD>();
         tetrahedralization.traverse(tetrahedrons, vertices);
         voronoi.getChildren().clear();
         delaunay.getChildren().clear();
@@ -104,7 +104,7 @@ public class TetrahedralizationView extends GraphicsView {
                 render(face, Colors.yellowMaterial, false, delaunay);
             }
         }
-        for (Vertex v : vertices) {
+        for (VertexD v : vertices) {
             for (Point3f[] face : tetrahedralization.getVoronoiRegion(v)) {
                 render(face, Colors.cyanMaterial, false, voronoi);
             }
