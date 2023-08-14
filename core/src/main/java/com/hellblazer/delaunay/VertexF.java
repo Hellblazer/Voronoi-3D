@@ -28,7 +28,7 @@ import javax.vecmath.Point3f;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
-public class VertexF {
+public class VertexF implements Vertex<Vertex.FloatType> {
     /**
      * Minimal zero
      */
@@ -99,7 +99,7 @@ public class VertexF {
     /**
      * One of the tetrahedra adjacent to the vertex
      */
-    private Tetrahedron adjacent;
+    private Tetrahedron<Vertex.FloatType> adjacent;
 
     /**
      * The number of tetrahedra adjacent to the vertex
@@ -116,6 +116,7 @@ public class VertexF {
         this(i * scale, j * scale, k * scale);
     }
 
+    @Override
     public Point3f asPoint3f() {
         return new Point3f(x, y, z);
     }
@@ -123,6 +124,7 @@ public class VertexF {
     /**
      * Account for the deletion of an adjacent tetrahedron.
      */
+    @Override
     public final void deleteAdjacent() {
         order--;
         assert order >= 0;
@@ -137,7 +139,8 @@ public class VertexF {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public void freshenAdjacent(Tetrahedron tetrahedron) {
+    @Override
+    public void freshenAdjacent(Tetrahedron<Vertex.FloatType> tetrahedron) {
         if (adjacent == null || adjacent.isDeleted())
             adjacent = tetrahedron;
     }
@@ -147,7 +150,8 @@ public class VertexF {
      *
      * @return
      */
-    public final Tetrahedron getAdjacent() {
+    @Override
+    public final Tetrahedron<Vertex.FloatType> getAdjacent() {
         return adjacent;
     }
 
@@ -158,6 +162,7 @@ public class VertexF {
      *
      * @return
      */
+    @Override
     public final int getOrder() {
         return order;
     }
@@ -166,7 +171,7 @@ public class VertexF {
      * Return +1 if the receiver lies inside the sphere passing through a, b, c, and
      * d; -1 if it lies outside; and 0 if the five points are cospherical. The
      * vertices a, b, c, and d must be ordered so that they have a positive
-     * orientation (as defined by {@link #orientation(VertexF, VertexF, VertexF)}),
+     * orientation (as defined by {@link #orientation(VertexD, VertexD, VertexD)}),
      * or the sign of the result will be reversed.
      * <p>
      *
@@ -176,8 +181,12 @@ public class VertexF {
      *         cospherical
      */
 
-    public final int inSphere(VertexF a, VertexF b, VertexF c, VertexF d) {
-        float result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
+    @Override
+    public final int inSphere(Vertex<FloatType> a, Vertex<FloatType> b, Vertex<FloatType> c, Vertex<FloatType> d) {
+        double result = Geometry.inSphere(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                          b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                          c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(),
+                                          d.vertices().getX(), d.vertices().getY(), d.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -197,8 +206,11 @@ public class VertexF {
      * @return +1 if the orientation of the query point is positive with respect to
      *         the plane, -1 if negative and 0 if the test point is coplanar
      */
-    public final int orientation(VertexF a, VertexF b, VertexF c) {
-        double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
+    @Override
+    public final int orientation(Vertex<FloatType> a, Vertex<FloatType> b, Vertex<FloatType> c) {
+        double result = Geometry.leftOfPlane(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                             b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                             c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -210,6 +222,7 @@ public class VertexF {
     /**
      * Reset the state associated with a tetrahedralization.
      */
+    @Override
     public final void reset() {
         adjacent = null;
         order = 0;
@@ -221,7 +234,8 @@ public class VertexF {
      *
      * @param tetrahedron
      */
-    public final void setAdjacent(Tetrahedron tetrahedron) {
+    @Override
+    public final void setAdjacent(Tetrahedron<Vertex.FloatType> tetrahedron) {
         order++;
         adjacent = tetrahedron;
     }
@@ -229,6 +243,27 @@ public class VertexF {
     @Override
     public String toString() {
         return "{" + x + ", " + y + ", " + z + "}";
+    }
+
+    @Override
+    public FloatType vertices() {
+        return new FloatType() {
+
+            @Override
+            public float getX() {
+                return x;
+            }
+
+            @Override
+            public float getY() {
+                return y;
+            }
+
+            @Override
+            public float getZ() {
+                return z;
+            }
+        };
     }
 
 }

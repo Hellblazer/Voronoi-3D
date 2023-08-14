@@ -20,14 +20,14 @@
 package com.hellblazer.delaunay.gui;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.vecmath.Point3f;
 
-import com.hellblazer.delaunay.Tetrahedralization;
+import com.hellblazer.delaunay.TetrahedralizationD;
 import com.hellblazer.delaunay.Tetrahedron;
-import com.hellblazer.delaunay.VertexD;
+import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.Vertex.DoubleType;
 
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
@@ -42,35 +42,35 @@ public class TetrahedralizationView extends GraphicsView {
 
     private static final PhongMaterial COLOR_OF_HIGHLIGHTED_REGION = null;
 
-    private final Group              delaunay           = new Group();
-    private final Set<Point3f>       fourCorners        = new HashSet<>();
-    private final Group              highlightedRegions = new Group();
-    private final Tetrahedralization tetrahedralization;
-    private final Group              vertexes           = new Group();
-    private final Group              voronoi            = new Group();
+    private final Group               delaunay           = new Group();
+    private final Set<Point3f>        fourCorners        = new HashSet<>();
+    private final Group               highlightedRegions = new Group();
+    private final TetrahedralizationD tetrahedralization;
+    private final Group               vertexes           = new Group();
+    private final Group               voronoi            = new Group();
 
     public TetrahedralizationView() {
-        this(new Tetrahedralization());
+        this(new TetrahedralizationD());
     }
 
-    public TetrahedralizationView(Tetrahedralization t) {
+    public TetrahedralizationView(TetrahedralizationD t) {
         super();
         tetrahedralization = t;
-        for (VertexD v : tetrahedralization.getUniverse()) {
+        for (Vertex<?> v : tetrahedralization.getUniverse()) {
             fourCorners.add(v.asPoint3f());
         }
         updateDiagram();
     }
 
-    public Tetrahedralization getTetrahedralization() {
+    public TetrahedralizationD getTetrahedralization() {
         return tetrahedralization;
     }
 
-    public void highlightRegions(boolean highlight, List<VertexD> vertices) {
+    public void highlightRegions(boolean highlight, HashSet<Vertex<DoubleType>> vertices) {
         assert vertices != null;
         highlightedRegions.getChildren().clear();
         if (highlight) {
-            for (VertexD v : vertices) {
+            for (Vertex<DoubleType> v : vertices) {
                 render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, true, highlightedRegions);
             }
             displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions);
@@ -94,17 +94,17 @@ public class TetrahedralizationView extends GraphicsView {
     }
 
     public void updateDiagram() {
-        var tetrahedrons = new HashSet<Tetrahedron>();
-        var vertices = new HashSet<VertexD>();
+        var tetrahedrons = new HashSet<Tetrahedron<DoubleType>>();
+        var vertices = new HashSet<Vertex<DoubleType>>();
         tetrahedralization.traverse(tetrahedrons, vertices);
         voronoi.getChildren().clear();
         delaunay.getChildren().clear();
-        for (Tetrahedron t : tetrahedrons) {
+        for (Tetrahedron<DoubleType> t : tetrahedrons) {
             for (Point3f[] face : t.getFacesCoordinates()) {
                 render(face, Colors.yellowMaterial, false, delaunay);
             }
         }
-        for (VertexD v : vertices) {
+        for (var v : vertices) {
             for (Point3f[] face : tetrahedralization.getVoronoiRegion(v)) {
                 render(face, Colors.cyanMaterial, false, voronoi);
             }

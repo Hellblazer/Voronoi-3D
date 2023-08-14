@@ -23,6 +23,6 @@ package com.hellblazer.delaunay;
  *
  */
 @FunctionalInterface
-public interface StarVisitor {
-    void visit(V vertex, Tetrahedron t, VertexD x, VertexD y, VertexD z);
+public interface StarVisitor<T extends Vertex.Type> {
+    void visit(V vertex, Tetrahedron<T> t, Vertex<T> x, Vertex<T> y, Vertex<T> z);
 }

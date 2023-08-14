@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.hellblazer.delaunay.Examples;
-import com.hellblazer.delaunay.Tetrahedralization;
+import com.hellblazer.delaunay.TetrahedralizationD;
 import com.hellblazer.delaunay.Tetrahedron;
 import com.hellblazer.delaunay.V;
-import com.hellblazer.delaunay.VertexD;
+import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.Vertex.DoubleType;
 import com.hellblazer.delaunay.gui.CubicGrid.Neighborhood;
 import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
 
@@ -31,11 +32,11 @@ public class OrientedFaceInspector extends Jfx3dViewerApp {
 
     @Override
     protected void initializeContentModel() {
-        final Tetrahedralization tet = new Tetrahedralization(new Random(666));
-        for (VertexD v : Examples.getCubicCrystalStructure()) {
+        final TetrahedralizationD tet = new TetrahedralizationD(new Random(666));
+        for (Vertex<DoubleType> v : Examples.getCubicCrystalStructure()) {
             tet.insert(v);
         }
-        ArrayList<Tetrahedron> tets = new ArrayList<>(tet.getTetrahedrons());
+        ArrayList<Tetrahedron<DoubleType>> tets = new ArrayList<Tetrahedron<DoubleType>>(tet.getTetrahedrons());
         view = new OrientedFaceView(tets.get(2).getFace(V.C));
 
         var content = getContentModel();

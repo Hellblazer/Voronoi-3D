@@ -1,6 +1,7 @@
 package com.hellblazer.delaunay.gui;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -8,6 +9,8 @@ import java.util.stream.Stream;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
+import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.Vertex.DoubleType;
 import com.hellblazer.delaunay.VertexD;
 
 import javafx.geometry.Point3D;
@@ -28,10 +31,10 @@ public class GraphicsView extends Group {
         return new Point3D(v.x, v.y, v.z);
     }
 
-    protected static Point3f[] convertToPoint3f(List<VertexD> somePoints) {
+    protected static Point3f[] convertToPoint3f(Collection<Vertex<Vertex.Type>> somePoints) {
         Point3f tmp[] = new Point3f[somePoints.size()];
         int i = 0;
-        for (VertexD v : somePoints) {
+        for (Vertex<Vertex.Type> v : somePoints) {
             tmp[i++] = v.asPoint3f();
         }
 
@@ -71,10 +74,21 @@ public class GraphicsView extends Group {
         return sphere;
     }
 
-    protected void displaySpheres(Collection<VertexD> selected, double aRadius, PhongMaterial aColor, Group group) {
+    public Sphere sphere(double radius, Point3f position, Material material) {
+        var sphere = new Sphere();
+        sphere.setMaterial(material);
+        sphere.setRadius(radius);
+        sphere.setTranslateX(position.getX());
+        sphere.setTranslateY(position.getY());
+        sphere.setTranslateZ(position.getZ());
+        return sphere;
+    }
+
+    protected void displaySpheres(HashSet<Vertex<DoubleType>> vertices, double aRadius, PhongMaterial aColor,
+                                  Group group) {
         final var children = group.getChildren();
-        for (VertexD v : selected) {
-            children.add(sphere(aRadius, p(v), aColor));
+        for (Vertex<?> v : vertices) {
+            children.add(sphere(aRadius, v.asPoint3f(), aColor));
         }
     }
 

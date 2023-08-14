@@ -28,11 +28,11 @@ import javax.vecmath.Point3f;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
-public class VertexD {
+public class VertexD implements Vertex<Vertex.DoubleType> {
     /**
      * Minimal zero
      */
-    static final double EPSILON = Math.pow(10D, -20D);
+    static final double  EPSILON = Math.pow(10D, -20D);
     static final VertexD ORIGIN  = new VertexD(0, 0, 0);
 
     /**
@@ -44,7 +44,8 @@ public class VertexD {
      * @param inSphere
      * @return
      */
-    public static VertexD[] getRandomPoints(Random random, int numberOfPoints, double radius, boolean inSphere) {
+    public static Vertex<DoubleType>[] getRandomPoints(Random random, int numberOfPoints, double radius,
+                                                       boolean inSphere) {
         double radiusSquared = radius * radius;
         VertexD ourPoints[] = new VertexD[numberOfPoints];
         for (int i = 0; i < ourPoints.length; i++) {
@@ -99,7 +100,7 @@ public class VertexD {
     /**
      * One of the tetrahedra adjacent to the vertex
      */
-    private Tetrahedron adjacent;
+    private Tetrahedron<Vertex.DoubleType> adjacent;
 
     /**
      * The number of tetrahedra adjacent to the vertex
@@ -116,6 +117,7 @@ public class VertexD {
         this(i * scale, j * scale, k * scale);
     }
 
+    @Override
     public Point3f asPoint3f() {
         return new Point3f((float) x, (float) y, (float) z);
     }
@@ -123,6 +125,7 @@ public class VertexD {
     /**
      * Account for the deletion of an adjacent tetrahedron.
      */
+    @Override
     public final void deleteAdjacent() {
         order--;
         assert order >= 0;
@@ -137,7 +140,8 @@ public class VertexD {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public void freshenAdjacent(Tetrahedron tetrahedron) {
+    @Override
+    public void freshenAdjacent(Tetrahedron<Vertex.DoubleType> tetrahedron) {
         if (adjacent == null || adjacent.isDeleted())
             adjacent = tetrahedron;
     }
@@ -147,7 +151,8 @@ public class VertexD {
      *
      * @return
      */
-    public final Tetrahedron getAdjacent() {
+    @Override
+    public final Tetrahedron<Vertex.DoubleType> getAdjacent() {
         return adjacent;
     }
 
@@ -158,6 +163,7 @@ public class VertexD {
      *
      * @return
      */
+    @Override
     public final int getOrder() {
         return order;
     }
@@ -166,8 +172,8 @@ public class VertexD {
      * Return +1 if the receiver lies inside the sphere passing through a, b, c, and
      * d; -1 if it lies outside; and 0 if the five points are cospherical. The
      * vertices a, b, c, and d must be ordered so that they have a positive
-     * orientation (as defined by {@link #orientation(VertexD, VertexD, VertexD)}), or
-     * the sign of the result will be reversed.
+     * orientation (as defined by {@link #orientation(VertexD, VertexD, VertexD)}),
+     * or the sign of the result will be reversed.
      * <p>
      *
      * @param a , b, c, d - the points defining the sphere, in oriented order
@@ -176,8 +182,12 @@ public class VertexD {
      *         cospherical
      */
 
-    public final int inSphere(VertexD a, VertexD b, VertexD c, VertexD d) {
-        double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
+    @Override
+    public final int inSphere(Vertex<DoubleType> a, Vertex<DoubleType> b, Vertex<DoubleType> c, Vertex<DoubleType> d) {
+        double result = Geometry.inSphere(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                          b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                          c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(),
+                                          d.vertices().getX(), d.vertices().getY(), d.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -197,8 +207,11 @@ public class VertexD {
      * @return +1 if the orientation of the query point is positive with respect to
      *         the plane, -1 if negative and 0 if the test point is coplanar
      */
-    public final int orientation(VertexD a, VertexD b, VertexD c) {
-        double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
+    @Override
+    public final int orientation(Vertex<DoubleType> a, Vertex<DoubleType> b, Vertex<DoubleType> c) {
+        double result = Geometry.leftOfPlane(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                             b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                             c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -210,6 +223,7 @@ public class VertexD {
     /**
      * Reset the state associated with a tetrahedralization.
      */
+    @Override
     public final void reset() {
         adjacent = null;
         order = 0;
@@ -221,7 +235,8 @@ public class VertexD {
      *
      * @param tetrahedron
      */
-    public final void setAdjacent(Tetrahedron tetrahedron) {
+    @Override
+    public final void setAdjacent(Tetrahedron<Vertex.DoubleType> tetrahedron) {
         order++;
         adjacent = tetrahedron;
     }
@@ -231,4 +246,24 @@ public class VertexD {
         return "{" + x + ", " + y + ", " + z + "}";
     }
 
+    @Override
+    public DoubleType vertices() {
+        return new DoubleType() {
+
+            @Override
+            public double getX() {
+                return x;
+            }
+
+            @Override
+            public double getY() {
+                return y;
+            }
+
+            @Override
+            public double getZ() {
+                return z;
+            }
+        };
+    }
 }

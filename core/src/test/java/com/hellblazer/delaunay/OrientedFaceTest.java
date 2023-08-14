@@ -31,6 +31,8 @@ import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.hellblazer.delaunay.Vertex.DoubleType;
+
 /**
  *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
@@ -47,21 +49,21 @@ public class OrientedFaceTest {
         VertexD d = new VertexD(0, -50, -100);
         VertexD e = new VertexD(0, -50, 100);
 
-        Tetrahedron tA = new Tetrahedron(a, b, c, d);
-        Tetrahedron tB = new Tetrahedron(e, b, c, a);
+        TetrahedronD tA = new TetrahedronD(a, b, c, d);
+        TetrahedronD tB = new TetrahedronD(e, b, c, a);
         tA.setNeighbor(D, tB);
         tB.setNeighbor(A, tA);
 
-        OrientedFace face = tA.getFace(D);
+        OrientedFace<Vertex.DoubleType> face = tA.getFace(D);
         assertTrue(face.hasAdjacent());
         assertEquals(A, face.getAdjacentVertexOrdinal());
-        Tetrahedron[] created = face.flip2to3();
+        Tetrahedron<DoubleType>[] created = face.flip2to3();
         assertNotNull(created);
-        Tetrahedron tI = created[1];
+        Tetrahedron<DoubleType> tI = created[1];
         assertNotNull(tI);
-        Tetrahedron tII = created[0];
+        Tetrahedron<DoubleType> tII = created[0];
         assertNotNull(tII);
-        Tetrahedron tIII = created[2];
+        Tetrahedron<DoubleType> tIII = created[2];
         assertNotNull(tIII);
 
         assertSame(c, tI.getVertex(A));
@@ -94,12 +96,12 @@ public class OrientedFaceTest {
         VertexD d = new VertexD(1, -1, -1);
         VertexD e = new VertexD(-1, 1, 1);
 
-        Tetrahedron tA = new Tetrahedron(a, b, c, d);
-        Tetrahedron tB = new Tetrahedron(b, c, a, e);
+        TetrahedronD tA = new TetrahedronD(a, b, c, d);
+        TetrahedronD tB = new TetrahedronD(b, c, a, e);
         tA.setNeighbor(D, tB);
         tB.setNeighbor(D, tA);
 
-        OrientedFace faceAB = tA.getFace(D);
+        OrientedFace<Vertex.DoubleType> faceAB = tA.getFace(D);
 
         for (int i = 0; i < 2; i++) {
             assertTrue(faceAB.isConvex(i));
@@ -115,12 +117,12 @@ public class OrientedFaceTest {
         VertexD d = new VertexD(1, -1, 100);
         VertexD e = new VertexD(-1, 1, 100);
 
-        Tetrahedron tA = new Tetrahedron(a, b, c, d);
-        Tetrahedron tB = new Tetrahedron(b, c, a, e);
+        TetrahedronD tA = new TetrahedronD(a, b, c, d);
+        TetrahedronD tB = new TetrahedronD(b, c, a, e);
         tA.setNeighbor(D, tB);
         tB.setNeighbor(D, tA);
 
-        OrientedFace faceAB = tA.getFace(D);
+        OrientedFace<Vertex.DoubleType> faceAB = tA.getFace(D);
         assertFalse(faceAB.isReflex(0));
         assertTrue(faceAB.isConvex(0));
         assertTrue(faceAB.isReflex(1));

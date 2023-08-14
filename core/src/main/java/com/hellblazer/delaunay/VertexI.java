@@ -28,7 +28,7 @@ import javax.vecmath.Point3f;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
-public class VertexI {
+public class VertexI implements Vertex<Vertex.IntType> {
     /**
      * Minimal zero
      */
@@ -93,13 +93,13 @@ public class VertexI {
     }
 
     public final int x;
-    public final int y;
-    public final int z;
 
+    public final int                    y;
+    public final int                    z;
     /**
      * One of the tetrahedra adjacent to the vertex
      */
-    private Tetrahedron adjacent;
+    private Tetrahedron<Vertex.IntType> adjacent;
 
     /**
      * The number of tetrahedra adjacent to the vertex
@@ -116,6 +116,7 @@ public class VertexI {
         this(i * scale, j * scale, k * scale);
     }
 
+    @Override
     public Point3f asPoint3f() {
         return new Point3f(x, y, z);
     }
@@ -123,6 +124,7 @@ public class VertexI {
     /**
      * Account for the deletion of an adjacent tetrahedron.
      */
+    @Override
     public final void deleteAdjacent() {
         order--;
         assert order >= 0;
@@ -137,7 +139,8 @@ public class VertexI {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public void freshenAdjacent(Tetrahedron tetrahedron) {
+    @Override
+    public void freshenAdjacent(Tetrahedron<Vertex.IntType> tetrahedron) {
         if (adjacent == null || adjacent.isDeleted())
             adjacent = tetrahedron;
     }
@@ -147,7 +150,8 @@ public class VertexI {
      *
      * @return
      */
-    public final Tetrahedron getAdjacent() {
+    @Override
+    public final Tetrahedron<Vertex.IntType> getAdjacent() {
         return adjacent;
     }
 
@@ -158,6 +162,7 @@ public class VertexI {
      *
      * @return
      */
+    @Override
     public final int getOrder() {
         return order;
     }
@@ -166,7 +171,7 @@ public class VertexI {
      * Return +1 if the receiver lies inside the sphere passing through a, b, c, and
      * d; -1 if it lies outside; and 0 if the five points are cospherical. The
      * vertices a, b, c, and d must be ordered so that they have a positive
-     * orientation (as defined by {@link #orientation(VertexI, VertexI, VertexI)}),
+     * orientation (as defined by {@link #orientation(VertexD, VertexD, VertexD)}),
      * or the sign of the result will be reversed.
      * <p>
      *
@@ -176,8 +181,12 @@ public class VertexI {
      *         cospherical
      */
 
-    public final int inSphere(VertexI a, VertexI b, VertexI c, VertexI d) {
-        int result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
+    @Override
+    public final int inSphere(Vertex<IntType> a, Vertex<IntType> b, Vertex<IntType> c, Vertex<IntType> d) {
+        double result = Geometry.inSphere(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                          b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                          c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(),
+                                          d.vertices().getX(), d.vertices().getY(), d.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -197,8 +206,11 @@ public class VertexI {
      * @return +1 if the orientation of the query point is positive with respect to
      *         the plane, -1 if negative and 0 if the test point is coplanar
      */
-    public final int orientation(VertexI a, VertexI b, VertexI c) {
-        int result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
+    @Override
+    public final int orientation(Vertex<IntType> a, Vertex<IntType> b, Vertex<IntType> c) {
+        double result = Geometry.leftOfPlane(a.vertices().getX(), a.vertices().getY(), a.vertices().getZ(),
+                                             b.vertices().getX(), b.vertices().getY(), b.vertices().getZ(),
+                                             c.vertices().getX(), c.vertices().getY(), c.vertices().getZ(), x, y, z);
         if (result > 0.0) {
             return 1;
         } else if (result < 0.0) {
@@ -210,6 +222,7 @@ public class VertexI {
     /**
      * Reset the state associated with a tetrahedralization.
      */
+    @Override
     public final void reset() {
         adjacent = null;
         order = 0;
@@ -221,7 +234,8 @@ public class VertexI {
      *
      * @param tetrahedron
      */
-    public final void setAdjacent(Tetrahedron tetrahedron) {
+    @Override
+    public final void setAdjacent(Tetrahedron<Vertex.IntType> tetrahedron) {
         order++;
         adjacent = tetrahedron;
     }
@@ -229,6 +243,27 @@ public class VertexI {
     @Override
     public String toString() {
         return "{" + x + ", " + y + ", " + z + "}";
+    }
+
+    @Override
+    public IntType vertices() {
+        return new IntType() {
+
+            @Override
+            public int getX() {
+                return x;
+            }
+
+            @Override
+            public int getY() {
+                return y;
+            }
+
+            @Override
+            public int getZ() {
+                return z;
+            }
+        };
     }
 
 }

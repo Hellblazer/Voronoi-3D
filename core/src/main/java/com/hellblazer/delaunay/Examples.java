@@ -21,6 +21,8 @@ package com.hellblazer.delaunay;
 
 import java.util.ArrayList;
 
+import com.hellblazer.delaunay.Vertex.DoubleType;
+
 /**
  *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
@@ -69,7 +71,7 @@ public class Examples {
         return list.toArray(new VertexD[list.size()]);
     }
 
-    public static VertexD[] getGrid() {
+    public static Vertex<DoubleType>[] getGrid() {
         ArrayList<VertexD> list;
         list = new ArrayList<>();
         list.add(new VertexD(-0.74999800000000005D, -0.74999199999999999D, -0.75000299999999998D));
@@ -139,7 +141,7 @@ public class Examples {
         return list.toArray(new VertexD[list.size()]);
     }
 
-    public static VertexD[] getWorstCase() {
+    public static Vertex<DoubleType>[] getWorstCase() {
         ArrayList<VertexD> list;
         list = new ArrayList<>();
 

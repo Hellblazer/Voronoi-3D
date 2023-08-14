@@ -5,7 +5,9 @@ import static com.hellblazer.delaunay.gui.Colors.blackMaterial;
 import java.util.Random;
 
 import com.hellblazer.delaunay.Examples;
-import com.hellblazer.delaunay.Tetrahedralization;
+import com.hellblazer.delaunay.TetrahedralizationD;
+import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.Vertex.DoubleType;
 import com.hellblazer.delaunay.VertexD;
 import com.hellblazer.delaunay.gui.CubicGrid.Neighborhood;
 import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
@@ -28,9 +30,9 @@ public class LinkInspector extends Jfx3dViewerApp {
 
     @Override
     protected void initializeContentModel() {
-        final Tetrahedralization tet = new Tetrahedralization(new Random(666));
+        final TetrahedralizationD tet = new TetrahedralizationD(new Random(666));
         VertexD[] vertices = Examples.getCubicCrystalStructure();
-        for (VertexD v : vertices) {
+        for (Vertex<DoubleType> v : vertices) {
             tet.insert(v);
         }
         VertexD v = vertices[13];
