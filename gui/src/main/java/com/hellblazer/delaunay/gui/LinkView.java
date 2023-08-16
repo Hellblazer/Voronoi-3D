@@ -2,7 +2,7 @@ package com.hellblazer.delaunay.gui;
 
 import java.util.List;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3d;
 
 import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Vertex;
@@ -18,9 +18,9 @@ import javafx.geometry.Point3D;
 public class LinkView extends GraphicsView {
     private final List<OrientedFace> ears;
     private final Vertex             v;
-    private final List<Point3f[]>    voronoiRegion;
+    private final List<Tuple3d[]>    voronoiRegion;
 
-    public LinkView(Vertex v, List<OrientedFace> ears, List<Point3f[]> voronoiRegion) {
+    public LinkView(Vertex v, List<OrientedFace> ears, List<Tuple3d[]> voronoiRegion) {
         this.v = v;
         this.ears = ears;
         this.voronoiRegion = voronoiRegion;
@@ -31,7 +31,7 @@ public class LinkView extends GraphicsView {
         getChildren().clear();
         for (OrientedFace ear : ears) {
             Vertex[] edge = ear.getEdge(v);
-            Point3f[] line = new Point3f[] { edge[0].asPoint3f(), edge[1].asPoint3f() };
+            Tuple3d[] line = new Tuple3d[] { edge[0], edge[1] };
             newFace(line, Colors.yellowMaterial, false, this);
         }
         sphere(0.01F, new Point3D(v.x, v.y, v.z), Colors.violetMaterial);

@@ -22,7 +22,7 @@ package com.hellblazer.delaunay.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3d;
 
 import com.hellblazer.delaunay.OrientedFace;
 import com.hellblazer.delaunay.Vertex;
@@ -37,12 +37,12 @@ import javafx.geometry.Point3D;
  *
  */
 public class OrientedFaceView extends GraphicsView {
-    private Point3f            adjacent;
-    private List<Point3f[]>    adjacentFaces = new ArrayList<>();
+    private Tuple3d            adjacent;
+    private List<Tuple3d[]>    adjacentFaces = new ArrayList<>();
     private final OrientedFace face;
-    private Point3f            incident;
-    private List<Point3f[]>    incidentFaces = new ArrayList<>();
-    private Point3f[]          myFace        = new Point3f[3];
+    private Tuple3d            incident;
+    private List<Tuple3d[]>    incidentFaces = new ArrayList<>();
+    private Tuple3d[]          myFace        = new Tuple3d[3];
 
     public OrientedFaceView(OrientedFace face) {
         super();
@@ -53,7 +53,7 @@ public class OrientedFaceView extends GraphicsView {
     public void update() {
         updateDiagram();
 
-        for (Point3f p : myFace) {
+        for (Tuple3d p : myFace) {
             getChildren().add(sphere(0.01F, new Point3D(p.x, p.y, p.z), Colors.blueMaterial));
         }
         getChildren().add(sphere(0.01F, new Point3D(incident.x, incident.y, incident.z), Colors.cyanMaterial));
@@ -67,15 +67,15 @@ public class OrientedFaceView extends GraphicsView {
     private void updateDiagram() {
         int i = 0;
         for (Vertex v : face) {
-            myFace[i++] = v.asPoint3f();
+            myFace[i++] = v;
         }
         incidentFaces.clear();
         adjacentFaces.clear();
-        incident = face.getIncidentVertex().asPoint3f();
-        face.getIncident().addFacesCoordinates(incidentFaces);
+        incident = face.getIncidentVertex();
+        incidentFaces.addAll(face.getIncident().getFaces());
         if (face.hasAdjacent()) {
-            adjacent = face.getAdjacentVertex().asPoint3f();
-            face.getAdjacent().addFacesCoordinates(adjacentFaces);
+            adjacent = face.getAdjacentVertex();
+            adjacentFaces.addAll(face.getAdjacent().getFaces());
         }
     }
 }

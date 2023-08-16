@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3d;
 
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Tetrahedron;
@@ -43,7 +43,7 @@ public class TetrahedralizationView extends GraphicsView {
     private static final PhongMaterial COLOR_OF_HIGHLIGHTED_REGION = null;
 
     private final Group              delaunay           = new Group();
-    private final Set<Point3f>       fourCorners        = new HashSet<>();
+    private final Set<Tuple3d>       fourCorners        = new HashSet<>();
     private final Group              highlightedRegions = new Group();
     private final Tetrahedralization tetrahedralization;
     private final Group              vertexes           = new Group();
@@ -57,7 +57,7 @@ public class TetrahedralizationView extends GraphicsView {
         super();
         tetrahedralization = t;
         for (Vertex v : tetrahedralization.getUniverse()) {
-            fourCorners.add(v.asPoint3f());
+            fourCorners.add(v);
         }
         updateDiagram();
     }
@@ -100,12 +100,12 @@ public class TetrahedralizationView extends GraphicsView {
         voronoi.getChildren().clear();
         delaunay.getChildren().clear();
         for (Tetrahedron t : tetrahedrons) {
-            for (Point3f[] face : t.getFacesCoordinates()) {
+            for (var face : t.getFaces()) {
                 render(face, Colors.yellowMaterial, false, delaunay);
             }
         }
         for (Vertex v : vertices) {
-            for (Point3f[] face : tetrahedralization.getVoronoiRegion(v)) {
+            for (var face : tetrahedralization.getVoronoiRegion(v)) {
                 render(face, Colors.cyanMaterial, false, voronoi);
             }
         }
@@ -113,17 +113,21 @@ public class TetrahedralizationView extends GraphicsView {
     }
 
     @Override
-    protected boolean isAuxillary(Point3f[] face) {
+    protected boolean isAuxillary(Tuple3d[] face) {
         if (face.length < 3) {
             return true;
         }
         for (var v : face) {
             if (fourCorners.contains(v)) {
                 return true;
-            } else if (v.distance(new Point3f()) > 1000000) {
+            } else if (lengthSquared(v) > 1000000) {
                 return true;
             }
         }
         return false;
+    }
+
+    private double lengthSquared(Tuple3d test) {
+        return (test.x * test.x + test.y * test.y + test.z * test.z);
     }
 }

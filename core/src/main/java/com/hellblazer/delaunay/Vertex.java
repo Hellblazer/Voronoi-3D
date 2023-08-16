@@ -22,18 +22,21 @@ package com.hellblazer.delaunay;
 import java.util.Random;
 
 import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3d;
+import javax.vecmath.Vector3d;
 
 /**
  *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
-public class Vertex {
+public class Vertex extends Vector3d {
     /**
      * Minimal zero
      */
-    static final double EPSILON = Math.pow(10D, -20D);
-    static final Vertex ORIGIN  = new Vertex(0, 0, 0);
+    static final double       EPSILON          = Math.pow(10D, -20D);
+    static final Vertex       ORIGIN           = new Vertex(0, 0, 0);
+    private static final long serialVersionUID = 1L;
 
     /**
      * Create some random points in a sphere
@@ -92,10 +95,6 @@ public class Vertex {
         return new Vertex(random(random, min, max), random(random, min, max), random(random, min, max));
     }
 
-    public final double x;
-    public final double y;
-    public final double z;
-
     /**
      * One of the tetrahedra adjacent to the vertex
      */
@@ -128,7 +127,7 @@ public class Vertex {
         assert order >= 0;
     }
 
-    public final double distanceSquared(Vertex p1) {
+    public final double distanceSquared(Tuple3d p1) {
         double dx, dy, dz;
 
         dx = x - p1.x;
@@ -176,7 +175,7 @@ public class Vertex {
      *         cospherical
      */
 
-    public final int inSphere(Vertex a, Vertex b, Vertex c, Vertex d) {
+    public final int inSphere(Tuple3d a, Tuple3d b, Tuple3d c, Tuple3d d) {
         double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
         if (result > 0.0) {
             return 1;
@@ -197,7 +196,7 @@ public class Vertex {
      * @return +1 if the orientation of the query point is positive with respect to
      *         the plane, -1 if negative and 0 if the test point is coplanar
      */
-    public final int orientation(Vertex a, Vertex b, Vertex c) {
+    public final int orientation(Tuple3d a, Tuple3d b, Tuple3d c) {
         double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
         if (result > 0.0) {
             return 1;

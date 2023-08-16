@@ -34,7 +34,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3d;
 
 /**
  * A Delaunay tetrahedralization.
@@ -238,10 +238,10 @@ public class Tetrahedralization {
      * @param v - the vertex of interest
      * @return the list of faces defining the voronoi region defined by v
      */
-    public List<Point3f[]> getVoronoiRegion(final Vertex v) {
+    public List<Tuple3d[]> getVoronoiRegion(final Vertex v) {
         assert v != null && v.getAdjacent() != null;
 
-        final ArrayList<Point3f[]> faces = new ArrayList<>();
+        final List<Tuple3d[]> faces = new ArrayList<>();
         Set<Vertex> neighbors = new IdentitySet<>(10);
         v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
             if (neighbors.add(x)) {

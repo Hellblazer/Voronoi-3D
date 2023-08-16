@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
 import com.hellblazer.delaunay.Vertex;
@@ -24,21 +24,11 @@ import mesh.PolyLine;
 
 public class GraphicsView extends Group {
 
-    public static Point3D p(Vertex v) {
+    public static Point3D p(Tuple3d v) {
         return new Point3D(v.x, v.y, v.z);
     }
 
-    protected static Point3f[] convertToPoint3f(List<Vertex> somePoints) {
-        Point3f tmp[] = new Point3f[somePoints.size()];
-        int i = 0;
-        for (Vertex v : somePoints) {
-            tmp[i++] = v.asPoint3f();
-        }
-
-        return tmp;
-    }
-
-    public void newFace(Point3f[] verts, PhongMaterial color, boolean showFace, Group group) {
+    public void newFace(Tuple3d[] verts, PhongMaterial color, boolean showFace, Group group) {
         List<Point3D> vertices;
         if (showFace) {
             Mesh mesh = new Mesh();
@@ -78,26 +68,22 @@ public class GraphicsView extends Group {
         }
     }
 
-    protected boolean isAuxillary(Point3f[] face) {
+    protected boolean isAuxillary(Tuple3d[] face) {
         return false;
     }
 
-    protected void render(List<Point3f[]> region, PhongMaterial color, boolean showFaces, Group group) {
+    protected void render(List<Tuple3d[]> region, PhongMaterial color, boolean showFaces, Group group) {
         for (var face : region) {
             color = render(face, color, showFaces, group);
         }
     }
 
-    protected PhongMaterial render(Point3f[] face, PhongMaterial color, boolean showFaces, Group group) {
+    protected PhongMaterial render(Tuple3d[] face, PhongMaterial color, boolean showFaces, Group group) {
         if (!isAuxillary(face)) {
             final var c = color.getDiffuseColor();
             color = new PhongMaterial(new Color(c.getRed(), c.getGreen(), c.getBlue(), 0.1));
             newFace(face, color, showFaces, group);
         }
         return color;
-    }
-
-    private Point3D p(Point3f v) {
-        return new Point3D(v.x, v.y, v.z);
     }
 }
