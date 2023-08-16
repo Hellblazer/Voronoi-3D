@@ -215,6 +215,9 @@ abstract public class Tetrahedralization<T extends Vertex.Type> {
                 next.children(stack, tetrahedrons);
             }
         }
+        for (Vertex v : fourCorners) {
+            vertices.remove(v);
+        }
         return vertices;
     }
 
@@ -354,6 +357,9 @@ abstract public class Tetrahedralization<T extends Vertex.Type> {
                 vertices.add(next.getD());
                 next.children(stack, tetrahedrons);
             }
+        }
+        for (Vertex v : fourCorners) {
+            vertices.remove(v);
         }
     }
 
