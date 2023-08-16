@@ -24,9 +24,7 @@ import static com.hellblazer.delaunay.V.B;
 import static com.hellblazer.delaunay.V.C;
 import static com.hellblazer.delaunay.V.D;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -130,7 +128,7 @@ public class Tetrahedralization {
     public void delete(Vertex v) {
         assert v != null;
 
-        LinkedList<OrientedFace> ears = getEars(v);
+        LinkedList<OrientedFace> ears = v.getEars();
         while (v.getOrder() > 4) {
             for (int i = 0; i < ears.size();) {
                 if (ears.get(i).flip(i, ears, v)) {
@@ -142,41 +140,6 @@ public class Tetrahedralization {
         }
         last = flip4to1(v);
         size--;
-    }
-
-    public LinkedList<OrientedFace> getEars(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-        EarSet aggregator = new EarSet();
-        v.getAdjacent().visitStar(v, aggregator);
-        return aggregator.getEars();
-    }
-
-    /**
-     * Answer the collection of neighboring vertices around the indicated vertex.
-     *
-     * @param v - the vertex determining the neighborhood
-     * @return the collection of neighboring vertices
-     */
-    public Collection<Vertex> getNeighbors(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-
-        final Set<Vertex> neighbors = new IdentitySet<>();
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
-            neighbors.add(x);
-            neighbors.add(y);
-            neighbors.add(z);
-        });
-        return neighbors;
-    }
-
-    public Deque<OrientedFace> getStar(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-
-        final Deque<OrientedFace> star = new ArrayDeque<>();
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
-            star.push(t.getFace(vertex));
-        });
-        return star;
     }
 
     /**
@@ -243,7 +206,7 @@ public class Tetrahedralization {
 
         final List<Tuple3d[]> faces = new ArrayList<>();
         Set<Vertex> neighbors = new IdentitySet<>(10);
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
+        v.getAdjacent().visitStar(v, (vertex, t, x, y, z) -> {
             if (neighbors.add(x)) {
                 t.traverseVoronoiFace(v, x, faces);
             }
@@ -298,7 +261,7 @@ public class Tetrahedralization {
      * @param query - the query point
      * @return
      */
-    public Tetrahedron locate(Vertex query) {
+    public Tetrahedron locate(Tuple3d query) {
         assert query != null;
 
         V o = null;
@@ -381,7 +344,7 @@ public class Tetrahedralization {
      * @return the tetrahedron created from the flip
      */
     protected Tetrahedron flip4to1(Vertex n) {
-        Deque<OrientedFace> star = getStar(n);
+        Deque<OrientedFace> star = n.getStar();
         ArrayList<Tetrahedron> deleted = new ArrayList<>();
         for (OrientedFace f : star) {
             deleted.add(f.getIncident());

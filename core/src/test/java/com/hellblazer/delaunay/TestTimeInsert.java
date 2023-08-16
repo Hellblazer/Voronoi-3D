@@ -105,7 +105,7 @@ public class TestTimeInsert {
     @Test
     public void testSuperLargeRandom() {
         Random random = new Random(666);
-        Vertex ourPoints[] = getRandomPoints(random, 6000, 10.0D, false);
+        Vertex ourPoints[] = getRandomPoints(random, 600000, 10.0D, false);
 
         Tetrahedralization tet = new Tetrahedralization(random);
 

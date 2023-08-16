@@ -19,7 +19,12 @@
 
 package com.hellblazer.delaunay;
 
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Random;
+import java.util.Set;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Tuple3d;
@@ -150,6 +155,31 @@ public class Vertex extends Vector3d {
         return adjacent;
     }
 
+    public LinkedList<OrientedFace> getEars() {
+        assert adjacent != null;
+        EarSet aggregator = new EarSet();
+        adjacent.visitStar(this, aggregator);
+        return aggregator.getEars();
+    }
+
+    /**
+     * Answer the collection of neighboring vertices around the indicated vertex.
+     *
+     * @param v - the vertex determining the neighborhood
+     * @return the collection of neighboring vertices
+     */
+    public Collection<Vertex> getNeighbors() {
+        assert adjacent != null;
+
+        final Set<Vertex> neighbors = new IdentitySet<>();
+        adjacent.visitStar(this, (vertex, t, x, y, z) -> {
+            neighbors.add(x);
+            neighbors.add(y);
+            neighbors.add(z);
+        });
+        return neighbors;
+    }
+
     /**
      * Answer the number of tetrahedra adjacent to the receiver vertex in the
      * tetrahedralization
@@ -159,6 +189,16 @@ public class Vertex extends Vector3d {
      */
     public final int getOrder() {
         return order;
+    }
+
+    public Deque<OrientedFace> getStar() {
+        assert adjacent != null;
+
+        final Deque<OrientedFace> star = new ArrayDeque<>();
+        adjacent.visitStar(this, (vertex, t, x, y, z) -> {
+            star.push(t.getFace(vertex));
+        });
+        return star;
     }
 
     /**

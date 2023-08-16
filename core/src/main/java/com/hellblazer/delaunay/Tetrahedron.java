@@ -927,8 +927,8 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     }
 
     /**
-     * Answer 1 if the query point is positively oriented with respect to the face
-     * opposite the vertex, -1 if negatively oriented, 0 if the query point is
+     * Answer > 0 if the query point is positively oriented with respect to the face
+     * opposite the vertex, < 0 if negatively oriented, 0 if the query point is
      * coplanar to the face
      *
      * @param face
@@ -951,8 +951,8 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     }
 
     /**
-     * Answer 1 if the query point is positively oriented with respect to the face
-     * ADB, -1 if negatively oriented, 0 if the query point is coplanar to the face
+     * Answer > 0 if the query point is positively oriented with respect to the face
+     * ADB, < 0 if negatively oriented, 0 if the query point is coplanar to the face
      *
      * @param query
      * @return
@@ -1239,7 +1239,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param visitor - the visitor to invoke for each tetrahedron in the star
      */
     void visitStar(Vertex vC, StarVisitor visitor) {
-        IdentitySet<Tetrahedron> visited = new IdentitySet<>(10);
+        Set<Tetrahedron> visited = new IdentitySet<>(10);
         visitStar(vC, visitor, visited);
     }
 
@@ -1250,7 +1250,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param visitor - the visitor to invoke for each tetrahedron in the star
      * @param visited - the set of previously visited tetrahedra
      */
-    void visitStar(Vertex vC, StarVisitor visitor, IdentitySet<Tetrahedron> visited) {
+    void visitStar(Vertex vC, StarVisitor visitor, Set<Tetrahedron> visited) {
         if (visited.add(this)) {
             switch (ordinalOf(vC)) {
             case A:
