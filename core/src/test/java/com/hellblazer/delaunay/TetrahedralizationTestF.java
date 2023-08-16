@@ -25,6 +25,8 @@ import static junit.framework.Assert.assertEquals;
 import java.util.Random;
 import java.util.Set;
 
+import org.junit.Test;
+
 import com.hellblazer.delaunay.Vertex.FloatType;
 
 /**
@@ -45,7 +47,7 @@ public class TetrahedralizationTestF {
         assertEquals(1, T.getTetrahedrons().size());
     }
 
-//    @Test
+    @Test
     public void testFlip4to1() {
         Tetrahedralization<FloatType> T = new TetrahedralizationF(new Random(0));
         Vertex<FloatType> N = new VertexF(100, 100, 100);
@@ -57,7 +59,7 @@ public class TetrahedralizationTestF {
 //    @Test
     public void testLargeRandom() {
         Random random = new Random(666);
-        Vertex<FloatType> ourPoints[] = getRandomPoints(random, 600, 100.0F, false);
+        Vertex<FloatType> ourPoints[] = getRandomPoints(random, 60000, 100.0F, false);
 
         Tetrahedralization<FloatType> T = new TetrahedralizationF(random);
 
@@ -66,6 +68,6 @@ public class TetrahedralizationTestF {
         }
 
         Set<Tetrahedron<FloatType>> L = T.getTetrahedrons();
-        assertEquals(3861, L.size());
+        assertEquals(403094, L.size());
     }
 }

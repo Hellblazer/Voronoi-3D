@@ -23,6 +23,8 @@ import static com.hellblazer.delaunay.VertexF.getRandomPoints;
 
 import java.util.Random;
 
+import org.junit.Test;
+
 import com.hellblazer.delaunay.Vertex.FloatType;
 
 /**
@@ -35,7 +37,7 @@ public class TestTimeInsertF {
 
     int iterations = 100;
 
-//    @Test
+    @Test
     public void testLargeRandom() {
         Random random = new Random(666);
         Vertex<FloatType> ourPoints[] = getRandomPoints(random, 600, 1.0F, false);
@@ -59,7 +61,7 @@ public class TestTimeInsertF {
 //    @Test
     public void testSuperLargeRandom() {
         Random random = new Random(666);
-        Vertex<FloatType> ourPoints[] = getRandomPoints(random, 6000, 10.0F, false);
+        Vertex<FloatType> ourPoints[] = getRandomPoints(random, 60000, 10000.0F, false);
 
         TetrahedralizationF tet = new TetrahedralizationF(random);
 

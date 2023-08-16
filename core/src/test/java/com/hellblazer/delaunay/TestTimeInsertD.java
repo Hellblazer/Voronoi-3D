@@ -101,28 +101,29 @@ public class TestTimeInsertD {
             }
         }
         long iter = (System.nanoTime() - now) / iterations;
-        System.out.println("insert random case (" + ourPoints.length + " points): " + iter / 1E6 + " Ms");
+        System.out.println("insert large random case (" + ourPoints.length + " points): " + iter / 1E6 + " Ms");
     }
 
-    @Test
+//    @Test
     public void testSuperLargeRandom() {
         Random random = new Random(666);
-        Vertex<DoubleType> ourPoints[] = getRandomPoints(random, 6000, 10.0D, false);
+        Vertex<DoubleType> ourPoints[] = getRandomPoints(random, 600000, 1000.0D, false);
 
         TetrahedralizationD tet = new TetrahedralizationD(random);
 
         for (Vertex<DoubleType> v : ourPoints) {
             tet.insert(v);
         }
+        var iterate = 2;
         long now = System.nanoTime();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < iterate; i++) {
             tet = new TetrahedralizationD(random);
             for (Vertex<DoubleType> v : ourPoints) {
                 tet.insert(v);
             }
         }
-        long iter = (System.nanoTime() - now) / 2;
-        System.out.println("insert random case (" + ourPoints.length + " points): " + iter / 1E6 + " Ms");
+        long iter = (System.nanoTime() - now) / iterate;
+        System.out.println("insert super large random case (" + ourPoints.length + " points): " + iter / 1E6 + " Ms");
     }
 
     @Test
