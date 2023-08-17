@@ -196,31 +196,6 @@ public class Tetrahedralization {
     }
 
     /**
-     * Answer the faces of the voronoi region around the vertex
-     *
-     * @param v - the vertex of interest
-     * @return the list of faces defining the voronoi region defined by v
-     */
-    public List<Tuple3d[]> getVoronoiRegion(final Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-
-        final List<Tuple3d[]> faces = new ArrayList<>();
-        Set<Vertex> neighbors = new IdentitySet<>(10);
-        v.getAdjacent().visitStar(v, (vertex, t, x, y, z) -> {
-            if (neighbors.add(x)) {
-                t.traverseVoronoiFace(v, x, faces);
-            }
-            if (neighbors.add(y)) {
-                t.traverseVoronoiFace(v, y, faces);
-            }
-            if (neighbors.add(z)) {
-                t.traverseVoronoiFace(v, z, faces);
-            }
-        });
-        return faces;
-    }
-
-    /**
      * Insert the vertex into the tetrahedralization. See "Computing the 3D Voronoi
      * Diagram Robustly: An Easy Explanation", by Hugo Ledoux
      * <p>

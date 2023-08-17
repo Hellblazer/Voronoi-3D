@@ -71,7 +71,7 @@ public class TetrahedralizationView extends GraphicsView {
         highlightedRegions.getChildren().clear();
         if (highlight) {
             for (Vertex v : vertices) {
-                render(tetrahedralization.getVoronoiRegion(v), COLOR_OF_HIGHLIGHTED_REGION, true, highlightedRegions);
+                render(v.getVoronoiRegion(), COLOR_OF_HIGHLIGHTED_REGION, true, highlightedRegions);
             }
             displaySpheres(vertices, 0.03F, COLOR_OF_HIGHLIGHTED_REGION, highlightedRegions);
         }
@@ -105,7 +105,7 @@ public class TetrahedralizationView extends GraphicsView {
             }
         }
         for (Vertex v : vertices) {
-            for (var face : tetrahedralization.getVoronoiRegion(v)) {
+            for (var face : v.getVoronoiRegion()) {
                 render(face, Colors.cyanMaterial, false, voronoi);
             }
         }

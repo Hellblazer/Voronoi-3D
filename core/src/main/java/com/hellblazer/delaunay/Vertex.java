@@ -20,9 +20,11 @@
 package com.hellblazer.delaunay;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -199,6 +201,31 @@ public class Vertex extends Vector3d {
             star.push(t.getFace(vertex));
         });
         return star;
+    }
+
+    /**
+     * Answer the faces of the voronoi region around the receiver
+     *
+     * @param v - the vertex of interest
+     * @return the list of faces defining the voronoi region defined by the receiver
+     */
+    public List<Tuple3d[]> getVoronoiRegion() {
+        assert adjacent != null;
+
+        final List<Tuple3d[]> faces = new ArrayList<>();
+        Set<Vertex> neighbors = new IdentitySet<>(10);
+        adjacent.visitStar(this, (vertex, t, x, y, z) -> {
+            if (neighbors.add(x)) {
+                t.traverseVoronoiFace(this, x, faces);
+            }
+            if (neighbors.add(y)) {
+                t.traverseVoronoiFace(this, y, faces);
+            }
+            if (neighbors.add(z)) {
+                t.traverseVoronoiFace(this, z, faces);
+            }
+        });
+        return faces;
     }
 
     /**

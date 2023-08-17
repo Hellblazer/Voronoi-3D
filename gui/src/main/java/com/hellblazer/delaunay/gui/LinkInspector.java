@@ -34,7 +34,7 @@ public class LinkInspector extends Jfx3dViewerApp {
             tet.insert(v);
         }
         Vertex v = vertices[13];
-        view = new LinkView(v, tet.getEars(v), tet.getVoronoiRegion(v));
+        view = new LinkView(v, v.getEars(), v.getVoronoiRegion());
 
         var content = getContentModel();
         var group = new Group();
