@@ -109,7 +109,7 @@ public class TetrahedralizationView extends GraphicsView {
                 render(face, Colors.cyanMaterial, false, voronoi);
             }
         }
-        displaySpheres(vertices, 0.01, Colors.yellowMaterial, vertexes);
+        displaySpheres(vertices, 0.07, Colors.yellowMaterial, vertexes);
     }
 
     @Override
@@ -120,14 +120,8 @@ public class TetrahedralizationView extends GraphicsView {
         for (var v : face) {
             if (fourCorners.contains(v)) {
                 return true;
-            } else if (lengthSquared(v) > 1000000) {
-                return true;
             }
         }
         return false;
-    }
-
-    private double lengthSquared(Tuple3d test) {
-        return (test.x * test.x + test.y * test.y + test.z * test.z);
     }
 }

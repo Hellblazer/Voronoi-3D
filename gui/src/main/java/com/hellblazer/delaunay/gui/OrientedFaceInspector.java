@@ -5,11 +5,9 @@ import static com.hellblazer.delaunay.gui.Colors.blackMaterial;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.hellblazer.delaunay.Examples;
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Tetrahedron;
 import com.hellblazer.delaunay.V;
-import com.hellblazer.delaunay.Vertex;
 import com.hellblazer.delaunay.gui.CubicGrid.Neighborhood;
 import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
 
@@ -32,7 +30,7 @@ public class OrientedFaceInspector extends Jfx3dViewerApp {
     @Override
     protected void initializeContentModel() {
         final Tetrahedralization tet = new Tetrahedralization(new Random(666));
-        for (Vertex v : Examples.getCubicCrystalStructure()) {
+        for (var v : Examples.getCubicCrystalStructure()) {
             tet.insert(v);
         }
         ArrayList<Tetrahedron> tets = new ArrayList<>(tet.getTetrahedrons());

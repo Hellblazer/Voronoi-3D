@@ -32,6 +32,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
+import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
 
 /**
@@ -196,17 +197,18 @@ public class Tetrahedralization {
     }
 
     /**
-     * Insert the vertex into the tetrahedralization. See "Computing the 3D Voronoi
+     * Insert the point into the tetrahedralization. See "Computing the 3D Voronoi
      * Diagram Robustly: An Easy Explanation", by Hugo Ledoux
      * <p>
      *
-     * @param v - the vertex to be inserted
+     * @param p - the point to be inserted
+     * @return the Vertex in the tetrahedralization
      */
-    public void insert(Vertex v) {
-        assert v != null;
-        v.reset();
+    public Vertex insert(Point3d p) {
+        assert p != null;
         List<OrientedFace> ears = new ArrayList<>();
-        last = locate(v).flip1to4(v, ears);
+        var v = new Vertex(p);
+        last = locate(p).flip1to4(v, ears);
         while (!ears.isEmpty()) {
             Tetrahedron l = ears.remove(ears.size() - 1).flip(v, ears);
             if (l != null) {
@@ -214,6 +216,7 @@ public class Tetrahedralization {
             }
         }
         size++;
+        return v;
     }
 
     /**

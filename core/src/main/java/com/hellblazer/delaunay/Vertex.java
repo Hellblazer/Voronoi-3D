@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
@@ -42,7 +42,7 @@ public class Vertex extends Vector3d {
      * Minimal zero
      */
     static final double       EPSILON          = Math.pow(10D, -20D);
-    static final Vertex       ORIGIN           = new Vertex(0, 0, 0);
+    static final Point3d      ORIGIN           = new Point3d(0, 0, 0);
     private static final long serialVersionUID = 1L;
 
     /**
@@ -54,9 +54,9 @@ public class Vertex extends Vector3d {
      * @param inSphere
      * @return
      */
-    public static Vertex[] getRandomPoints(Random random, int numberOfPoints, double radius, boolean inSphere) {
+    public static Point3d[] getRandomPoints(Random random, int numberOfPoints, double radius, boolean inSphere) {
         double radiusSquared = radius * radius;
-        Vertex ourPoints[] = new Vertex[numberOfPoints];
+        Point3d ourPoints[] = new Point3d[numberOfPoints];
         for (int i = 0; i < ourPoints.length; i++) {
             if (inSphere) {
                 do {
@@ -98,8 +98,8 @@ public class Vertex extends Vector3d {
      * @param max
      * @return
      */
-    public static Vertex randomPoint(Random random, double min, double max) {
-        return new Vertex(random(random, min, max), random(random, min, max), random(random, min, max));
+    public static Point3d randomPoint(Random random, double min, double max) {
+        return new Point3d(random(random, min, max), random(random, min, max), random(random, min, max));
     }
 
     /**
@@ -112,18 +112,18 @@ public class Vertex extends Vector3d {
      */
     private int order = 0;
 
-    public Vertex(double i, double j, double k) {
+    Vertex(double i, double j, double k) {
         x = i;
         y = j;
         z = k;
     }
 
-    public Vertex(double i, double j, double k, double scale) {
+    Vertex(double i, double j, double k, double scale) {
         this(i * scale, j * scale, k * scale);
     }
 
-    public Point3f asPoint3f() {
-        return new Point3f((float) x, (float) y, (float) z);
+    Vertex(Tuple3d p) {
+        this(p.x, p.y, p.z);
     }
 
     /**
@@ -141,11 +141,6 @@ public class Vertex extends Vector3d {
         dy = y - p1.y;
         dz = z - p1.z;
         return dx * dx + dy * dy + dz * dz;
-    }
-
-    public void freshenAdjacent(Tetrahedron tetrahedron) {
-        if (adjacent == null || adjacent.isDeleted())
-            adjacent = tetrahedron;
     }
 
     /**
@@ -273,12 +268,14 @@ public class Vertex extends Vector3d {
         return 0;
     }
 
-    /**
-     * Reset the state associated with a tetrahedralization.
-     */
-    public final void reset() {
-        adjacent = null;
-        order = 0;
+    @Override
+    public String toString() {
+        return "{" + x + ", " + y + ", " + z + "}";
+    }
+
+    void freshenAdjacent(Tetrahedron tetrahedron) {
+        if (adjacent == null || adjacent.isDeleted())
+            adjacent = tetrahedron;
     }
 
     /**
@@ -287,14 +284,9 @@ public class Vertex extends Vector3d {
      *
      * @param tetrahedron
      */
-    public final void setAdjacent(Tetrahedron tetrahedron) {
+    final void setAdjacent(Tetrahedron tetrahedron) {
         order++;
         adjacent = tetrahedron;
-    }
-
-    @Override
-    public String toString() {
-        return "{" + x + ", " + y + ", " + z + "}";
     }
 
 }

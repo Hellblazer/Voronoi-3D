@@ -4,7 +4,8 @@ import static com.hellblazer.delaunay.gui.Colors.blackMaterial;
 
 import java.util.Random;
 
-import com.hellblazer.delaunay.Examples;
+import javax.vecmath.Point3d;
+
 import com.hellblazer.delaunay.Tetrahedralization;
 import com.hellblazer.delaunay.Vertex;
 import com.hellblazer.delaunay.gui.CubicGrid.Neighborhood;
@@ -29,12 +30,12 @@ public class LinkInspector extends Jfx3dViewerApp {
     @Override
     protected void initializeContentModel() {
         final Tetrahedralization tet = new Tetrahedralization(new Random(666));
-        Vertex[] vertices = Examples.getCubicCrystalStructure();
-        for (Vertex v : vertices) {
-            tet.insert(v);
+        Point3d[] vertices = Examples.getCubicCrystalStructure();
+        Vertex vert = null;
+        for (var v : vertices) {
+            vert = tet.insert(v);
         }
-        Vertex v = vertices[13];
-        view = new LinkView(v, v.getEars(), v.getVoronoiRegion());
+        view = new LinkView(vert, vert.getEars(), vert.getVoronoiRegion());
 
         var content = getContentModel();
         var group = new Group();

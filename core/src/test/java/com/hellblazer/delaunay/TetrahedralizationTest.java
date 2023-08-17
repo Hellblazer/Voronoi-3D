@@ -25,6 +25,8 @@ import static junit.framework.Assert.assertEquals;
 import java.util.Random;
 import java.util.Set;
 
+import javax.vecmath.Point3d;
+
 import org.junit.Test;
 
 /**
@@ -47,7 +49,7 @@ public class TetrahedralizationTest {
     @Test
     public void testCubic() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : Examples.getCubicCrystalStructure()) {
+        for (Point3d v : Examples.getCubicCrystalStructure()) {
             T.insert(v);
         }
 
@@ -57,27 +59,27 @@ public class TetrahedralizationTest {
 
     public void testDelete() {
         Tetrahedralization T = new Tetrahedralization(new Random(666));
-        Vertex N = new Vertex(100, 100, 100);
+        Point3d N = new Point3d(100, 100, 100);
         T.insert(N);
-        Vertex O = new Vertex(5000, -1003, 101);
-        T.insert(O);
-        T.delete(N);
+        Point3d O = new Point3d(5000, -1003, 101);
+        var v = T.insert(O);
+        T.delete(v);
         assertEquals(1, T.getTetrahedrons().size());
     }
 
     @Test
     public void testFlip4to1() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        Vertex N = new Vertex(100, 100, 100);
-        T.insert(N);
-        T.flip4to1(N);
+        Point3d N = new Point3d(100, 100, 100);
+        var v = T.insert(N);
+        T.flip4to1(v);
         assertEquals(1, T.getTetrahedrons().size());
     }
 
     @Test
     public void testGrid() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : Examples.getGrid()) {
+        for (Point3d v : Examples.getGrid()) {
             T.insert(v);
         }
 
@@ -88,11 +90,11 @@ public class TetrahedralizationTest {
     @Test
     public void testLargeRandom() {
         Random random = new Random(666);
-        Vertex ourPoints[] = getRandomPoints(random, 60000, 100.0D, false);
+        Point3d ourPoints[] = getRandomPoints(random, 60000, 100.0D, false);
 
         Tetrahedralization T = new Tetrahedralization(random);
 
-        for (Vertex v : ourPoints) {
+        for (var v : ourPoints) {
             T.insert(v);
         }
 
@@ -116,7 +118,7 @@ public class TetrahedralizationTest {
     @Test
     public void testWorstCase() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : Examples.getWorstCase()) {
+        for (var v : Examples.getWorstCase()) {
             T.insert(v);
         }
 
@@ -124,12 +126,12 @@ public class TetrahedralizationTest {
         assertEquals(610, L.size());
     }
 
-    private void verifyOrder(Vertex[] vertices) {
+    private void verifyOrder(Point3d[] vertices) {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (Vertex v : vertices) {
+        for (var v : vertices) {
             T.insert(v);
         }
-        for (Vertex v : vertices) {
+        for (var v : T.getVertices()) {
             OC oc = new OC();
             v.getAdjacent().visitStar(v, oc);
             assertEquals(oc.order, v.getOrder());
