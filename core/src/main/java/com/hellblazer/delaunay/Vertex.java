@@ -45,6 +45,11 @@ public class Vertex extends Vector3d {
     static final Point3d      ORIGIN           = new Point3d(0, 0, 0);
     private static final long serialVersionUID = 1L;
 
+    public static double determinant(Tuple3d a, Tuple3d b, Tuple3d c) {
+        return a.x * b.y * c.z + b.x * c.y * a.z + c.x * a.y * b.z - b.x * a.y * c.z - c.x * b.y * a.z
+        - a.x * c.y * b.z;
+    }
+
     /**
      * Create some random points in a sphere
      *
@@ -68,6 +73,16 @@ public class Vertex extends Vector3d {
         }
 
         return ourPoints;
+    }
+
+    public static double pseudoOrientation(Tuple3d a, Tuple3d b, Tuple3d c, Tuple3d d) {
+        var a1 = new Point3d(a);
+        a1.sub(b);
+        var b1 = new Point3d(b);
+        b1.sub(c);
+        var c1 = new Point3d(b);
+        c1.sub(d);
+        return determinant(a1, b1, c1);
     }
 
     /**
@@ -107,11 +122,6 @@ public class Vertex extends Vector3d {
      */
     private Tetrahedron adjacent;
 
-    /**
-     * The number of tetrahedra adjacent to the vertex
-     */
-    private int order = 0;
-
     Vertex(double i, double j, double k) {
         x = i;
         y = j;
@@ -126,12 +136,8 @@ public class Vertex extends Vector3d {
         this(p.x, p.y, p.z);
     }
 
-    /**
-     * Account for the deletion of an adjacent tetrahedron.
-     */
-    public final void deleteAdjacent() {
-        order--;
-        assert order >= 0;
+    public double determinant(Tuple3d b, Tuple3d c) {
+        return x * b.y * c.z + b.x * c.y * z + c.x * y * b.z - b.x * y * c.z - c.x * b.y * z - x * c.y * b.z;
     }
 
     public final double distanceSquared(Tuple3d p1) {
@@ -175,17 +181,6 @@ public class Vertex extends Vector3d {
             neighbors.add(z);
         });
         return neighbors;
-    }
-
-    /**
-     * Answer the number of tetrahedra adjacent to the receiver vertex in the
-     * tetrahedralization
-     * <p>
-     *
-     * @return
-     */
-    public final int getOrder() {
-        return order;
     }
 
     public Deque<OrientedFace> getStar() {
@@ -249,6 +244,27 @@ public class Vertex extends Vector3d {
     }
 
     /**
+     * Answer the maximum fraction of delta displacement the receiver before a
+     * topological event occurs.
+     *
+     * @param delta - the displacement delta of the receiver
+     * @return l - l <= 1 if a topological event will occur at this + (l * delta), l
+     *         > 1 if no topological event will occur
+     */
+    public double maxStep(Tuple3d delta) {
+        double[] min = new double[] { 0 };
+        var target = new Point3d();
+        target.add(this, delta);
+        adjacent.visitStar(this, (vertex, t, b, c, d) -> {
+            var pseudo = pseudoOrientation(b, c, d);
+            var pseudoDelta = Math.abs(pseudoOrientation(delta, b, c, c));
+            var l = pseudo / pseudoDelta;
+            min[0] = Math.min(l, min[0]);
+        });
+        return min[0];
+    }
+
+    /**
      * Answer +1 if the orientation of the receiver is positive with respect to the
      * plane defined by {a, b, c}, -1 if negative, or 0 if the test point is
      * coplanar
@@ -268,6 +284,10 @@ public class Vertex extends Vector3d {
         return 0;
     }
 
+    public double pseudoOrientation(Tuple3d b, Tuple3d c, Tuple3d d) {
+        return pseudoOrientation(this, b, c, d);
+    }
+
     @Override
     public String toString() {
         return "{" + x + ", " + y + ", " + z + "}";
@@ -285,7 +305,6 @@ public class Vertex extends Vector3d {
      * @param tetrahedron
      */
     final void setAdjacent(Tetrahedron tetrahedron) {
-        order++;
         adjacent = tetrahedron;
     }
 

@@ -37,15 +37,6 @@ import org.junit.Test;
 
 public class TetrahedralizationTest {
 
-    private static class OC implements StarVisitor {
-        int order = 0;
-
-        @Override
-        public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
-            order++;
-        }
-    }
-
     @Test
     public void testCubic() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
@@ -102,19 +93,6 @@ public class TetrahedralizationTest {
         assertEquals(403094, L.size());
     }
 
-    /**
-     * Verify that the order of a vertex in a Tetrahedralization is correctly
-     * maintained.
-     */
-    @Test
-    public void testOrderMaintenance() throws Exception {
-        verifyOrder(Examples.getWorstCase());
-        verifyOrder(Examples.getCubicCrystalStructure());
-        verifyOrder(Examples.getGrid());
-        Random random = new Random(666);
-        verifyOrder(getRandomPoints(random, 600, 1.0D, false));
-    }
-
     @Test
     public void testWorstCase() {
         Tetrahedralization T = new Tetrahedralization(new Random(0));
@@ -124,17 +102,5 @@ public class TetrahedralizationTest {
 
         Set<Tetrahedron> L = T.getTetrahedrons();
         assertEquals(610, L.size());
-    }
-
-    private void verifyOrder(Point3d[] vertices) {
-        Tetrahedralization T = new Tetrahedralization(new Random(0));
-        for (var v : vertices) {
-            T.insert(v);
-        }
-        for (var v : T.getVertices()) {
-            OC oc = new OC();
-            v.getAdjacent().visitStar(v, oc);
-            assertEquals(oc.order, v.getOrder());
-        }
     }
 }

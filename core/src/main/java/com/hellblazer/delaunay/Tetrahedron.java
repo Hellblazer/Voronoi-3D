@@ -1063,10 +1063,6 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Clean up the pointers
      */
     void delete() {
-        a.deleteAdjacent();
-        b.deleteAdjacent();
-        c.deleteAdjacent();
-        d.deleteAdjacent();
         nA = nB = nC = nD = null;
         a = b = c = d = null;
     }
@@ -1089,6 +1085,68 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     boolean isDeleted() {
         return a == null;
+    }
+
+    /**
+     * visit the receiver and push unvisited tetrahedrons around the supplied vertex
+     *
+     * @param vC      - the center vertex
+     * @param visitor - the star visitor
+     * @param stack   - the stack of visitations
+     */
+    void nextStar(Vertex vC, StarVisitor visitor, Stack<Tetrahedron> stack, Set<Tetrahedron> visited) {
+        switch (ordinalOf(vC)) {
+        case A:
+            visitor.visit(A, this, c, b, d);
+            if (nC != null) {
+                stack.push(nC);
+            }
+            if (nB != null) {
+                stack.push(nC);
+            }
+            if (nD != null) {
+                stack.push(nD);
+            }
+            break;
+        case B:
+            visitor.visit(B, this, d, a, c);
+            if (nD != null) {
+                stack.push(nD);
+            }
+            if (nA != null) {
+                stack.push(nA);
+            }
+            if (nC != null) {
+                stack.push(nC);
+            }
+            break;
+        case C:
+            visitor.visit(C, this, a, d, b);
+            if (nA != null) {
+                stack.push(nA);
+            }
+            if (nD != null) {
+                stack.push(nD);
+            }
+            if (nB != null) {
+                stack.push(nB);
+            }
+            break;
+        case D:
+            visitor.visit(D, this, b, c, a);
+            if (nB != null) {
+                stack.push(nB);
+            }
+            if (nA != null) {
+                stack.push(nB);
+            }
+            if (nC != null) {
+                stack.push(nC);
+            }
+            break;
+        default:
+            throw new IllegalArgumentException("Invalid center vertex: " + vC);
+        }
     }
 
     /**
@@ -1239,70 +1297,13 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param visitor - the visitor to invoke for each tetrahedron in the star
      */
     void visitStar(Vertex vC, StarVisitor visitor) {
-        Set<Tetrahedron> visited = new IdentitySet<>(10);
-        visitStar(vC, visitor, visited);
-    }
-
-    /**
-     * Visit the star tetrahedra set of the of the center vertex
-     *
-     * @param vC      - the center vertex
-     * @param visitor - the visitor to invoke for each tetrahedron in the star
-     * @param visited - the set of previously visited tetrahedra
-     */
-    void visitStar(Vertex vC, StarVisitor visitor, Set<Tetrahedron> visited) {
-        if (visited.add(this)) {
-            switch (ordinalOf(vC)) {
-            case A:
-                visitor.visit(A, this, c, b, d);
-                if (nC != null) {
-                    nC.visitStar(vC, visitor, visited);
-                }
-                if (nB != null) {
-                    nB.visitStar(vC, visitor, visited);
-                }
-                if (nD != null) {
-                    nD.visitStar(vC, visitor, visited);
-                }
-                break;
-            case B:
-                visitor.visit(B, this, d, a, c);
-                if (nD != null) {
-                    nD.visitStar(vC, visitor, visited);
-                }
-                if (nA != null) {
-                    nA.visitStar(vC, visitor, visited);
-                }
-                if (nC != null) {
-                    nC.visitStar(vC, visitor, visited);
-                }
-                break;
-            case C:
-                visitor.visit(C, this, a, d, b);
-                if (nA != null) {
-                    nA.visitStar(vC, visitor, visited);
-                }
-                if (nD != null) {
-                    nD.visitStar(vC, visitor, visited);
-                }
-                if (nB != null) {
-                    nB.visitStar(vC, visitor, visited);
-                }
-                break;
-            case D:
-                visitor.visit(D, this, b, c, a);
-                if (nB != null) {
-                    nB.visitStar(vC, visitor, visited);
-                }
-                if (nA != null) {
-                    nA.visitStar(vC, visitor, visited);
-                }
-                if (nC != null) {
-                    nC.visitStar(vC, visitor, visited);
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid center vertex: " + vC);
+        Set<Tetrahedron> tetrahedrons = new IdentitySet<>(10);
+        var stack = new Stack<Tetrahedron>();
+        stack.push(this);
+        while (!stack.isEmpty()) {
+            var t = stack.pop();
+            if (tetrahedrons.add(t)) {
+                t.nextStar(vC, visitor, stack, tetrahedrons);
             }
         }
     }

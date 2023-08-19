@@ -130,7 +130,17 @@ public class Tetrahedralization {
         assert v != null;
 
         LinkedList<OrientedFace> ears = v.getEars();
-        while (v.getOrder() > 4) {
+        class OC implements StarVisitor {
+            int order = 0;
+
+            @Override
+            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
+                order++;
+            }
+        }
+        var oc = new OC();
+        v.getAdjacent().visitStar(v, oc);
+        while (oc.order > 4) {
             for (int i = 0; i < ears.size();) {
                 if (ears.get(i).flip(i, ears, v)) {
                     ears.remove(i);
@@ -299,6 +309,14 @@ public class Tetrahedralization {
             U[i++] = v;
         }
         return new Tetrahedron(U);
+    }
+
+    /**
+     * @return - a "random" Tetrahedron from the receiver. This implementation
+     *         returns the <code>last</code> Tetrahedron of the receiver
+     */
+    public Tetrahedron randomPick() {
+        return last;
     }
 
     /**
