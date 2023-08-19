@@ -208,7 +208,31 @@ public class Tetrahedralization {
         assert p != null;
         List<OrientedFace> ears = new ArrayList<>();
         var v = new Vertex(p);
-        last = locate(p).flip1to4(v, ears);
+        last = locate(p, last).flip1to4(v, ears);
+        while (!ears.isEmpty()) {
+            Tetrahedron l = ears.remove(ears.size() - 1).flip(v, ears);
+            if (l != null) {
+                last = l;
+            }
+        }
+        size++;
+        return v;
+    }
+
+    /**
+     * Insert the point into the tetrahedralization. See "Computing the 3D Voronoi
+     * Diagram Robustly: An Easy Explanation", by Hugo Ledoux
+     * <p>
+     *
+     * @param p    - the point to be inserted
+     * @param near - the nearby vertex
+     * @return the new Vertex in the tetrahedralization
+     */
+    public Vertex insert(Point3d p, Vertex near) {
+        assert p != null;
+        List<OrientedFace> ears = new ArrayList<>();
+        var v = new Vertex(p);
+        last = locate(p, near.getAdjacent()).flip1to4(v, ears);
         while (!ears.isEmpty()) {
             Tetrahedron l = ears.remove(ears.size() - 1).flip(v, ears);
             if (l != null) {
@@ -225,35 +249,26 @@ public class Tetrahedralization {
      * variation of the 3D jump and walk algorithm found in: "Fast randomized point
      * location without preprocessing in two- and three-dimensional Delaunay
      * triangulations", Computational Geometry 12 (1999) 63-83.
-     * <p>
-     * In this variant, the intial "random" triangle used is simply the one of the
-     * triangles in the last tetrahedron created by a flip, or the previously
-     * located tetrahedron.
-     * <p>
-     * This location algorithm provides fast location results with no memory
-     * overhead. Further, because there is no search structure to maintain, this
-     * algorithm is ideally suited for incremental deletions and kinetic maintenance
-     * of the delaunay tetrahedralization.
-     * <p>
      *
      * @param query - the query point
-     * @return
+     * @param start - the starting tetrahedron
+     * @return the Tetrahedron containing the query
      */
-    public Tetrahedron locate(Tuple3d query) {
+    public Tetrahedron locate(Tuple3d query, Tetrahedron start) {
         assert query != null;
 
         V o = null;
         for (V face : Tetrahedralization.VERTICES) {
-            if (last.orientationWrt(face, query) < 0) {
+            if (start.orientationWrt(face, query) < 0) {
                 o = face;
                 break;
             }
         }
         if (o == null) {
             // The query point is contained in the receiver
-            return last;
+            return start;
         }
-        Tetrahedron current = last;
+        Tetrahedron current = start;
         while (true) {
             // get the tetrahedron on the other side of the face
             Tetrahedron tetrahedron = current.getNeighbor(o);
@@ -266,8 +281,7 @@ public class Tetrahedralization {
                     break;
                 }
                 if (i++ == 2) {
-                    last = tetrahedron;
-                    return last;
+                    return tetrahedron;
                 }
             }
         }
