@@ -43,11 +43,13 @@ public class TetrahedralizationView extends GraphicsView {
     private static final PhongMaterial COLOR_OF_HIGHLIGHTED_REGION = null;
 
     private final Group              delaunay           = new Group();
+    private final Group              delaunayFaces      = new Group();
     private final Set<Tuple3d>       fourCorners        = new HashSet<>();
     private final Group              highlightedRegions = new Group();
     private final Tetrahedralization tetrahedralization;
     private final Group              vertexes           = new Group();
     private final Group              voronoi            = new Group();
+    private final Group              voronoiFaces       = new Group();
 
     public TetrahedralizationView() {
         this(new Tetrahedralization());
@@ -78,15 +80,22 @@ public class TetrahedralizationView extends GraphicsView {
         getChildren().add(highlightedRegions);
     }
 
-    public void update(boolean showVD, boolean showDT, boolean showAllPoints) {
+    public void update(boolean showVD, boolean showVDFaces, boolean showDT, boolean showDTFaces,
+                       boolean showAllPoints) {
         var children = getChildren();
         children.clear();
 
         if (showVD) {
             children.add(voronoi);
         }
+        if (showVDFaces) {
+            children.add(voronoiFaces);
+        }
         if (showDT) {
             children.add(delaunay);
+        }
+        if (showDTFaces) {
+            children.add(delaunayFaces);
         }
         if (showAllPoints) {
             children.add(vertexes);
@@ -98,15 +107,19 @@ public class TetrahedralizationView extends GraphicsView {
         var vertices = new HashSet<Vertex>();
         tetrahedralization.traverse(tetrahedrons, vertices);
         voronoi.getChildren().clear();
+        voronoiFaces.getChildren().clear();
         delaunay.getChildren().clear();
+        delaunayFaces.getChildren().clear();
         for (Tetrahedron t : tetrahedrons) {
             for (var face : t.getFaces()) {
                 render(face, Colors.yellowMaterial, false, delaunay);
+                render(face, Colors.yellowMaterial, true, delaunayFaces);
             }
         }
         for (Vertex v : vertices) {
             for (var face : v.getVoronoiRegion()) {
                 render(face, Colors.cyanMaterial, false, voronoi);
+                render(face, Colors.cyanMaterial, true, voronoiFaces);
             }
         }
         displaySpheres(vertices, 0.07, Colors.yellowMaterial, vertexes);

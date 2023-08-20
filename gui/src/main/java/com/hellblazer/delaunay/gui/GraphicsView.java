@@ -45,10 +45,11 @@ public class GraphicsView extends Group {
             view.setCullFace(CullFace.BACK);
             view.setMaterial(color);
             group.getChildren().addAll(view);
+        } else {
+            vertices = Stream.of(verts).map(v -> p(v)).collect(Collectors.toList());
+            vertices.add(vertices.get(0));
+            group.getChildren().add(new PolyLine(vertices, 0.01, Colors.blackMaterial));
         }
-        vertices = Stream.of(verts).map(v -> p(v)).collect(Collectors.toList());
-        vertices.add(vertices.get(0));
-        group.getChildren().add(new PolyLine(vertices, 0.01, Colors.blackMaterial));
     }
 
     public Sphere sphere(double radius, Point3D position, Material material) {

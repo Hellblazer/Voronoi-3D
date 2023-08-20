@@ -76,13 +76,11 @@ public class Vertex extends Vector3d {
     }
 
     public static double pseudoOrientation(Tuple3d a, Tuple3d b, Tuple3d c, Tuple3d d) {
-        var a1 = new Point3d(a);
-        a1.sub(b);
         var b1 = new Point3d(b);
         b1.sub(c);
         var c1 = new Point3d(b);
         c1.sub(d);
-        return determinant(a1, b1, c1);
+        return determinant(a, b1, c1);
     }
 
     /**
@@ -240,7 +238,6 @@ public class Vertex extends Vector3d {
             return -1;
         }
         return 0;
-
     }
 
     /**
@@ -252,13 +249,16 @@ public class Vertex extends Vector3d {
      *         > 1 if no topological event will occur
      */
     public double maxStep(Tuple3d delta) {
-        double[] min = new double[] { 0 };
+        double[] min = new double[] { Double.MAX_VALUE };
         var target = new Point3d();
         target.add(this, delta);
-        adjacent.visitStar(this, (vertex, t, b, c, d) -> {
-            var pseudo = pseudoOrientation(b, c, d);
-            var pseudoDelta = Math.abs(pseudoOrientation(delta, b, c, c));
-            var l = pseudo / pseudoDelta;
+        adjacent.visitStar(this, (vertex, t, a, b, c) -> {
+            var pseudo = Geometry.leftOfPlaneFast(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
+            var newPos = new Vertex(this);
+            newPos.add(delta);
+            var pseudoDelta = Geometry.leftOfPlaneFast(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, newPos.x, newPos.y,
+                                                       newPos.z);
+            var l = pseudo / Math.abs(pseudoDelta);
             min[0] = Math.min(l, min[0]);
         });
         return min[0];
@@ -285,7 +285,13 @@ public class Vertex extends Vector3d {
     }
 
     public double pseudoOrientation(Tuple3d b, Tuple3d c, Tuple3d d) {
-        return pseudoOrientation(this, b, c, d);
+        var a1 = new Point3d(this);
+        a1.sub(b);
+        var b1 = new Point3d(b);
+        b1.sub(c);
+        var c1 = new Point3d(b);
+        c1.sub(d);
+        return determinant(a1, b1, c1);
     }
 
     @Override

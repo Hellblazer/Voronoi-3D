@@ -1094,7 +1094,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param visitor - the star visitor
      * @param stack   - the stack of visitations
      */
-    void nextStar(Vertex vC, StarVisitor visitor, Stack<Tetrahedron> stack, Set<Tetrahedron> visited) {
+    void visit(Vertex vC, StarVisitor visitor, Stack<Tetrahedron> stack, Set<Tetrahedron> visited) {
         switch (ordinalOf(vC)) {
         case A:
             visitor.visit(A, this, c, b, d);
@@ -1303,7 +1303,7 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         while (!stack.isEmpty()) {
             var t = stack.pop();
             if (tetrahedrons.add(t)) {
-                t.nextStar(vC, visitor, stack, tetrahedrons);
+                t.visit(vC, visitor, stack, tetrahedrons);
             }
         }
     }

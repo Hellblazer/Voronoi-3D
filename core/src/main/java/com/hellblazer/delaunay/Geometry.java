@@ -6,6 +6,9 @@ available at http://www.eclipse.org/legal/cpl-v10.html
  ****************************************************************************/
 package com.hellblazer.delaunay;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Tuple3d;
+
 /**
  * Robust geometric predicates.
  * <p>
@@ -56,27 +59,6 @@ public final class Geometry {
     private static final double O3DERRBOUND;
 
     private static final double SPLITTER;
-
-    static {
-        double epsilon = 1.0;
-        double splitter = 1.0;
-        boolean everyOther = true;
-        do {
-            epsilon *= 0.5;
-            if (everyOther) {
-                splitter *= 2.0;
-            }
-            everyOther = !everyOther;
-        } while (1.0 + epsilon != 1.0);
-        splitter += 1.0;
-        EPSILON = epsilon;
-        SPLITTER = splitter;
-        O2DERRBOUND = 4.0 * EPSILON;
-        O3DERRBOUND = 8.0 * EPSILON;
-        INCERRBOUND = 11.0 * EPSILON;
-        INSERRBOUND = 17.0 * EPSILON;
-        IOSERRBOUND = 19.0 * EPSILON;
-    }
 
     /**
      * Computes the center of the circle defined by the points a, b, and c. The
@@ -243,6 +225,57 @@ public final class Geometry {
      */
     public static void centerSphere(float[] pa, float[] pb, float[] pc, float[] pd, float[] po) {
         centerSphere(pa[0], pa[1], pa[2], pb[0], pb[1], pb[2], pc[0], pc[1], pc[2], pd[0], pd[1], pd[2], po);
+    }
+
+    public static Point3d[] findLineSphereIntersections(Tuple3d linePoint0, Tuple3d linePoint1, Tuple3d circleCenter,
+                                                        double circleRadius) {
+        // http://www.codeproject.com/Articles/19799/Simple-Ray-Tracing-in-C-Part-II-Triangles-Intersec
+
+        double cx = circleCenter.x;
+        double cy = circleCenter.y;
+        double cz = circleCenter.z;
+
+        double px = linePoint0.x;
+        double py = linePoint0.y;
+        double pz = linePoint0.z;
+
+        double vx = linePoint1.x - px;
+        double vy = linePoint1.y - py;
+        double vz = linePoint1.z - pz;
+
+        double A = vx * vx + vy * vy + vz * vz;
+        double B = 2.0 * (px * vx + py * vy + pz * vz - vx * cx - vy * cy - vz * cz);
+        double C = px * px - 2 * px * cx + cx * cx + py * py - 2 * py * cy + cy * cy + pz * pz - 2 * pz * cz + cz * cz
+        - circleRadius * circleRadius;
+
+        // discriminant
+        double D = B * B - 4 * A * C;
+
+        if (D < 0) {
+            return new Point3d[0];
+        }
+
+        double t1 = (-B - Math.sqrt(D)) / (2.0 * A);
+
+        Point3d solution1 = new Point3d(linePoint0.x * (1 - t1) + t1 * linePoint1.x,
+                                        linePoint0.y * (1 - t1) + t1 * linePoint1.y,
+                                        linePoint0.z * (1 - t1) + t1 * linePoint1.z);
+        if (D == 0) {
+            return new Point3d[] { solution1 };
+        }
+
+        double t2 = (-B + Math.sqrt(D)) / (2.0 * A);
+        Point3d solution2 = new Point3d(linePoint0.x * (1 - t2) + t2 * linePoint1.x,
+                                        linePoint0.y * (1 - t2) + t2 * linePoint1.y,
+                                        linePoint0.z * (1 - t2) + t2 * linePoint1.z);
+
+        // prefer a solution that's on the line segment itself
+
+        if (Math.abs(t1 - 0.5) < Math.abs(t2 - 0.5)) {
+            return new Point3d[] { solution1, solution2 };
+        }
+
+        return new Point3d[] { solution2, solution1 };
     }
 
     /**
@@ -898,19 +931,6 @@ public final class Geometry {
         return leftOfLine(pa[0], pa[1], pb[0], pb[1], pc[0], pc[1]);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // private
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Java implementation of Jonathan Shewchuk's functions for arbitrary
-    // floating-point arithmetic and fast robust geometric predicates.
-    // Only Shewchuk's "slow" exact methods are implemented here.
-    // If the methods above lack sufficient precision, then they call
-    // the slow methods below. This is equivalent to using only stages A
-    // and D of Shewchuk's adaptive methods with stages A, B, C, and D.
-    // Note that the error bounds used here to determine whether an fast
-    // method is accurate are simpler and more conservative than Shewchuk's.
-
     /**
      * Determines if a point c is left of the line defined by the points a and b.
      * This is equivalent to determining whether the points a, b, and c are in
@@ -928,6 +948,19 @@ public final class Geometry {
         double bcy = yb - yc;
         return acx * bcy - acy * bcx;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // private
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Java implementation of Jonathan Shewchuk's functions for arbitrary
+    // floating-point arithmetic and fast robust geometric predicates.
+    // Only Shewchuk's "slow" exact methods are implemented here.
+    // If the methods above lack sufficient precision, then they call
+    // the slow methods below. This is equivalent to using only stages A
+    // and D of Shewchuk's adaptive methods with stages A, B, C, and D.
+    // Note that the error bounds used here to determine whether an fast
+    // method is accurate are simpler and more conservative than Shewchuk's.
 
     /**
      * Determines if a point c is left of the line defined by the points a and b.
@@ -1718,15 +1751,6 @@ public final class Geometry {
     }
 
     /**
-     * Computes difference a-b, assuming that |a|&gt;=|b|. Puts result in x and
-     * error in y.
-     */
-    /*
-     * private strictfp static void twoDiffFast(double a, double b, Two t) { double
-     * x = a-b; double bvirt = a-x; t.x = x; t.y = bvirt-b; }
-     */
-
-    /**
      * Slow exact 3D in-sphere test. Returns a positive value if the point pe lies
      * inside the sphere passing through pa, pb, pc, and pd; a negative value if it
      * lies outside; and zero if the five points are cospherical. The points pa, pb,
@@ -2053,14 +2077,12 @@ public final class Geometry {
     }
 
     /**
-     * Computes the product a*b. Puts the product in x and the error in y.
+     * Computes difference a-b, assuming that |a|&gt;=|b|. Puts result in x and
+     * error in y.
      */
     /*
-     * private strictfp static void twoProduct(double a, double b, Two t) { double x
-     * = a*b; split(a,t); double ahi = t.x; double alo = t.y; split(b,t); double bhi
-     * = t.x; double blo = t.y; double err1 = x-(ahi*bhi); double err2 =
-     * err1-(alo*bhi); double err3 = err2-(ahi*blo); t.x = x; t.y = (alo*blo)-err3;
-     * }
+     * private strictfp static void twoDiffFast(double a, double b, Two t) { double
+     * x = a-b; double bvirt = a-x; t.x = x; t.y = bvirt-b; }
      */
 
     /**
@@ -2097,6 +2119,17 @@ public final class Geometry {
 
         return det[detlen - 1];
     }
+
+    /**
+     * Computes the product a*b. Puts the product in x and the error in y.
+     */
+    /*
+     * private strictfp static void twoProduct(double a, double b, Two t) { double x
+     * = a*b; split(a,t); double ahi = t.x; double alo = t.y; split(b,t); double bhi
+     * = t.x; double blo = t.y; double err1 = x-(ahi*bhi); double err2 =
+     * err1-(alo*bhi); double err3 = err2-(ahi*blo); t.x = x; t.y = (alo*blo)-err3;
+     * }
+     */
 
     /**
      * Slow exact 3D orientation test. Returns a positive value if the point d lies
@@ -2385,5 +2418,26 @@ public final class Geometry {
         twoSum(um, uk, t);
         x[7] = t.x;
         x[6] = t.y;
+    }
+
+    static {
+        double epsilon = 1.0;
+        double splitter = 1.0;
+        boolean everyOther = true;
+        do {
+            epsilon *= 0.5;
+            if (everyOther) {
+                splitter *= 2.0;
+            }
+            everyOther = !everyOther;
+        } while (1.0 + epsilon != 1.0);
+        splitter += 1.0;
+        EPSILON = epsilon;
+        SPLITTER = splitter;
+        O2DERRBOUND = 4.0 * EPSILON;
+        O3DERRBOUND = 8.0 * EPSILON;
+        INCERRBOUND = 11.0 * EPSILON;
+        INSERRBOUND = 17.0 * EPSILON;
+        IOSERRBOUND = 19.0 * EPSILON;
     }
 }

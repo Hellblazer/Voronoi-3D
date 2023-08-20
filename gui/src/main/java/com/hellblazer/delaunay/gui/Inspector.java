@@ -5,7 +5,6 @@ import java.util.Random;
 import javax.vecmath.Point3d;
 
 import com.hellblazer.delaunay.Tetrahedralization;
-import com.hellblazer.delaunay.Vertex;
 import com.javafx.experiments.jfx3dviewer.Jfx3dViewerApp;
 
 import javafx.scene.Group;
@@ -42,12 +41,13 @@ public class Inspector extends Jfx3dViewerApp {
     protected void initializeContentModel() {
         final var random = new Random(666);
         final var tet = new Tetrahedralization(random);
-        Point3d ourPoints[] = Vertex.getRandomPoints(random, 120, 10.0D, false);
+//        Point3d ourPoints[] = Vertex.getRandomPoints(random, 200, 10.0D, false);
+        Point3d ourPoints[] = Examples.getGrid();
         for (var v : ourPoints) {
             tet.insert(v);
         }
         view = new TetrahedralizationView(tet);
-        view.update(false, true, true);
+        view.update(false, false, true, false, true);
 
         var content = getContentModel();
         var group = new Group();

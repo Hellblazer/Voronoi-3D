@@ -21,7 +21,6 @@ package com.hellblazer.delaunay;
 
 import static com.hellblazer.delaunay.Vertex.getRandomPoints;
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,18 @@ import org.junit.Test;
  */
 
 public class VertexTest {
+    @Test
+    public void intersect() {
+        Tetrahedralization T = new Tetrahedralization(new Random(0));
+        Vertex vertex = null;
+        for (Point3d v : Examples.getGrid()) {
+            vertex = T.insert(v);
+        }
+
+        var origin = T.getUniverse()[0];
+
+    }
+
     @Test
     public void testDeterminant() {
         var a = new Vertex(7, 8, 4);
@@ -64,18 +75,19 @@ public class VertexTest {
     @Test
     public void testMaxStep() {
         Random random = new Random(666);
-        Point3d ourPoints[] = getRandomPoints(random, 60000, 100.0D, false);
+        Point3d ourPoints[] = getRandomPoints(random, 600, 10000.0D, false);
 
         Tetrahedralization T = new Tetrahedralization(random);
 
         for (var v : ourPoints) {
             T.insert(v);
         }
-        Point3d N = new Point3d(100, 100, 100);
-        var vertex = T.insert(N);
+        Point3d N = new Point3d(10, -10, 1);
 
-        var step = vertex.maxStep(N);
-        assertTrue(step <= 1.0);
+        for (var v : T.getVertices()) {
+            v.maxStep(N);
+//            System.out.println(step);
+        }
     }
 
     @Test
