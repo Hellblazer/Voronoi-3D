@@ -13,10 +13,13 @@ This library is licensed under the AGPL v3.0, requires Java 20+ and is built wit
 ## Current Status
 Raised from the dead.  The GUI is now a crude, but servicable Java/FX GUI.  Probably will work on cleaning that up and improving that, but...
 
+The current implementation leaves flat tetrahedra when processing the cubic example test cases.  :: big sad :: My understanding is that these can be removed with 4 <-> 4 flips, so enjoy!
+
 ## Maven Artifacts
-Currently, Voronoi-3D is in active development and does not publish to maven central.  Rather, periodic snapshots (and releases when they happen)
-will be uploaded to the [repo-hell]() repository.  If you would like to use Voronoi-3D maven artifacts, you'll need to add the following repository
-declarations to your pom.xml  The maven coordinates for individual artifacts are found below.
+Currently, Voronoi-3D is snapshot development and does not publish to maven central.  Rather, periodic snapshots (and releases when they happen)
+will be uploaded to the [repo-hell](https://raw.githubusercontent.com/Hellblazer/repo-hell/main/mvn-artifact) repository.  If you would like to 
+use Voronoi-3D maven artifacts, you'll need to add the following repository declarations to your pom.xml  The maven coordinates for individual
+artifacts are found below.
     
     <repositories>
         <repository>
