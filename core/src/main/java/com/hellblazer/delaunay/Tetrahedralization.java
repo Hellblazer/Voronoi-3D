@@ -311,7 +311,8 @@ abstract public class Tetrahedralization<T extends Vertex.Type> {
                 current = tetrahedron;
                 if (tetrahedron.orientationWrt(v, query) < 0) {
                     // we have found a face which the query point is on the other side
-                    break;
+                    last = tetrahedron;
+                    return last;
                 }
                 if (i++ == 2) {
                     last = tetrahedron;

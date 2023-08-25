@@ -34,6 +34,7 @@ public interface Vertex<T extends Vertex.Type> {
     }
 
     interface FloatType extends Type {
+
         float getX();
 
         float getY();

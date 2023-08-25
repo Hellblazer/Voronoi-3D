@@ -92,9 +92,9 @@ public class VertexF implements Vertex<Vertex.FloatType> {
         return new VertexF(random(random, min, max), random(random, min, max), random(random, min, max));
     }
 
-    public final float x;
-    public final float y;
-    public final float z;
+    public float x;
+    public float y;
+    public float z;
 
     /**
      * One of the tetrahedra adjacent to the vertex
