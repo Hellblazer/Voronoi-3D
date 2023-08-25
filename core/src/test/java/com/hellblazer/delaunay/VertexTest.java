@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.hellblazer.delaunay.Vertex.DoubleType;
+
 /**
  *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
@@ -33,11 +35,11 @@ import org.junit.Test;
 public class VertexTest {
     @Test
     public void testFlip4to1() {
-        Tetrahedralization tetrahedralization = new Tetrahedralization();
-        Tetrahedron U = tetrahedralization.myOwnPrivateIdaho();
-        Vertex N = new Vertex(100, 100, 100);
+        Tetrahedralization<DoubleType> tetrahedralization = new TetrahedralizationD();
+        Tetrahedron<DoubleType> U = tetrahedralization.myOwnPrivateIdaho();
+        Vertex<DoubleType> N = new VertexD(100, 100, 100);
 
-        List<OrientedFace> unlinkedFacets = new ArrayList<>();
+        List<OrientedFace<DoubleType>> unlinkedFacets = new ArrayList<>();
 
         U.flip1to4(N, unlinkedFacets);
 

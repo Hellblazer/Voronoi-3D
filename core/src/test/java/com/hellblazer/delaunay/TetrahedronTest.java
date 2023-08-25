@@ -34,6 +34,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.hellblazer.delaunay.Vertex.DoubleType;
+
 /**
  *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
@@ -43,9 +45,9 @@ import org.junit.Test;
 public class TetrahedronTest {
     @Test
     public void testCreateUniverse() {
-        Tetrahedron idaho = new Tetrahedralization().myOwnPrivateIdaho();
+        Tetrahedron<DoubleType> idaho = new TetrahedralizationD().myOwnPrivateIdaho();
         assertNotNull(idaho);
-        Vertex[] vertices = idaho.getVertices();
+        Vertex<DoubleType>[] vertices = idaho.getVertices();
         assertNotNull(vertices);
         assertEquals(4, vertices.length);
         assertNotSame(vertices[0], vertices[1]);
@@ -62,7 +64,7 @@ public class TetrahedronTest {
         assertNull(idaho.getNeighbor(D));
 
         // Check our faces
-        for (OrientedFace face : idaho) {
+        for (OrientedFace<DoubleType> face : idaho) {
             assertNotNull(face);
             assertSame(idaho, face.getIncident());
             assertNull(face.getAdjacent());
@@ -71,23 +73,23 @@ public class TetrahedronTest {
 
     @Test
     public void testFlip14() {
-        Tetrahedron U = new Tetrahedralization().myOwnPrivateIdaho();
-        Vertex a = U.getVertex(A);
-        Vertex b = U.getVertex(B);
-        Vertex c = U.getVertex(C);
-        Vertex d = U.getVertex(D);
+        Tetrahedron<DoubleType> U = new TetrahedralizationD().myOwnPrivateIdaho();
+        Vertex<DoubleType> a = U.getVertex(A);
+        Vertex<DoubleType> b = U.getVertex(B);
+        Vertex<DoubleType> c = U.getVertex(C);
+        Vertex<DoubleType> d = U.getVertex(D);
 
-        Vertex N = new Vertex(100, 100, 100);
+        Vertex<DoubleType> N = new VertexD(100, 100, 100);
 
-        List<OrientedFace> unlinkedFacets = new ArrayList<>();
+        List<OrientedFace<DoubleType>> unlinkedFacets = new ArrayList<>();
 
-        Tetrahedron tIV = U.flip1to4(N, unlinkedFacets);
+        Tetrahedron<DoubleType> tIV = U.flip1to4(N, unlinkedFacets);
         assertNotNull(tIV);
         assertEquals(0, unlinkedFacets.size());
 
-        Tetrahedron tI = tIV.getNeighbor(C);
-        Tetrahedron tII = tIV.getNeighbor(B);
-        Tetrahedron tIII = tIV.getNeighbor(A);
+        Tetrahedron<DoubleType> tI = tIV.getNeighbor(C);
+        Tetrahedron<DoubleType> tII = tIV.getNeighbor(B);
+        Tetrahedron<DoubleType> tIII = tIV.getNeighbor(A);
 
         assertSame(tIII, tI.getNeighbor(A));
         assertSame(tIV, tI.getNeighbor(B));
@@ -129,7 +131,7 @@ public class TetrahedronTest {
         assertEquals(b, tIV.getVertex(C));
         assertEquals(N, tIV.getVertex(D));
 
-        OrientedFace face = tI.getFace(A);
+        OrientedFace<DoubleType> face = tI.getFace(A);
         assertEquals(d, face.getVertex(0));
         assertEquals(c, face.getVertex(1));
         assertEquals(N, face.getVertex(2));

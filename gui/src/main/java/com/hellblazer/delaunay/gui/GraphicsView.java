@@ -1,6 +1,26 @@
+/**
+ * Copyright (C) 2023 Hal Hildebrand. All rights reserved.
+ *
+ * This file is part of the 3D Incremental Voronoi system
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.hellblazer.delaunay.gui;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,6 +29,8 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
 import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.Vertex.DoubleType;
+import com.hellblazer.delaunay.VertexD;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -24,14 +46,14 @@ import mesh.PolyLine;
 
 public class GraphicsView extends Group {
 
-    public static Point3D p(Vertex v) {
+    public static Point3D p(VertexD v) {
         return new Point3D(v.x, v.y, v.z);
     }
 
-    protected static Point3f[] convertToPoint3f(List<Vertex> somePoints) {
+    protected static Point3f[] convertToPoint3f(Collection<Vertex<Vertex.Type>> somePoints) {
         Point3f tmp[] = new Point3f[somePoints.size()];
         int i = 0;
-        for (Vertex v : somePoints) {
+        for (Vertex<Vertex.Type> v : somePoints) {
             tmp[i++] = v.asPoint3f();
         }
 
@@ -71,10 +93,21 @@ public class GraphicsView extends Group {
         return sphere;
     }
 
-    protected void displaySpheres(Collection<Vertex> selected, double aRadius, PhongMaterial aColor, Group group) {
+    public Sphere sphere(double radius, Point3f position, Material material) {
+        var sphere = new Sphere();
+        sphere.setMaterial(material);
+        sphere.setRadius(radius);
+        sphere.setTranslateX(position.getX());
+        sphere.setTranslateY(position.getY());
+        sphere.setTranslateZ(position.getZ());
+        return sphere;
+    }
+
+    protected void displaySpheres(HashSet<Vertex<DoubleType>> vertices, double aRadius, PhongMaterial aColor,
+                                  Group group) {
         final var children = group.getChildren();
-        for (Vertex v : selected) {
-            children.add(sphere(aRadius, p(v), aColor));
+        for (Vertex<?> v : vertices) {
+            children.add(sphere(aRadius, v.asPoint3f(), aColor));
         }
     }
 

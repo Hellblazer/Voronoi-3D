@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.hellblazer.delaunay.Vertex;
+import com.hellblazer.delaunay.VertexD;
 
 /**
  *
@@ -36,7 +36,7 @@ import com.hellblazer.delaunay.Vertex;
 
 public class PointModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
-    private ArrayList<Vertex> data;
+    private ArrayList<VertexD> data;
     private NumberFormat      numberFormatter;
 
     PointModel() {
@@ -45,12 +45,12 @@ public class PointModel extends AbstractTableModel {
         data = new ArrayList<>();
     }
 
-    PointModel(List<Vertex> somePoints) {
+    PointModel(List<VertexD> somePoints) {
         data = null;
         numberFormatter = new DecimalFormat("0.000");
         if (somePoints != null && somePoints.size() != 0) {
             data = new ArrayList<>(somePoints.size());
-            for (Vertex somePoint : somePoints) {
+            for (VertexD somePoint : somePoints) {
                 data.add(somePoint);
             }
 

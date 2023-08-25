@@ -24,15 +24,15 @@ import java.util.Set;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
-public class EarSet implements StarVisitor {
-    private static class Ear {
-        final OrientedFace face;
-        final int          hashcode;
+public class EarSet<T extends Vertex.Type> implements StarVisitor<T> {
+    private static class Ear<T extends Vertex.Type> {
+        final OrientedFace<T> face;
+        final int             hashcode;
 
-        Ear(OrientedFace face) {
+        Ear(OrientedFace<T> face) {
             this.face = face;
             int hash = 0;
-            for (Vertex v : face) {
+            for (Vertex<T> v : face) {
                 hash ^= v.hashCode();
             }
             hashcode = hash;
@@ -41,7 +41,7 @@ public class EarSet implements StarVisitor {
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof Ear) {
-                Ear ear = (Ear) obj;
+                Ear<?> ear = (Ear<?>) obj;
                 if ((face.getIncident() == ear.face.getIncident() && face.getAdjacent() == ear.face.getAdjacent()) ||
                     (face.getAdjacent() == ear.face.getIncident() && face.getIncident() == ear.face.getAdjacent())) {
                     return true;
@@ -56,25 +56,25 @@ public class EarSet implements StarVisitor {
         }
     }
 
-    private LinkedList<OrientedFace> ears    = new LinkedList<>();
-    private Set<Ear>                 visited = new OaHashSet<>();
+    private LinkedList<OrientedFace<T>> ears    = new LinkedList<>();
+    private Set<Ear<T>>                 visited = new OaHashSet<>();
 
-    public LinkedList<OrientedFace> getEars() {
+    public LinkedList<OrientedFace<T>> getEars() {
         return ears;
     }
 
     @Override
-    public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
-        OrientedFace face = t.getFace(z);
-        if (visited.add(new Ear(face))) {
+    public void visit(V vertex, Tetrahedron<T> t, Vertex<T> x, Vertex<T> y, Vertex<T> z) {
+        OrientedFace<T> face = t.getFace(z);
+        if (visited.add(new Ear<T>(face))) {
             ears.add(face);
         }
         face = t.getFace(x);
-        if (visited.add(new Ear(face))) {
+        if (visited.add(new Ear<T>(face))) {
             ears.add(face);
         }
         face = t.getFace(y);
-        if (visited.add(new Ear(face))) {
+        if (visited.add(new Ear<T>(face))) {
             ears.add(face);
         }
     }
