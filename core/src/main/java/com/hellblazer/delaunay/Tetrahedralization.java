@@ -261,6 +261,20 @@ public class Tetrahedralization {
      * triangulations", Computational Geometry 12 (1999) 63-83.
      *
      * @param query - the query point
+     * @return the Tetrahedron containing the query
+     */
+    public Tetrahedron locate(Tuple3d query) {
+        return locate(query, last);
+    }
+
+    /**
+     * Locate the tetrahedron which contains the query point via a stochastic walk
+     * through the delaunay triangulation. This location algorithm is a slight
+     * variation of the 3D jump and walk algorithm found in: "Fast randomized point
+     * location without preprocessing in two- and three-dimensional Delaunay
+     * triangulations", Computational Geometry 12 (1999) 63-83.
+     *
+     * @param query - the query point
      * @param start - the starting tetrahedron
      * @return the Tetrahedron containing the query
      */
