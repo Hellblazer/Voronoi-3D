@@ -19,21 +19,36 @@
 
 package com.hellblazer.delaunay;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Tuple3d;
+import javax.vecmath.Vector3d;
 
 /**
  *
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  *
  */
-public class Vertex {
+public class Vertex extends Vector3d {
     /**
      * Minimal zero
      */
-    static final double EPSILON = Math.pow(10D, -20D);
-    static final Vertex ORIGIN  = new Vertex(0, 0, 0);
+    static final double       EPSILON          = Math.pow(10D, -20D);
+    static final Point3d      ORIGIN           = new Point3d(0, 0, 0);
+    private static final long serialVersionUID = 1L;
+
+    public static double determinant(Tuple3d a, Tuple3d b, Tuple3d c) {
+        return a.x * b.y * c.z + b.x * c.y * a.z + c.x * a.y * b.z - b.x * a.y * c.z - c.x * b.y * a.z
+        - a.x * c.y * b.z;
+    }
 
     /**
      * Create some random points in a sphere
@@ -44,9 +59,9 @@ public class Vertex {
      * @param inSphere
      * @return
      */
-    public static Vertex[] getRandomPoints(Random random, int numberOfPoints, double radius, boolean inSphere) {
+    public static Point3d[] getRandomPoints(Random random, int numberOfPoints, double radius, boolean inSphere) {
         double radiusSquared = radius * radius;
-        Vertex ourPoints[] = new Vertex[numberOfPoints];
+        Point3d ourPoints[] = new Point3d[numberOfPoints];
         for (int i = 0; i < ourPoints.length; i++) {
             if (inSphere) {
                 do {
@@ -58,6 +73,14 @@ public class Vertex {
         }
 
         return ourPoints;
+    }
+
+    public static double pseudoOrientation(Tuple3d a, Tuple3d b, Tuple3d c, Tuple3d d) {
+        var b1 = new Point3d(b);
+        b1.sub(c);
+        var c1 = new Point3d(b);
+        c1.sub(d);
+        return determinant(a, b1, c1);
     }
 
     /**
@@ -88,58 +111,40 @@ public class Vertex {
      * @param max
      * @return
      */
-    public static Vertex randomPoint(Random random, double min, double max) {
-        return new Vertex(random(random, min, max), random(random, min, max), random(random, min, max));
+    public static Point3d randomPoint(Random random, double min, double max) {
+        return new Point3d(random(random, min, max), random(random, min, max), random(random, min, max));
     }
-
-    public final double x;
-    public final double y;
-    public final double z;
 
     /**
      * One of the tetrahedra adjacent to the vertex
      */
     private Tetrahedron adjacent;
 
-    /**
-     * The number of tetrahedra adjacent to the vertex
-     */
-    private int order = 0;
-
-    public Vertex(double i, double j, double k) {
+    Vertex(double i, double j, double k) {
         x = i;
         y = j;
         z = k;
     }
 
-    public Vertex(double i, double j, double k, double scale) {
+    Vertex(double i, double j, double k, double scale) {
         this(i * scale, j * scale, k * scale);
     }
 
-    public Point3f asPoint3f() {
-        return new Point3f((float) x, (float) y, (float) z);
+    Vertex(Tuple3d p) {
+        this(p.x, p.y, p.z);
     }
 
-    /**
-     * Account for the deletion of an adjacent tetrahedron.
-     */
-    public final void deleteAdjacent() {
-        order--;
-        assert order >= 0;
+    public double determinant(Tuple3d b, Tuple3d c) {
+        return x * b.y * c.z + b.x * c.y * z + c.x * y * b.z - b.x * y * c.z - c.x * b.y * z - x * c.y * b.z;
     }
 
-    public final double distanceSquared(Vertex p1) {
+    public final double distanceSquared(Tuple3d p1) {
         double dx, dy, dz;
 
         dx = x - p1.x;
         dy = y - p1.y;
         dz = z - p1.z;
         return dx * dx + dy * dy + dz * dz;
-    }
-
-    public void freshenAdjacent(Tetrahedron tetrahedron) {
-        if (adjacent == null || adjacent.isDeleted())
-            adjacent = tetrahedron;
     }
 
     /**
@@ -151,15 +156,64 @@ public class Vertex {
         return adjacent;
     }
 
+    public LinkedList<OrientedFace> getEars() {
+        assert adjacent != null;
+        EarSet aggregator = new EarSet();
+        adjacent.visitStar(this, aggregator);
+        return aggregator.getEars();
+    }
+
     /**
-     * Answer the number of tetrahedra adjacent to the receiver vertex in the
-     * tetrahedralization
-     * <p>
+     * Answer the collection of neighboring vertices around the indicated vertex.
      *
-     * @return
+     * @param v - the vertex determining the neighborhood
+     * @return the collection of neighboring vertices
      */
-    public final int getOrder() {
-        return order;
+    public Collection<Vertex> getNeighbors() {
+        assert adjacent != null;
+
+        final Set<Vertex> neighbors = new IdentitySet<>();
+        adjacent.visitStar(this, (vertex, t, x, y, z) -> {
+            neighbors.add(x);
+            neighbors.add(y);
+            neighbors.add(z);
+        });
+        return neighbors;
+    }
+
+    public Deque<OrientedFace> getStar() {
+        assert adjacent != null;
+
+        final Deque<OrientedFace> star = new ArrayDeque<>();
+        adjacent.visitStar(this, (vertex, t, x, y, z) -> {
+            star.push(t.getFace(vertex));
+        });
+        return star;
+    }
+
+    /**
+     * Answer the faces of the voronoi region around the receiver
+     *
+     * @param v - the vertex of interest
+     * @return the list of faces defining the voronoi region defined by the receiver
+     */
+    public List<Tuple3d[]> getVoronoiRegion() {
+        assert adjacent != null;
+
+        final List<Tuple3d[]> faces = new ArrayList<>();
+        Set<Vertex> neighbors = new IdentitySet<>(10);
+        adjacent.visitStar(this, (vertex, t, x, y, z) -> {
+            if (neighbors.add(x)) {
+                t.traverseVoronoiFace(this, x, faces);
+            }
+            if (neighbors.add(y)) {
+                t.traverseVoronoiFace(this, y, faces);
+            }
+            if (neighbors.add(z)) {
+                t.traverseVoronoiFace(this, z, faces);
+            }
+        });
+        return faces;
     }
 
     /**
@@ -176,7 +230,7 @@ public class Vertex {
      *         cospherical
      */
 
-    public final int inSphere(Vertex a, Vertex b, Vertex c, Vertex d) {
+    public final int inSphere(Tuple3d a, Tuple3d b, Tuple3d c, Tuple3d d) {
         double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, x, y, z);
         if (result > 0.0) {
             return 1;
@@ -184,7 +238,30 @@ public class Vertex {
             return -1;
         }
         return 0;
+    }
 
+    /**
+     * Answer the maximum fraction of delta displacement the receiver before a
+     * topological event occurs.
+     *
+     * @param delta - the displacement delta of the receiver
+     * @return l - l <= 1 if a topological event will occur at this + (l * delta), l
+     *         > 1 if no topological event will occur
+     */
+    public double maxStep(Tuple3d delta) {
+        double[] min = new double[] { Double.MAX_VALUE };
+        var target = new Point3d();
+        target.add(this, delta);
+        adjacent.visitStar(this, (vertex, t, a, b, c) -> {
+            var pseudo = Geometry.leftOfPlaneFast(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
+            var newPos = new Vertex(this);
+            newPos.add(delta);
+            var pseudoDelta = Geometry.leftOfPlaneFast(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, newPos.x, newPos.y,
+                                                       newPos.z);
+            var l = pseudo / Math.abs(pseudoDelta);
+            min[0] = Math.min(l, min[0]);
+        });
+        return min[0];
     }
 
     /**
@@ -197,7 +274,7 @@ public class Vertex {
      * @return +1 if the orientation of the query point is positive with respect to
      *         the plane, -1 if negative and 0 if the test point is coplanar
      */
-    public final int orientation(Vertex a, Vertex b, Vertex c) {
+    public final int orientation(Tuple3d a, Tuple3d b, Tuple3d c) {
         double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, x, y, z);
         if (result > 0.0) {
             return 1;
@@ -207,12 +284,24 @@ public class Vertex {
         return 0;
     }
 
-    /**
-     * Reset the state associated with a tetrahedralization.
-     */
-    public final void reset() {
-        adjacent = null;
-        order = 0;
+    public double pseudoOrientation(Tuple3d b, Tuple3d c, Tuple3d d) {
+        var a1 = new Point3d(this);
+        a1.sub(b);
+        var b1 = new Point3d(b);
+        b1.sub(c);
+        var c1 = new Point3d(b);
+        c1.sub(d);
+        return determinant(a1, b1, c1);
+    }
+
+    @Override
+    public String toString() {
+        return "{" + x + ", " + y + ", " + z + "}";
+    }
+
+    void freshenAdjacent(Tetrahedron tetrahedron) {
+        if (adjacent == null || adjacent.isDeleted())
+            adjacent = tetrahedron;
     }
 
     /**
@@ -221,14 +310,8 @@ public class Vertex {
      *
      * @param tetrahedron
      */
-    public final void setAdjacent(Tetrahedron tetrahedron) {
-        order++;
+    final void setAdjacent(Tetrahedron tetrahedron) {
         adjacent = tetrahedron;
-    }
-
-    @Override
-    public String toString() {
-        return "{" + x + ", " + y + ", " + z + "}";
     }
 
 }

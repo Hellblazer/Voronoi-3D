@@ -24,9 +24,7 @@ import static com.hellblazer.delaunay.V.B;
 import static com.hellblazer.delaunay.V.C;
 import static com.hellblazer.delaunay.V.D;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +32,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Tuple3d;
 
 /**
  * A Delaunay tetrahedralization.
@@ -130,8 +129,18 @@ public class Tetrahedralization {
     public void delete(Vertex v) {
         assert v != null;
 
-        LinkedList<OrientedFace> ears = getEars(v);
-        while (v.getOrder() > 4) {
+        LinkedList<OrientedFace> ears = v.getEars();
+        class OC implements StarVisitor {
+            int order = 0;
+
+            @Override
+            public void visit(V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) {
+                order++;
+            }
+        }
+        var oc = new OC();
+        v.getAdjacent().visitStar(v, oc);
+        while (oc.order > 4) {
             for (int i = 0; i < ears.size();) {
                 if (ears.get(i).flip(i, ears, v)) {
                     ears.remove(i);
@@ -142,41 +151,6 @@ public class Tetrahedralization {
         }
         last = flip4to1(v);
         size--;
-    }
-
-    public LinkedList<OrientedFace> getEars(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-        EarSet aggregator = new EarSet();
-        v.getAdjacent().visitStar(v, aggregator);
-        return aggregator.getEars();
-    }
-
-    /**
-     * Answer the collection of neighboring vertices around the indicated vertex.
-     *
-     * @param v - the vertex determining the neighborhood
-     * @return the collection of neighboring vertices
-     */
-    public Collection<Vertex> getNeighbors(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-
-        final Set<Vertex> neighbors = new IdentitySet<>();
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
-            neighbors.add(x);
-            neighbors.add(y);
-            neighbors.add(z);
-        });
-        return neighbors;
-    }
-
-    public Deque<OrientedFace> getStar(Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-
-        final Deque<OrientedFace> star = new ArrayDeque<>();
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
-            star.push(t.getFace(vertex));
-        });
-        return star;
     }
 
     /**
@@ -233,42 +207,18 @@ public class Tetrahedralization {
     }
 
     /**
-     * Answer the faces of the voronoi region around the vertex
-     *
-     * @param v - the vertex of interest
-     * @return the list of faces defining the voronoi region defined by v
-     */
-    public List<Point3f[]> getVoronoiRegion(final Vertex v) {
-        assert v != null && v.getAdjacent() != null;
-
-        final ArrayList<Point3f[]> faces = new ArrayList<>();
-        Set<Vertex> neighbors = new IdentitySet<>(10);
-        v.getAdjacent().visitStar(v, (V vertex, Tetrahedron t, Vertex x, Vertex y, Vertex z) -> {
-            if (neighbors.add(x)) {
-                t.traverseVoronoiFace(v, x, faces);
-            }
-            if (neighbors.add(y)) {
-                t.traverseVoronoiFace(v, y, faces);
-            }
-            if (neighbors.add(z)) {
-                t.traverseVoronoiFace(v, z, faces);
-            }
-        });
-        return faces;
-    }
-
-    /**
-     * Insert the vertex into the tetrahedralization. See "Computing the 3D Voronoi
+     * Insert the point into the tetrahedralization. See "Computing the 3D Voronoi
      * Diagram Robustly: An Easy Explanation", by Hugo Ledoux
      * <p>
      *
-     * @param v - the vertex to be inserted
+     * @param p - the point to be inserted
+     * @return the Vertex in the tetrahedralization
      */
-    public void insert(Vertex v) {
-        assert v != null;
-        v.reset();
+    public Vertex insert(Point3d p) {
+        assert p != null;
         List<OrientedFace> ears = new ArrayList<>();
-        last = locate(v).flip1to4(v, ears);
+        var v = new Vertex(p);
+        last = locate(p, last).flip1to4(v, ears);
         while (!ears.isEmpty()) {
             Tetrahedron l = ears.remove(ears.size() - 1).flip(v, ears);
             if (l != null) {
@@ -276,6 +226,31 @@ public class Tetrahedralization {
             }
         }
         size++;
+        return v;
+    }
+
+    /**
+     * Insert the point into the tetrahedralization. See "Computing the 3D Voronoi
+     * Diagram Robustly: An Easy Explanation", by Hugo Ledoux
+     * <p>
+     *
+     * @param p    - the point to be inserted
+     * @param near - the nearby vertex
+     * @return the new Vertex in the tetrahedralization
+     */
+    public Vertex insert(Point3d p, Vertex near) {
+        assert p != null;
+        List<OrientedFace> ears = new ArrayList<>();
+        var v = new Vertex(p);
+        last = locate(p, near.getAdjacent()).flip1to4(v, ears);
+        while (!ears.isEmpty()) {
+            Tetrahedron l = ears.remove(ears.size() - 1).flip(v, ears);
+            if (l != null) {
+                last = l;
+            }
+        }
+        size++;
+        return v;
     }
 
     /**
@@ -284,35 +259,40 @@ public class Tetrahedralization {
      * variation of the 3D jump and walk algorithm found in: "Fast randomized point
      * location without preprocessing in two- and three-dimensional Delaunay
      * triangulations", Computational Geometry 12 (1999) 63-83.
-     * <p>
-     * In this variant, the intial "random" triangle used is simply the one of the
-     * triangles in the last tetrahedron created by a flip, or the previously
-     * located tetrahedron.
-     * <p>
-     * This location algorithm provides fast location results with no memory
-     * overhead. Further, because there is no search structure to maintain, this
-     * algorithm is ideally suited for incremental deletions and kinetic maintenance
-     * of the delaunay tetrahedralization.
-     * <p>
      *
      * @param query - the query point
-     * @return
+     * @return the Tetrahedron containing the query
      */
-    public Tetrahedron locate(Vertex query) {
+    public Tetrahedron locate(Tuple3d query) {
+        return locate(query, last);
+    }
+
+    /**
+     * Locate the tetrahedron which contains the query point via a stochastic walk
+     * through the delaunay triangulation. This location algorithm is a slight
+     * variation of the 3D jump and walk algorithm found in: "Fast randomized point
+     * location without preprocessing in two- and three-dimensional Delaunay
+     * triangulations", Computational Geometry 12 (1999) 63-83.
+     *
+     * @param query - the query point
+     * @param start - the starting tetrahedron
+     * @return the Tetrahedron containing the query
+     */
+    public Tetrahedron locate(Tuple3d query, Tetrahedron start) {
         assert query != null;
 
         V o = null;
         for (V face : Tetrahedralization.VERTICES) {
-            if (last.orientationWrt(face, query) < 0) {
+            if (start.orientationWrt(face, query) < 0) {
                 o = face;
                 break;
             }
         }
         if (o == null) {
             // The query point is contained in the receiver
-            return last;
+            return start;
         }
-        Tetrahedron current = last;
+        Tetrahedron current = start;
         while (true) {
             // get the tetrahedron on the other side of the face
             Tetrahedron tetrahedron = current.getNeighbor(o);
@@ -325,8 +305,7 @@ public class Tetrahedralization {
                     break;
                 }
                 if (i++ == 2) {
-                    last = tetrahedron;
-                    return last;
+                    return tetrahedron;
                 }
             }
         }
@@ -344,6 +323,14 @@ public class Tetrahedralization {
             U[i++] = v;
         }
         return new Tetrahedron(U);
+    }
+
+    /**
+     * @return - a "random" Tetrahedron from the receiver. This implementation
+     *         returns the <code>last</code> Tetrahedron of the receiver
+     */
+    public Tetrahedron randomPick() {
+        return last;
     }
 
     /**
@@ -381,7 +368,7 @@ public class Tetrahedralization {
      * @return the tetrahedron created from the flip
      */
     protected Tetrahedron flip4to1(Vertex n) {
-        Deque<OrientedFace> star = getStar(n);
+        Deque<OrientedFace> star = n.getStar();
         ArrayList<Tetrahedron> deleted = new ArrayList<>();
         for (OrientedFace f : star) {
             deleted.add(f.getIncident());

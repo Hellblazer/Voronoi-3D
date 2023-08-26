@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.vecmath.Point3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Tuple3d;
 
 /**
  * An oriented, delaunay tetrahedral cell. The vertices of the tetrahedron are
@@ -560,6 +561,53 @@ public class Tetrahedron implements Iterable<OrientedFace> {
                                                        { B, C, A, null } };
 
     /**
+     * Return +1 if the qeury lies inside the sphere passing through a, b, c, and d;
+     * -1 if it lies outside; and 0 if the five points are cospherical. The vertices
+     * a, b, c, and d must be ordered so that they have a positive orientation (as
+     * defined by {@link #orientation(Vertex, Vertex, Vertex)}), or the sign of the
+     * result will be reversed.
+     * <p>
+     *
+     * @param query - the point to query
+     * @param a     , b, c, d - the points defining the sphere, in oriented order
+     * @return +1 if the query lies inside the sphere passing through a, b, c, and
+     *         d; -1 if it lies outside; and 0 if the five points are cospherical
+     */
+
+    public static final int inSphere(Tuple3d query, Tuple3d a, Tuple3d b, Tuple3d c, Tuple3d d) {
+        double result = Geometry.inSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, query.x, query.y,
+                                          query.z);
+        if (result > 0.0) {
+            return 1;
+        } else if (result < 0.0) {
+            return -1;
+        }
+        return 0;
+
+    }
+
+    /**
+     * Answer +1 if the orientation of the query is positive with respect to the
+     * plane defined by {a, b, c}, -1 if negative, or 0 if the test point is
+     * coplanar
+     * <p>
+     *
+     * @param query - the point to query
+     * @param a     , b, c - the points defining the plane
+     * @return +1 if the orientation of the query point is positive with respect to
+     *         the plane, -1 if negative and 0 if the test point is coplanar
+     */
+    public static int orientation(Tuple3d query, Tuple3d a, Tuple3d b, Tuple3d c) {
+        double result = Geometry.leftOfPlane(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, query.x, query.y, query.z);
+        if (result > 0.0) {
+            return 1;
+        } else if (result < 0.0) {
+            return -1;
+        }
+        return 0;
+    }
+
+    /**
      * Vertex A
      */
     private Vertex a;
@@ -641,18 +689,6 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         faces.add(new Vertex[] { b, c, a });
         faces.add(new Vertex[] { c, b, d });
         faces.add(new Vertex[] { d, a, c });
-    }
-
-    /**
-     * Add the four faces defined by the tetrahedron to the list of faces
-     *
-     * @param faces
-     */
-    public void addFacesCoordinates(List<Point3f[]> faces) {
-        faces.add(new Point3f[] { a.asPoint3f(), d.asPoint3f(), b.asPoint3f() });
-        faces.add(new Point3f[] { b.asPoint3f(), c.asPoint3f(), a.asPoint3f() });
-        faces.add(new Point3f[] { c.asPoint3f(), b.asPoint3f(), d.asPoint3f() });
-        faces.add(new Point3f[] { d.asPoint3f(), a.asPoint3f(), c.asPoint3f() });
     }
 
     /**
@@ -749,12 +785,12 @@ public class Tetrahedron implements Iterable<OrientedFace> {
         return getFace(ordinalOf(v));
     }
 
-    public List<Point3f[]> getFacesCoordinates() {
-        var faces = new ArrayList<Point3f[]>();
-        faces.add(new Point3f[] { a.asPoint3f(), d.asPoint3f(), b.asPoint3f() });
-        faces.add(new Point3f[] { b.asPoint3f(), c.asPoint3f(), a.asPoint3f() });
-        faces.add(new Point3f[] { c.asPoint3f(), b.asPoint3f(), d.asPoint3f() });
-        faces.add(new Point3f[] { d.asPoint3f(), a.asPoint3f(), c.asPoint3f() });
+    public List<Vertex[]> getFaces() {
+        List<Vertex[]> faces = new ArrayList<>();
+        faces.add(new Vertex[] { a, d, b });
+        faces.add(new Vertex[] { b, c, a });
+        faces.add(new Vertex[] { c, b, d });
+        faces.add(new Vertex[] { d, a, c });
         return faces;
     }
 
@@ -891,15 +927,15 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     }
 
     /**
-     * Answer 1 if the query point is positively oriented with respect to the face
-     * opposite the vertex, -1 if negatively oriented, 0 if the query point is
+     * Answer > 0 if the query point is positively oriented with respect to the face
+     * opposite the vertex, < 0 if negatively oriented, 0 if the query point is
      * coplanar to the face
      *
      * @param face
      * @param query
      * @return
      */
-    public int orientationWrt(V face, Vertex query) {
+    public int orientationWrt(V face, Tuple3d query) {
         switch (face) {
         case A:
             return orientationWrtCBD(query);
@@ -915,14 +951,14 @@ public class Tetrahedron implements Iterable<OrientedFace> {
     }
 
     /**
-     * Answer 1 if the query point is positively oriented with respect to the face
-     * ADB, -1 if negatively oriented, 0 if the query point is coplanar to the face
+     * Answer > 0 if the query point is positively oriented with respect to the face
+     * ADB, < 0 if negatively oriented, 0 if the query point is coplanar to the face
      *
      * @param query
      * @return
      */
-    public int orientationWrtADB(Vertex query) {
-        return query.orientation(a, d, b);
+    public int orientationWrtADB(Tuple3d query) {
+        return orientation(query, a, d, b);
     }
 
     /**
@@ -932,8 +968,8 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrtBCA(Vertex query) {
-        return query.orientation(b, c, a);
+    public int orientationWrtBCA(Tuple3d query) {
+        return orientation(query, b, c, a);
     }
 
     /**
@@ -943,8 +979,8 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrtCBD(Vertex query) {
-        return query.orientation(c, b, d);
+    public int orientationWrtCBD(Tuple3d query) {
+        return orientation(query, c, b, d);
     }
 
     /**
@@ -954,8 +990,8 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param query
      * @return
      */
-    public int orientationWrtDAC(Vertex query) {
-        return query.orientation(d, a, c);
+    public int orientationWrtDAC(Tuple3d query) {
+        return orientation(query, d, a, c);
     }
 
     public void removeAnyDegenerateTetrahedronPair() {
@@ -1027,10 +1063,6 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * Clean up the pointers
      */
     void delete() {
-        a.deleteAdjacent();
-        b.deleteAdjacent();
-        c.deleteAdjacent();
-        d.deleteAdjacent();
         nA = nB = nC = nD = null;
         a = b = c = d = null;
     }
@@ -1053,6 +1085,68 @@ public class Tetrahedron implements Iterable<OrientedFace> {
 
     boolean isDeleted() {
         return a == null;
+    }
+
+    /**
+     * visit the receiver and push unvisited tetrahedrons around the supplied vertex
+     *
+     * @param vC      - the center vertex
+     * @param visitor - the star visitor
+     * @param stack   - the stack of visitations
+     */
+    void visit(Vertex vC, StarVisitor visitor, Stack<Tetrahedron> stack, Set<Tetrahedron> visited) {
+        switch (ordinalOf(vC)) {
+        case A:
+            visitor.visit(A, this, c, b, d);
+            if (nC != null) {
+                stack.push(nC);
+            }
+            if (nB != null) {
+                stack.push(nC);
+            }
+            if (nD != null) {
+                stack.push(nD);
+            }
+            break;
+        case B:
+            visitor.visit(B, this, d, a, c);
+            if (nD != null) {
+                stack.push(nD);
+            }
+            if (nA != null) {
+                stack.push(nA);
+            }
+            if (nC != null) {
+                stack.push(nC);
+            }
+            break;
+        case C:
+            visitor.visit(C, this, a, d, b);
+            if (nA != null) {
+                stack.push(nA);
+            }
+            if (nD != null) {
+                stack.push(nD);
+            }
+            if (nB != null) {
+                stack.push(nB);
+            }
+            break;
+        case D:
+            visitor.visit(D, this, b, c, a);
+            if (nB != null) {
+                stack.push(nB);
+            }
+            if (nA != null) {
+                stack.push(nB);
+            }
+            if (nC != null) {
+                stack.push(nC);
+            }
+            break;
+        default:
+            throw new IllegalArgumentException("Invalid center vertex: " + vC);
+        }
     }
 
     /**
@@ -1159,13 +1253,13 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param axis
      * @param face
      */
-    void traverseVoronoiFace(Tetrahedron origin, Tetrahedron from, Vertex vC, Vertex axis, List<Point3f> face) {
+    void traverseVoronoiFace(Tetrahedron origin, Tetrahedron from, Vertex vC, Vertex axis, List<Point3d> face) {
         if (origin == this) {
             return;
         }
         double[] center = new double[3];
         centerSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, center);
-        face.add(new Point3f((float) center[0], (float) center[1], (float) center[2]));
+        face.add(new Point3d(center[0], center[1], center[2]));
         V next = VORONOI_FACE_NEXT[ordinalOf(from).ordinal()][ordinalOf(vC).ordinal()][ordinalOf(axis).ordinal()];
         Tetrahedron t = getNeighbor(next);
         if (t != null) {
@@ -1183,17 +1277,17 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param axis
      * @param face
      */
-    void traverseVoronoiFace(Vertex vC, Vertex axis, List<Point3f[]> faces) {
-        ArrayList<Point3f> face = new ArrayList<>();
+    void traverseVoronoiFace(Vertex vC, Vertex axis, List<Tuple3d[]> faces) {
+        ArrayList<Point3d> face = new ArrayList<>();
         double[] center = new double[3];
         centerSphere(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, center);
-        face.add(new Point3f((float) center[0], (float) center[1], (float) center[2]));
+        face.add(new Point3d(center[0], center[1], center[2]));
         V v = VORONOI_FACE_ORIGIN[ordinalOf(vC).ordinal()][ordinalOf(axis).ordinal()];
         Tetrahedron next = getNeighbor(v);
         if (next != null) {
             next.traverseVoronoiFace(this, this, vC, axis, face);
         }
-        faces.add(face.toArray(new Point3f[face.size()]));
+        faces.add(face.toArray(new Point3d[face.size()]));
     }
 
     /**
@@ -1203,70 +1297,13 @@ public class Tetrahedron implements Iterable<OrientedFace> {
      * @param visitor - the visitor to invoke for each tetrahedron in the star
      */
     void visitStar(Vertex vC, StarVisitor visitor) {
-        IdentitySet<Tetrahedron> visited = new IdentitySet<>(10);
-        visitStar(vC, visitor, visited);
-    }
-
-    /**
-     * Visit the star tetrahedra set of the of the center vertex
-     *
-     * @param vC      - the center vertex
-     * @param visitor - the visitor to invoke for each tetrahedron in the star
-     * @param visited - the set of previously visited tetrahedra
-     */
-    void visitStar(Vertex vC, StarVisitor visitor, IdentitySet<Tetrahedron> visited) {
-        if (visited.add(this)) {
-            switch (ordinalOf(vC)) {
-            case A:
-                visitor.visit(A, this, c, b, d);
-                if (nC != null) {
-                    nC.visitStar(vC, visitor, visited);
-                }
-                if (nB != null) {
-                    nB.visitStar(vC, visitor, visited);
-                }
-                if (nD != null) {
-                    nD.visitStar(vC, visitor, visited);
-                }
-                break;
-            case B:
-                visitor.visit(B, this, d, a, c);
-                if (nD != null) {
-                    nD.visitStar(vC, visitor, visited);
-                }
-                if (nA != null) {
-                    nA.visitStar(vC, visitor, visited);
-                }
-                if (nC != null) {
-                    nC.visitStar(vC, visitor, visited);
-                }
-                break;
-            case C:
-                visitor.visit(C, this, a, d, b);
-                if (nA != null) {
-                    nA.visitStar(vC, visitor, visited);
-                }
-                if (nD != null) {
-                    nD.visitStar(vC, visitor, visited);
-                }
-                if (nB != null) {
-                    nB.visitStar(vC, visitor, visited);
-                }
-                break;
-            case D:
-                visitor.visit(D, this, b, c, a);
-                if (nB != null) {
-                    nB.visitStar(vC, visitor, visited);
-                }
-                if (nA != null) {
-                    nA.visitStar(vC, visitor, visited);
-                }
-                if (nC != null) {
-                    nC.visitStar(vC, visitor, visited);
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid center vertex: " + vC);
+        Set<Tetrahedron> tetrahedrons = new IdentitySet<>(10);
+        var stack = new Stack<Tetrahedron>();
+        stack.push(this);
+        while (!stack.isEmpty()) {
+            var t = stack.pop();
+            if (tetrahedrons.add(t)) {
+                t.visit(vC, visitor, stack, tetrahedrons);
             }
         }
     }
