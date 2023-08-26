@@ -11,7 +11,7 @@ This library is licensed under the AGPL v3.0, requires Java 20+ and is built wit
     mvn clean install
 
 ## Current Status
-Raised from the dead.  The GUI is now a crude, but servicable Java/FX GUI.  Probably will work on cleaning that up and improving that, but...
+Raised from the dead.  The GUI is now a very crude, but servicable Java/FX GUI.  Probably will work on cleaning that up and improving that, but...
 
 The current implementation leaves flat tetrahedra when processing the cubic example test cases.  :: big sad :: My understanding is that these can be removed with 4 <-> 4 flips, so enjoy!
 
